@@ -28,7 +28,6 @@ try {
     
     $userId = $_SESSION['user_id'];
     $visitId = $data['visit_id'];
-    $cancelReason = $data['reason'] ?? 'Cancelada por el usuario';
     
     // Verificar existencia y permisos
     $checkStmt = $db->prepare("
@@ -36,46 +35,28 @@ try {
         FROM property_visits v
         LEFT JOIN visit_calendar_mappings m ON v.id = m.visit_id
         WHERE v.id = :visit_id AND (v.user_id = :user_id1 OR v.created_by = :user_id2)
+        AND v.deleted_at IS NULL
     ");
-        
+    
     $checkStmt->execute([
         ':visit_id' => $visitId, 
         ':user_id1' => $userId,
         ':user_id2' => $userId
     ]);
-
+    
     $visit = $checkStmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$visit) {
         throw new Exception('Visita no encontrada o sin permisos');
     }
     
-    if ($visit['status'] === 'cancelada') {
-        $db->commit();
-        echo json_encode([
-            'success' => true,
-            'visit_id' => $visitId,
-            'message' => 'La visita ya estaba cancelada'
-        ]);
-        exit;
+    // Verificar que la visita esté cancelada
+    if ($visit['status'] !== 'cancelada') {
+        throw new Exception('Solo las visitas canceladas pueden eliminarse');
     }
     
-    // Actualizar estado
-    $updateStmt = $db->prepare("
-        UPDATE property_visits 
-        SET status = 'cancelada', 
-            cancel_reason = :cancel_reason,
-            updated_at = NOW()
-        WHERE id = :visit_id
-    ");
-    
-    $updateStmt->execute([
-        ':visit_id' => $visitId,
-        ':cancel_reason' => $cancelReason
-    ]);
-    
-    // Cancelar en Google Calendar si existe
-    $googleCancelled = false;
+    // Eliminar de Google Calendar si existe
+    $googleDeleted = false;
     
     if ($visit['google_event_id']) {
         // Obtener tokens
@@ -127,44 +108,58 @@ try {
             try {
                 // Eliminar evento de Google Calendar
                 $service->events->delete('primary', $visit['google_event_id']);
+                $googleDeleted = true;
                 
-                // Actualizar o eliminar el registro del mapeo
-                $deleteMapStmt = $db->prepare("
-                    DELETE FROM visit_calendar_mappings
+                // Actualizar mapeo con deleted_at
+                $updateMapStmt = $db->prepare("
+                    UPDATE visit_calendar_mappings
+                    SET deleted_at = NOW()
                     WHERE google_event_id = :google_event_id
                 ");
                 
-                $deleteMapStmt->execute([
+                $updateMapStmt->execute([
                     ':google_event_id' => $visit['google_event_id']
                 ]);
                 
-                $googleCancelled = true;
-                
             } catch (Exception $e) {
-                error_log("Error al cancelar evento en Google: " . $e->getMessage());
+                error_log("Error al eliminar evento en Google: " . $e->getMessage());
             }
         }
     }
+    
+    // Implementar borrado lógico en lugar de permanente
+    $updateStmt = $db->prepare("
+        UPDATE property_visits 
+        SET deleted_at = NOW(), 
+            deleted_by = :deleted_by,
+            status = 'eliminada'
+        WHERE id = :visit_id
+    ");
+    
+    $updateStmt->execute([
+        ':visit_id' => $visitId,
+        ':deleted_by' => $userId
+    ]);
     
     $db->commit();
     
     echo json_encode([
         'success' => true,
         'visit_id' => $visitId,
-        'google_cancelled' => $googleCancelled,
-        'message' => 'Visita cancelada correctamente' . 
-                    ($googleCancelled ? ' y eliminada de Google Calendar' : '')
+        'google_deleted' => $googleDeleted,
+        'message' => 'Visita eliminada' . 
+                    ($googleDeleted ? ' y eliminada de Google Calendar' : '')
     ]);
     
 } catch (Exception $e) {
     if (isset($db)) {
         $db->rollBack();
     }
-    error_log("Error en cancel_visit.php: " . $e->getMessage());
+    error_log("Error en delete_visit.php: " . $e->getMessage());
     http_response_code(500);
     echo json_encode([
         'success' => false,
-        'error' => 'Error al cancelar visita: ' . $e->getMessage()
+        'error' => 'Error al eliminar visita: ' . $e->getMessage()
     ]);
 } finally {
     if (isset($database)) {

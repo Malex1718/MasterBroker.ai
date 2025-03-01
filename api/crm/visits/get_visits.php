@@ -17,8 +17,9 @@ try {
     $userId = $_SESSION['user_id'];
     
     // Construir consulta con filtros
-    $params = [':user_id' => $userId];
-    $whereConditions = ["(v.user_id = :user_id OR v.created_by = :user_id)"];
+    // Modificamos este bloque para usar nombre de parámetros únicos
+    $params = [':user_id1' => $userId, ':user_id2' => $userId];
+    $whereConditions = ["(v.user_id = :user_id1 OR v.created_by = :user_id2)"];
     
     // Filtros por lead
     if (isset($_GET['lead_id'])) {
@@ -46,6 +47,11 @@ try {
     // Visitas pendientes
     if (isset($_GET['pending']) && $_GET['pending'] === 'true') {
         $whereConditions[] = "v.visit_date >= NOW() AND v.status = 'programada'";
+    }
+    
+    // Filtro para registros eliminados lógicamente
+    if (!isset($_GET['include_deleted']) || $_GET['include_deleted'] !== 'true') {
+        $whereConditions[] = "v.deleted_at IS NULL";
     }
     
     // Consulta

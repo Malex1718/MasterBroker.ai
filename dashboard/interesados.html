@@ -274,31 +274,51 @@
                 <!-- Añadir campo oculto para ID de reprogramación -->
                 <input type="hidden" id="rescheduleVisitId" value="">
                 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Fecha de visita</label>
-                    <input type="date" id="visitDate" required
-                        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                        data-tz="UTC-6">
-                    <small class="text-xs text-gray-500">Zona horaria: CDMX (UTC-6)</small>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Fecha de visita</label>
+                        <input type="date" id="visitDate" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                            data-tz="UTC-6">
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Hora</label>
+                        <input type="time" id="visitTime" required
+                            class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                            data-tz="UTC-6">
+                    </div>
                 </div>
                 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Hora</label>
-                    <input type="time" id="visitTime" required
-                        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                        data-tz="UTC-6">
-                    <small class="text-xs text-gray-500">Horario en CDMX</small>
+                <div class="grid grid-cols-2 gap-4">
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Duración</label>
+                        <select id="visitDuration" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
+                            <option value="30">30 minutos</option>
+                            <option value="45">45 minutos</option>
+                            <option value="60" selected>1 hora</option>
+                            <option value="90">1 hora 30 minutos</option>
+                            <option value="120">2 horas</option>
+                        </select>
+                    </div>
+                    
+                    <!-- Nuevo campo: Tipo de visita -->
+                    <div>
+                        <label class="block text-sm font-medium mb-1">Tipo de visita</label>
+                        <select id="visitType" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500" onchange="toggleMeetOptions()">
+                            <option value="presencial" selected>Presencial</option>
+                            <option value="virtual">Virtual</option>
+                        </select>
+                    </div>
                 </div>
                 
-                <div>
-                    <label class="block text-sm font-medium mb-1">Duración (minutos)</label>
-                    <select id="visitDuration" class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500">
-                        <option value="30">30 minutos</option>
-                        <option value="45">45 minutos</option>
-                        <option value="60" selected>1 hora</option>
-                        <option value="90">1 hora 30 minutos</option>
-                        <option value="120">2 horas</option>
-                    </select>
+                <!-- Nuevo contenedor para opciones de visita virtual -->
+                <div id="virtualVisitOptions" class="hidden bg-blue-50 p-3 rounded-lg">
+                    <label class="flex items-center text-sm font-medium text-gray-700 mb-1">
+                        <input type="checkbox" id="createMeetLink" checked class="mr-2">
+                        <span>Generar enlace de Google Meet</span>
+                    </label>
+                    <p class="text-xs text-gray-500 mt-1">Se creará una reunión virtual en Google Meet y se enviará a todos los participantes.</p>
                 </div>
                 
                 <div>
@@ -308,12 +328,13 @@
                         placeholder="Información adicional o instrucciones específicas..."></textarea>
                 </div>
                 
-                <!-- Añadir checkbox para sincronización con Google -->
-                <div class="mb-4">
+                <!-- Mantener checkbox para sincronización con Google -->
+                <div>
                     <label class="flex items-center">
                         <input type="checkbox" id="syncWithGoogle" class="mr-2" checked>
-                        <span>Sincronizar con Google Calendar</span>
+                        <span class="text-sm">Sincronizar con Google Calendar</span>
                     </label>
+                    <p class="text-xs text-gray-500 mt-1">Zona horaria: CDMX (UTC-6)</p>
                 </div>
                 
                 <div class="pt-2">
@@ -406,7 +427,18 @@
     </div>
     
     <div id="footer_container"></div>
-
+    <script>
+        function toggleMeetOptions() {
+            const visitType = document.getElementById('visitType').value;
+            const virtualOptions = document.getElementById('virtualVisitOptions');
+            
+            if (visitType === 'virtual') {
+                virtualOptions.classList.remove('hidden');
+            } else {
+                virtualOptions.classList.add('hidden');
+            }
+        }
+        </script>
     <script src="/assets/js/kanban.js"></script>
     <script src="/assets/js/components_private.js?v=1.0.2"></script>
     <script src="/assets/js/navigation.js?v=1.0.2"></script>

@@ -3,6 +3,10 @@ session_start();
 require_once '../../config/database.php';
 require_once '../../../vendor/autoload.php';
 
+// Cargar variables de entorno
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
+$dotenv->load();
+
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
@@ -26,23 +30,29 @@ try {
     $visitId = $data['visit_id'];
     $visitNotes = $data['notes'] ?? '';
     
-    // Verificar existencia y permisos
+    // Verificar existencia y permisos - Corregido el problema de parámetros duplicados
     $checkStmt = $db->prepare("
         SELECT v.*, m.google_event_id 
         FROM property_visits v
         LEFT JOIN visit_calendar_mappings m ON v.id = m.visit_id
-        WHERE v.id = :visit_id AND (v.user_id = :user_id OR v.created_by = :user_id)
+        WHERE v.id = :visit_id AND (v.user_id = :user_id1 OR v.created_by = :user_id2)
     ");
     
-    $checkStmt->execute([':visit_id' => $visitId, ':user_id' => $userId]);
+    $checkStmt->execute([
+        ':visit_id' => $visitId, 
+        ':user_id1' => $userId,
+        ':user_id2' => $userId
+    ]);
+    
     $visit = $checkStmt->fetch(PDO::FETCH_ASSOC);
     
     if (!$visit) {
         throw new Exception('Visita no encontrada o sin permisos');
     }
     
-    if ($visit['status'] !== 'programada') {
-        throw new Exception('Solo las visitas programadas pueden marcarse como realizadas');
+    // Permitir marcar como realizadas tanto las visitas programadas como las reprogramadas
+    if (!in_array($visit['status'], ['programada', 'reprogramada'])) {
+        throw new Exception('Solo las visitas programadas o reprogramadas pueden marcarse como realizadas');
     }
     
     // Actualizar estado

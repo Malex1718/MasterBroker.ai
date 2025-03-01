@@ -251,6 +251,9 @@ class VisitManager {
             let url = this.API_ENDPOINT + 'get_visits.php';
             const queryParams = [];
             
+            // Añadir filtro para excluir registros eliminados lógicamente
+            filters.include_deleted = filters.include_deleted || 'false';
+            
             Object.entries(filters).forEach(([key, value]) => {
                 if (value !== null && value !== undefined && value !== '') {
                     queryParams.push(`${key}=${encodeURIComponent(value)}`);
@@ -289,6 +292,12 @@ class VisitManager {
     // Crear una nueva visita
     async createVisit(visitData) {
         try {
+            // Revisar si se solicitó una reunión virtual
+            const isVirtual = visitData.is_virtual || false;
+            
+            // No necesitamos generar el enlace de Meet por separado ahora
+            // ya que el PHP lo hace todo en un solo paso
+            
             const response = await fetch(this.API_ENDPOINT + 'create_visit.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -305,6 +314,7 @@ class VisitManager {
             if (result.success) {
                 this.notificationSystem.show(result.message, 'success');
                 await this.loadVisits(); // Recargar visitas
+                
                 return result;
             } else {
                 throw new Error(result.error || 'Error al crear visita');
@@ -313,6 +323,44 @@ class VisitManager {
             console.error('Error creando visita:', error);
             this.notificationSystem.show('Error al crear visita: ' + error.message, 'error');
             throw error;
+        }
+    }
+
+    // Nuevo método para crear un enlace de Google Meet
+    async createGoogleMeetLink(visitData) {
+        try {
+            const response = await fetch('/api/crm/visits/create_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    lead_id: visitData.lead_id,
+                    visit_date: visitData.visit_date,
+                    duration: visitData.duration || 60,
+                    title: visitData.title || 'Visita virtual programada',
+                    description: visitData.description || '',
+                    is_virtual: true,
+                    create_meet_link: true,
+                    sync_with_google: true,
+                    meet_link_only: true // Este flag le indica al PHP que solo queremos el enlace
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success && result.meet_link) {
+                return result.meet_link;
+            } else {
+                console.warn('No se pudo crear el enlace de Meet:', result.message || 'Sin detalles');
+                return null;
+            }
+        } catch (error) {
+            console.error('Error generando enlace de Meet:', error);
+            return null;
         }
     }
 
@@ -419,6 +467,11 @@ class VisitManager {
     // Reprogramar una visita
     async rescheduleVisit(visitId, newDate, reason = '', duration = 60) {
         try {
+            // Primero obtener la información de la visita actual
+            const visitInfo = this.visits.find(v => v.id == visitId);
+            const isVirtual = visitInfo?.is_virtual || false;
+            const currentMeetLink = visitInfo?.meet_link || null;
+            
             const response = await fetch(this.API_ENDPOINT + 'reschedule_visit.php', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
@@ -427,7 +480,10 @@ class VisitManager {
                     visit_id: visitId,
                     new_date: newDate,
                     reason: reason,
-                    duration: duration
+                    duration: duration,
+                    is_virtual: isVirtual,
+                    meet_link: currentMeetLink, // Conservar el enlace existente
+                    update_meet: isVirtual // Indicar si se debe actualizar la reunión
                 })
             });
             
@@ -451,12 +507,46 @@ class VisitManager {
         }
     }
 
+    async deleteVisitPermanently(visitId) {
+        try {
+            const response = await fetch(this.API_ENDPOINT + 'delete_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    visit_id: visitId
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.notificationSystem.show(result.message, 'success');
+                await this.loadVisits(); // Recargar visitas
+                return result;
+            } else {
+                throw new Error(result.error || 'Error al eliminar visita');
+            }
+        } catch (error) {
+            console.error('Error eliminando visita:', error);
+            this.notificationSystem.show('Error al eliminar visita: ' + error.message, 'error');
+            throw error;
+        }
+    }
+
     // Formatear fecha para mostrar
     formatDateTime(dateStr) {
         if (!dateStr) return '';
         
         // Crear una nueva fecha para evitar modificar la original
         const date = new Date(dateStr);
+        
+        // Restar 6 horas para ajustar a la zona horaria de México
+        date.setHours(date.getHours() - 6);
         
         // Configurar opciones de formato
         const options = {
@@ -468,7 +558,7 @@ class VisitManager {
             hour12: true
         };
         
-        return date.toLocaleDateString('es-MX', options);
+        return date.toLocaleString('es-MX', options);
     }
 
     // Formatear duración en minutos a formato legible
@@ -970,8 +1060,8 @@ class AppointmentCalendar {
                         Ver Lead
                     </button>
     
-                    ${appointment.status === 'programada' ? `
-                        <!-- Botones de gestión solo para citas programadas -->
+                    ${(appointment.status === 'programada' || appointment.status === 'reprogramada') ? `
+                        <!-- Botones de gestión para citas programadas y reprogramadas -->
                         <button class="px-3 py-1 text-sm bg-green-600 text-white rounded hover:bg-green-700"
                                 onclick="appointmentCalendar.markAppointmentComplete('${appointment.id}')">
                             Marcar Realizada
@@ -984,11 +1074,41 @@ class AppointmentCalendar {
                                 onclick="appointmentCalendar.cancelAppointment('${appointment.id}')">
                             Cancelar
                         </button>
+                    ` : appointment.status === 'cancelada' ? `
+                        <!-- Botón para eliminar permanentemente si está cancelada -->
+                        <button class="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
+                                onclick="appointmentCalendar.deleteAppointmentPermanently('${appointment.id}')">
+                            Eliminar permanentemente
+                        </button>
                     ` : ''}
                 </div>
             </div>
         `;
-    }    
+    }
+
+    async deleteAppointmentPermanently(appointmentId) {
+        if (!confirm('¿Estás seguro de que deseas eliminar esta visita? Esta acción no se puede deshacer.')) return;
+        
+        try {
+            // Extraer el ID real de visita
+            const idParts = appointmentId.split('-');
+            if (idParts[0] === 'visit' && idParts[1]) {
+                const visitId = idParts[1];
+                
+                const result = await window.visitManager.deleteVisitPermanently(visitId);
+                if (result.success) {
+                    await this.loadAppointments();
+                    this.leadManager.showNotification('Visita eliminada', 'success');
+                    this.clearDetails(); // Cerrar el panel de detalles
+                }
+            } else {
+                this.leadManager.showNotification('ID de visita no válido', 'error');
+            }
+        } catch (error) {
+            console.error('Error al eliminar la visita:', error);
+            this.leadManager.showNotification('Error al eliminar la visita', 'error');
+        }
+    }
 
     // Método para marcar una cita como completada
     async markAppointmentComplete(appointmentId) {
@@ -2509,7 +2629,7 @@ class LeadDetailView {
         }
     }
 
-    // Manejar envío del formulario de agendar visita
+    // Actualización del método handleScheduleVisitSubmit en LeadDetailView
     async handleScheduleVisitSubmit(e) {
         if (e && e.preventDefault) {
             e.preventDefault();
@@ -2522,13 +2642,18 @@ class LeadDetailView {
         const visitDuration = document.getElementById('visitDuration').value;
         const visitNotes = document.getElementById('visitNotes').value;
         const syncWithGoogle = document.getElementById('syncWithGoogle')?.checked ?? true;
-    
+        
+        // Obtener los nuevos campos de visita virtual
+        const visitType = document.getElementById('visitType').value;
+        const isVirtual = visitType === 'virtual';
+        const createMeetLink = isVirtual && document.getElementById('createMeetLink')?.checked;
+
         // Validaciones
         if (!visitDate || !visitTime || !visitDuration) {
             this.leadManager.showNotification('Todos los campos son requeridos', 'error');
             return;
         }
-    
+
         // Validar que la fecha y hora sean futuras
         const selectedDateTime = new Date(`${visitDate}T${visitTime}`);
         const now = new Date();
@@ -2536,7 +2661,7 @@ class LeadDetailView {
             this.leadManager.showNotification('La fecha y hora deben ser futuras', 'error');
             return;
         }
-    
+
         // Verificar zona horaria del usuario
         const userTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone;
         if (userTimezone !== 'America/Mexico_City') {
@@ -2556,17 +2681,20 @@ class LeadDetailView {
             const propertyId = lead?.property_id || null;
             const propertyTitle = lead?.property_title || lead?.original_property_title || 'Sin propiedad';
             
-            // Usar VisitManager para crear la visita
+            // Crear datos para la visita
             const visitData = {
                 lead_id: leadId,
                 property_id: propertyId,
                 visit_date: dateTimeForDB,
                 duration: parseInt(visitDuration),
-                title: 'Visita programada',
+                title: isVirtual ? 'Visita virtual programada' : 'Visita programada',
                 description: visitNotes || '',
-                sync_with_google: syncWithGoogle
+                sync_with_google: syncWithGoogle,
+                is_virtual: isVirtual,
+                create_meet_link: createMeetLink
             };
             
+            // Usar VisitManager para crear la visita
             const result = await window.visitManager.createVisit(visitData);
             
             if (result.success) {
@@ -2588,36 +2716,56 @@ class LeadDetailView {
                 // Mostrar enlace al evento si está disponible
                 if (result.google_synced && result.google_event_url) {
                     setTimeout(() => {
-                        const notification = document.createElement('div');
-                        notification.className = 'fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 max-w-md';
-                        notification.innerHTML = `
+                        // Contenido para la notificación
+                        let notificationContent = `
                             <div class="flex items-center gap-3">
                                 <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                 </svg>
                                 <div>
                                     <h4 class="font-medium">Evento creado en Google Calendar</h4>
-                                    <div class="flex mt-2">
+                                    <div class="flex flex-col gap-1 mt-2">
                                         <a href="${result.google_event_url}" target="_blank" 
-                                           class="text-sm text-blue-600 hover:text-blue-800">
+                                        class="text-sm text-blue-600 hover:text-blue-800">
                                             Abrir en Google Calendar
                                         </a>
+                        `;
+                        
+                        // Agregar enlace de Meet si está disponible
+                        if (isVirtual && result.meet_link) {
+                            notificationContent += `
+                                        <a href="${result.meet_link}" target="_blank" 
+                                        class="text-sm text-green-600 hover:text-green-800 flex items-center">
+                                            <svg class="w-4 h-4 mr-1" viewBox="0 0 24 24" fill="currentColor">
+                                                <path d="M19 12h2a8 8 0 1 0-8 8v-2a6 6 0 1 1 6-6z"/>
+                                            </svg>
+                                            Unirse a Google Meet
+                                        </a>
+                            `;
+                        }
+                        
+                        // Cerrar la estructura HTML
+                        notificationContent += `
                                     </div>
                                 </div>
                                 <button class="ml-auto text-gray-400 hover:text-gray-600" 
                                         onclick="this.parentElement.parentElement.remove()">
                                     <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                              d="M6 18L18 6M6 6l12 12"/>
+                                            d="M6 18L18 6M6 6l12 12"/>
                                     </svg>
                                 </button>
                             </div>
                         `;
+                        
+                        const notification = document.createElement('div');
+                        notification.className = 'fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 max-w-md';
+                        notification.innerHTML = notificationContent;
                         document.body.appendChild(notification);
                         
                         setTimeout(() => {
                             notification.remove();
-                        }, 10000);
+                        }, 15000);
                     }, 2000);
                 }
             } else {

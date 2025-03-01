@@ -3,6 +3,10 @@ session_start();
 require_once '../../config/database.php';
 require_once '../../../vendor/autoload.php';
 
+// Cargar variables de entorno
+$dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../../');
+$dotenv->load();
+
 header('Content-Type: application/json');
 
 if (!isset($_SESSION['user_id'])) {
