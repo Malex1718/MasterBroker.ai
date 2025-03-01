@@ -237,6 +237,428 @@ class NotificationSystem {
     }
 }
 
+class VisitManager {
+    constructor() {
+        this.visits = [];
+        this.API_ENDPOINT = '/api/crm/visits/';
+        this.notificationSystem = new NotificationSystem(); // Reutiliza la clase existente
+    }
+
+    // Cargar visitas desde el servidor
+    async loadVisits(filters = {}) {
+        try {
+            // Construir URL con filtros
+            let url = this.API_ENDPOINT + 'get_visits.php';
+            const queryParams = [];
+            
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value !== null && value !== undefined && value !== '') {
+                    queryParams.push(`${key}=${encodeURIComponent(value)}`);
+                }
+            });
+            
+            if (queryParams.length > 0) {
+                url += '?' + queryParams.join('&');
+            }
+            
+            const response = await fetch(url, {
+                method: 'GET',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include'
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.visits = data.data;
+                return this.visits;
+            } else {
+                throw new Error(data.error || 'Error al cargar visitas');
+            }
+        } catch (error) {
+            console.error('Error cargando visitas:', error);
+            this.notificationSystem.show('Error al cargar visitas: ' + error.message, 'error');
+            return [];
+        }
+    }
+
+    // Crear una nueva visita
+    async createVisit(visitData) {
+        try {
+            const response = await fetch(this.API_ENDPOINT + 'create_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify(visitData)
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.notificationSystem.show(result.message, 'success');
+                await this.loadVisits(); // Recargar visitas
+                return result;
+            } else {
+                throw new Error(result.error || 'Error al crear visita');
+            }
+        } catch (error) {
+            console.error('Error creando visita:', error);
+            this.notificationSystem.show('Error al crear visita: ' + error.message, 'error');
+            throw error;
+        }
+    }
+
+    // Actualizar una visita existente
+    async updateVisit(visitId, updateData) {
+        try {
+            const response = await fetch(this.API_ENDPOINT + 'update_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    visit_id: visitId,
+                    ...updateData
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.notificationSystem.show(result.message, 'success');
+                await this.loadVisits(); // Recargar visitas
+                return result;
+            } else {
+                throw new Error(result.error || 'Error al actualizar visita');
+            }
+        } catch (error) {
+            console.error('Error actualizando visita:', error);
+            this.notificationSystem.show('Error al actualizar visita: ' + error.message, 'error');
+            throw error;
+        }
+    }
+
+    // Marcar una visita como completada
+    async completeVisit(visitId, notes = '', advanceLead = false) {
+        try {
+            const response = await fetch(this.API_ENDPOINT + 'complete_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    visit_id: visitId,
+                    notes: notes,
+                    advance_lead: advanceLead
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.notificationSystem.show(result.message, 'success');
+                await this.loadVisits(); // Recargar visitas
+                return result;
+            } else {
+                throw new Error(result.error || 'Error al completar visita');
+            }
+        } catch (error) {
+            console.error('Error completando visita:', error);
+            this.notificationSystem.show('Error al completar visita: ' + error.message, 'error');
+            throw error;
+        }
+    }
+
+    // Cancelar una visita
+    async cancelVisit(visitId, reason = '') {
+        try {
+            const response = await fetch(this.API_ENDPOINT + 'cancel_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    visit_id: visitId,
+                    reason: reason
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.notificationSystem.show(result.message, 'success');
+                await this.loadVisits(); // Recargar visitas
+                return result;
+            } else {
+                throw new Error(result.error || 'Error al cancelar visita');
+            }
+        } catch (error) {
+            console.error('Error cancelando visita:', error);
+            this.notificationSystem.show('Error al cancelar visita: ' + error.message, 'error');
+            throw error;
+        }
+    }
+
+    // Reprogramar una visita
+    async rescheduleVisit(visitId, newDate, reason = '', duration = 60) {
+        try {
+            const response = await fetch(this.API_ENDPOINT + 'reschedule_visit.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                credentials: 'include',
+                body: JSON.stringify({
+                    visit_id: visitId,
+                    new_date: newDate,
+                    reason: reason,
+                    duration: duration
+                })
+            });
+            
+            if (!response.ok) {
+                throw new Error(`Error HTTP: ${response.status}`);
+            }
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                this.notificationSystem.show(result.message, 'success');
+                await this.loadVisits(); // Recargar visitas
+                return result;
+            } else {
+                throw new Error(result.error || 'Error al reprogramar visita');
+            }
+        } catch (error) {
+            console.error('Error reprogramando visita:', error);
+            this.notificationSystem.show('Error al reprogramar visita: ' + error.message, 'error');
+            throw error;
+        }
+    }
+
+    // Formatear fecha para mostrar
+    formatDateTime(dateStr) {
+        if (!dateStr) return '';
+        
+        // Crear una nueva fecha para evitar modificar la original
+        const date = new Date(dateStr);
+        
+        // Configurar opciones de formato
+        const options = {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: true
+        };
+        
+        return date.toLocaleDateString('es-MX', options);
+    }
+
+    // Formatear duración en minutos a formato legible
+    formatDuration(startDate, endDate) {
+        if (!startDate || !endDate) return '';
+        
+        const start = new Date(startDate);
+        const end = new Date(endDate);
+        const diffMinutes = Math.round((end - start) / 60000);
+        
+        if (diffMinutes < 60) {
+            return `${diffMinutes} minutos`;
+        } else {
+            const hours = Math.floor(diffMinutes / 60);
+            const minutes = diffMinutes % 60;
+            return `${hours} ${hours === 1 ? 'hora' : 'horas'}${minutes > 0 ? ` ${minutes} minutos` : ''}`;
+        }
+    }
+
+    // Obtener color según estado
+    getStatusColor(status) {
+        const colors = {
+            programada: 'bg-blue-100 text-blue-800',
+            realizada: 'bg-green-100 text-green-800',
+            cancelada: 'bg-red-100 text-red-800',
+            reprogramada: 'bg-yellow-100 text-yellow-800',
+            no_asistio: 'bg-gray-100 text-gray-800'
+        };
+        
+        return colors[status] || colors.programada;
+    }
+
+    // Integrar con el calendario de leads
+    integrateWithLeadCalendar(appointmentCalendar) {
+        if (!appointmentCalendar) return;
+        
+        const loadCalendarData = async () => {
+            const visits = await this.loadVisits();
+            
+            // Convertir visitas al formato que espera el calendario
+            const appointments = visits.map(visit => ({
+                id: `visit-${visit.id}`,
+                leadId: visit.lead_id,
+                leadName: visit.lead_name,
+                date: new Date(visit.visit_date),
+                title: visit.title || 'Visita programada',
+                description: visit.description || '',
+                status: visit.status,
+                propertyTitle: visit.property_title || 'Sin propiedad',
+                type: 'visita',
+                googleEventUrl: visit.event_url
+            }));
+            
+            // Actualizar el calendario
+            appointmentCalendar.appointments = appointments;
+            appointmentCalendar.renderCalendar();
+            
+            return appointments;
+        };
+        
+        // Reemplazar el método original de loadAppointments
+        appointmentCalendar.loadAppointments = loadCalendarData;
+        
+        // Adaptar métodos existentes
+        const originalMarkComplete = appointmentCalendar.markAppointmentComplete;
+        appointmentCalendar.markAppointmentComplete = async function(appointmentId) {
+            // Extraer el ID de visita real
+            const idParts = appointmentId.split('-');
+            if (idParts[0] === 'visit' && idParts[1]) {
+                // Usar el sistema de visitas
+                return await visitManager.completeVisit(idParts[1]);
+            } else {
+                // Usar el método original para otros tipos
+                return await originalMarkComplete.call(this, appointmentId);
+            }
+        };
+        
+        const originalCancelAppointment = appointmentCalendar.cancelAppointment;
+        appointmentCalendar.cancelAppointment = async function(appointmentId) {
+            // Extraer el ID de visita real
+            const idParts = appointmentId.split('-');
+            if (idParts[0] === 'visit' && idParts[1]) {
+                // Solicitar motivo de cancelación
+                const reason = prompt('Por favor, ingrese el motivo de la cancelación:');
+                if (reason === null) return; // Usuario canceló el prompt
+                
+                // Usar el sistema de visitas
+                return await visitManager.cancelVisit(idParts[1], reason);
+            } else {
+                // Usar el método original para otros tipos
+                return await originalCancelAppointment.call(this, appointmentId);
+            }
+        };
+        
+        const originalRescheduleAppointment = appointmentCalendar.rescheduleAppointment;
+        appointmentCalendar.rescheduleAppointment = async function(appointmentId) {
+            // Extraer el ID de visita real
+            const idParts = appointmentId.split('-');
+            if (idParts[0] === 'visit' && idParts[1]) {
+                // Mostrar modal de reprogramación
+                const modal = document.getElementById('scheduleVisitModal');
+                if (!modal) return;
+                
+                // Buscar la visita
+                const visitId = idParts[1];
+                const visit = visitManager.visits.find(v => v.id == visitId);
+                if (!visit) return;
+                
+                // Configurar formulario
+                document.getElementById('rescheduleVisitId').value = visitId;
+                document.getElementById('scheduleVisitLeadId').value = visit.lead_id;
+                
+                // Formato fecha y hora actuales
+                const visitDate = new Date(visit.visit_date);
+                document.getElementById('visitDate').value = visitDate.toISOString().split('T')[0];
+                document.getElementById('visitTime').value = visitDate.toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                
+                // Calcular duración
+                const startDate = new Date(visit.visit_date);
+                const endDate = new Date(visit.end_time);
+                const durationMinutes = Math.round((endDate - startDate) / 60000);
+                document.getElementById('visitDuration').value = durationMinutes;
+                
+                // Agregar nota sobre reprogramación
+                document.getElementById('visitNotes').value = `Visita reprogramada. Original: ${
+                    visitManager.formatDateTime(visit.visit_date)
+                }`;
+                
+                // Mostrar modal
+                modal.style.display = 'flex';
+                
+                // Cambiar título del modal
+                const modalTitle = modal.querySelector('h3');
+                if (modalTitle) modalTitle.textContent = 'Reprogramar Visita';
+                
+                // Cambiar el manejador del formulario
+                const form = document.getElementById('scheduleVisitForm');
+                if (form) {
+                    form.onsubmit = async function(e) {
+                        e.preventDefault();
+                        
+                        const newDate = document.getElementById('visitDate').value;
+                        const newTime = document.getElementById('visitTime').value;
+                        const duration = document.getElementById('visitDuration').value;
+                        const notes = document.getElementById('visitNotes').value;
+                        
+                        const datetime = `${newDate}T${newTime}`;
+                        
+                        try {
+                            await visitManager.rescheduleVisit(
+                                visitId, 
+                                datetime, 
+                                notes, 
+                                duration
+                            );
+                            
+                            // Cerrar modal y recargar
+                            modal.style.display = 'none';
+                            await loadCalendarData();
+                            
+                        } catch (error) {
+                            console.error('Error al reprogramar:', error);
+                        }
+                    };
+                }
+            } else {
+                // Usar el método original para otros tipos
+                return await originalRescheduleAppointment.call(this, appointmentId);
+            }
+        };
+        
+        // Cargar datos iniciales
+        loadCalendarData();
+    }
+}
+
+// Inicializar y exportar el gestor de visitas
+window.visitManager = new VisitManager();
+
+// Integrar con el calendario existente al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    if (window.appointmentCalendar) {
+        window.visitManager.integrateWithLeadCalendar(window.appointmentCalendar);
+    }
+});
+
 class AppointmentCalendar {
     constructor(leadManager) {
         this.leadManager = leadManager;
@@ -573,9 +995,20 @@ class AppointmentCalendar {
         if (!confirm('¿Confirmar que la visita fue realizada?')) return;
         
         try {
-            const result = await this.updateAppointmentStatus(appointmentId, 'realizada');
-            if (result) {
-                this.leadManager.showNotification('Visita marcada como realizada', 'success');
+            // Extraer el ID real de visita
+            const idParts = appointmentId.split('-');
+            if (idParts[0] === 'visit' && idParts[1]) {
+                const visitId = idParts[1];
+                const notes = prompt('Notas sobre la visita (opcional):') || '';
+                
+                const result = await window.visitManager.completeVisit(visitId, notes);
+                if (result.success) {
+                    await this.loadAppointments();
+                    this.leadManager.showNotification('Visita marcada como realizada', 'success');
+                }
+            } else {
+                // Usar el método anterior para compatibilidad
+                await this.updateAppointmentStatus(appointmentId, 'realizada');
             }
         } catch (error) {
             console.error('Error al marcar visita como realizada:', error);
@@ -589,35 +1022,43 @@ class AppointmentCalendar {
         if (reason === null) return; // Usuario canceló el prompt
         
         try {
-            const appointment = this.appointments.find(a => a.id === appointmentId);
-            if (!appointment) throw new Error('Cita no encontrada');
-
-            const updateData = {
-                id: appointment.leadId,
-                activity_type: 'visita',
-                sub_state: 'cancelada',
-                description: `Visita cancelada. Motivo: ${reason || 'No especificado'}`,
-                activity_date: new Date().toISOString()
-            };
-
-            const response = await fetch(this.leadManager.API_ENDPOINT, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(updateData)
-            });
-
-            const result = await response.json();
-            
-            if (result.success) {
-                await this.syncCancelWithGoogle(appointment.leadId, appointmentId);
-                await this.leadManager.loadLeads();
-                await this.loadAppointments();
-                this.leadManager.showNotification('Visita cancelada correctamente', 'success');
+            // Extraer el ID real de visita
+            const idParts = appointmentId.split('-');
+            if (idParts[0] === 'visit' && idParts[1]) {
+                const visitId = idParts[1];
+                
+                const result = await window.visitManager.cancelVisit(visitId, reason);
+                if (result.success) {
+                    await this.loadAppointments();
+                    this.leadManager.showNotification('Visita cancelada correctamente', 'success');
+                }
             } else {
-                throw new Error(result.message || 'Error al cancelar la visita');
+                // Usar el método anterior para compatibilidad
+                const appointment = this.appointments.find(a => a.id === appointmentId);
+                if (!appointment) throw new Error('Cita no encontrada');
+    
+                const updateData = {
+                    id: appointment.leadId,
+                    activity_type: 'visita',
+                    sub_state: 'cancelada',
+                    description: `Visita cancelada. Motivo: ${reason || 'No especificado'}`,
+                    activity_date: new Date().toISOString()
+                };
+    
+                const response = await fetch(this.leadManager.API_ENDPOINT, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    credentials: 'include',
+                    body: JSON.stringify(updateData)
+                });
+    
+                const result = await response.json();
+                
+                if (result.success) {
+                    await this.leadManager.loadLeads();
+                    await this.loadAppointments();
+                    this.leadManager.showNotification('Visita cancelada correctamente', 'success');
+                }
             }
         } catch (error) {
             console.error('Error al cancelar visita:', error);
@@ -628,53 +1069,89 @@ class AppointmentCalendar {
     // Método para reprogramar una cita
     async rescheduleAppointment(appointmentId) {
         try {
-            const appointment = this.appointments.find(a => a.id === appointmentId);
-            if (!appointment) throw new Error('Cita no encontrada');
+            // Extraer el ID real de visita
+            const idParts = appointmentId.split('-');
+            if (idParts[0] === 'visit' && idParts[1]) {
+                const visitId = idParts[1];
+                
+                // Buscar la visita en el nuevo sistema
+                const visitData = window.visitManager.visits.find(v => v.id == visitId);
+                
+                if (!visitData) throw new Error('Visita no encontrada');
+                
+                // Configurar el modal de agendar visita con los datos actuales
+                const modal = document.getElementById('scheduleVisitModal');
+                if (!modal) return;
+                
+                document.getElementById('scheduleVisitLeadId').value = visitData.lead_id;
+                
+                // Configurar fecha y hora para la reprogramación
+                const visitDate = new Date(visitData.visit_date);
+                document.getElementById('visitDate').value = visitDate.toISOString().split('T')[0];
+                document.getElementById('visitTime').value = visitDate.toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                
+                // Calcular duración
+                const duration = visitData.duration || 60;
+                const durationSelect = document.getElementById('visitDuration');
+                if (durationSelect) {
+                    // Intentar seleccionar el valor correspondiente
+                    const optionExists = Array.from(durationSelect.options).some(opt => opt.value == duration);
+                    if (optionExists) {
+                        durationSelect.value = duration;
+                    } else {
+                        // Si no existe, usar la opción por defecto
+                        durationSelect.selectedIndex = 0;
+                    }
+                }
+                
+                // Notas de reprogramación
+                const notesField = document.getElementById('visitNotes');
+                notesField.value = `Visita reprogramada. Original: ${visitData.visit_date}\n${visitData.description || ''}`;
+                
+                // Configurar ID de visita para reprogramación
+                document.getElementById('rescheduleVisitId').value = visitId;
+                
+                // Mostrar el modal
+                modal.style.display = 'flex';
+                
+                // Cambiar título del modal
+                const modalTitle = modal.querySelector('h3');
+                if (modalTitle) modalTitle.textContent = 'Reprogramar Visita';
+            } else {
+                // Usar el método anterior para compatibilidad
+                const appointment = this.appointments.find(a => a.id === appointmentId);
+                if (!appointment) throw new Error('Cita no encontrada');
     
-            // Marcar la cita actual como reprogramada
-            const updateData = {
-                id: appointment.leadId,
-                activity_type: 'visita',
-                sub_state: 'reprogramada',
-                description: 'Visita reprogramada',
-                activity_date: new Date().toISOString()
-            };
-    
-            await fetch(this.leadManager.API_ENDPOINT, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(updateData)
-            });
-    
-            // Configurar el modal de agendar visita con los datos actuales
-            const modal = document.getElementById('scheduleVisitModal');
-            const currentDate = new Date(appointment.date);
-            
-            document.getElementById('scheduleVisitLeadId').value = appointment.leadId;
-            document.getElementById('visitDate').value = currentDate.toISOString().split('T')[0];
-            document.getElementById('visitTime').value = currentDate.toLocaleTimeString('es-MX', {
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: false
-            });
-            
-            // Mostrar el modal
-            modal.style.display = 'flex';
-            
-            // Actualizar el mensaje de descripción para indicar que es una reprogramación
-            const notesField = document.getElementById('visitNotes');
-            // Usar el formatDateTime del leadManager
-            const originalDateFormatted = this.leadManager.formatDateTime(appointment.date);
-            notesField.value = `Visita reprogramada. Cita original: ${originalDateFormatted}`;
-            
+                // Configurar el modal de agendar visita con los datos actuales
+                const modal = document.getElementById('scheduleVisitModal');
+                const currentDate = new Date(appointment.date);
+                
+                document.getElementById('scheduleVisitLeadId').value = appointment.leadId;
+                document.getElementById('visitDate').value = currentDate.toISOString().split('T')[0];
+                document.getElementById('visitTime').value = currentDate.toLocaleTimeString('es-MX', {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                });
+                
+                // Mostrar el modal
+                modal.style.display = 'flex';
+                
+                // Actualizar el mensaje de descripción para indicar que es una reprogramación
+                const notesField = document.getElementById('visitNotes');
+                const originalDateFormatted = this.leadManager.formatDateTime(appointment.date);
+                notesField.value = `Visita reprogramada. Cita original: ${originalDateFormatted}`;
+            }
         } catch (error) {
             console.error('Error al reprogramar visita:', error);
             this.leadManager.showNotification('Error al reprogramar la visita', 'error');
         }
     }
+    
 
     // Método para sincronizar la cancelación con Google Calendar
     async syncCancelWithGoogle(leadId, appointmentId) {
@@ -1745,9 +2222,49 @@ class LeadDetailView {
         const form = document.getElementById('scheduleVisitForm');
         if (form) {
             // Remover handlers previos para evitar duplicados
-            const boundHandler = this.handleScheduleVisitSubmit.bind(this);
-            form.removeEventListener('submit', boundHandler);
-            form.addEventListener('submit', boundHandler);
+            form.removeEventListener('submit', this.handleScheduleVisitSubmit.bind(this));
+            form.addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const rescheduleId = document.getElementById('rescheduleVisitId').value;
+                
+                if (rescheduleId) {
+                    // Es una reprogramación
+                    const visitDate = document.getElementById('visitDate').value;
+                    const visitTime = document.getElementById('visitTime').value;
+                    const visitDuration = document.getElementById('visitDuration').value;
+                    const visitNotes = document.getElementById('visitNotes').value;
+                    const syncWithGoogle = document.getElementById('syncWithGoogle')?.checked ?? true;
+                    
+                    try {
+                        const datetime = `${visitDate}T${visitTime}`;
+                        const result = await window.visitManager.rescheduleVisit(
+                            rescheduleId,
+                            datetime,
+                            visitNotes,
+                            visitDuration,
+                            syncWithGoogle
+                        );
+                        
+                        if (result.success) {
+                            this.leadManager.showNotification('Visita reprogramada correctamente', 'success');
+                            await window.appointmentCalendar.loadAppointments();
+                            document.getElementById('scheduleVisitModal').style.display = 'none';
+                            document.getElementById('scheduleVisitForm').reset();
+                            document.getElementById('rescheduleVisitId').value = '';
+                        }
+                    } catch (error) {
+                        console.error('Error al reprogramar:', error);
+                        this.leadManager.showNotification(
+                            `Error: ${error.message || 'No se pudo reprogramar la visita'}`,
+                            'error'
+                        );
+                    }
+                } else {
+                    // Es una nueva visita
+                    await this.handleScheduleVisitSubmit(e);
+                }
+            });
         }
     }
 
@@ -1756,6 +2273,7 @@ class LeadDetailView {
         if (modal) {
             modal.style.display = 'none';
             document.getElementById('scheduleVisitForm').reset();
+            document.getElementById('rescheduleVisitId').value = ''; // Importante!
         }
     }
     
@@ -1994,7 +2512,7 @@ class LeadDetailView {
     // Manejar envío del formulario de agendar visita
     async handleScheduleVisitSubmit(e) {
         if (e && e.preventDefault) {
-            e.preventDefault();  // Asegurar que se previene el comportamiento por defecto
+            e.preventDefault();
         }
         
         // Obtener datos del formulario
@@ -2003,6 +2521,7 @@ class LeadDetailView {
         const visitTime = document.getElementById('visitTime').value;
         const visitDuration = document.getElementById('visitDuration').value;
         const visitNotes = document.getElementById('visitNotes').value;
+        const syncWithGoogle = document.getElementById('syncWithGoogle')?.checked ?? true;
     
         // Validaciones
         if (!visitDate || !visitTime || !visitDuration) {
@@ -2028,226 +2547,81 @@ class LeadDetailView {
         }
         
         try {
-            // Crear fecha local (ya está en UTC-6 por la configuración del navegador)
+            // Crear fecha local
             const localDateTime = new Date(`${visitDate}T${visitTime}`);
-            
-            // El ajuste de -6 horas ya se realiza en otras partes del código cuando sea necesario
             const dateTimeForDB = localDateTime.toISOString();
             
-            // Formatear para la descripción
-            const localTimeFormatted = new Intl.DateTimeFormat('es-MX', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                hour: '2-digit',
-                minute: '2-digit',
-                hour12: true,
-                timeZone: 'America/Mexico_City'
-            }).format(localDateTime);
-    
+            // Obtener información del lead actual
+            const lead = this.leadManager.leads.find(l => l.id == leadId);
+            const propertyId = lead?.property_id || null;
+            const propertyTitle = lead?.property_title || lead?.original_property_title || 'Sin propiedad';
+            
+            // Usar VisitManager para crear la visita
             const visitData = {
-                id: leadId,
-                activity_type: 'visita',
-                status: 'visita',
-                sub_state: 'programada',
-                description: `Visita programada para ${localTimeFormatted}. ${visitNotes ? 'Notas: ' + visitNotes : ''}`,
+                lead_id: leadId,
+                property_id: propertyId,
+                visit_date: dateTimeForDB,
                 duration: parseInt(visitDuration),
-                activity_date: dateTimeForDB,
-                activity_data: JSON.stringify({
-                    visit_date: dateTimeForDB,
-                    duration: visitDuration,
-                    notes: visitNotes,
-                    scheduled_by: this.leadManager.currentUser || 'sistema'
-                })
+                title: 'Visita programada',
+                description: visitNotes || '',
+                sync_with_google: syncWithGoogle
             };
             
-            // Enviar a la API
-            const response = await fetch(this.leadManager.API_ENDPOINT, {
-                method: 'PUT',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                credentials: 'include',
-                body: JSON.stringify(visitData)
-            });
-            
-            const result = await response.json();
+            const result = await window.visitManager.createVisit(visitData);
             
             if (result.success) {
-                // Obtener ID de la actividad
-                let activityId = null;
-                if (result.data && result.data.activities) {
-                    const activities = typeof result.data.activities === 'string' ? 
-                        JSON.parse(result.data.activities) : result.data.activities;
-                    
-                    if (Array.isArray(activities) && activities.length > 0) {
-                        const visitActivity = activities.find(act => 
-                            act.type === 'visita' || act.activity_type === 'visita'
-                        );
-                        if (visitActivity) {
-                            activityId = visitActivity.id;
-                        }
-                    }
-                }
-                
-                // Si no encontramos el ID, consultar actividades
-                if (!activityId) {
-                    try {
-                        const activitiesResponse = await fetch(
-                            `${this.leadManager.API_ENDPOINT}?action=get_activities&lead_id=${leadId}`
-                        );
-                        const activitiesData = await activitiesResponse.json();
-                        
-                        if (activitiesData.success && Array.isArray(activitiesData.data)) {
-                            const visitActivity = activitiesData.data.find(act => 
-                                (act.type === 'visita' || act.activity_type === 'visita') && 
-                                act.sub_state === 'programada'
-                            );
-                            if (visitActivity) {
-                                activityId = visitActivity.id;
-                            }
-                        }
-                    } catch (error) {
-                        console.warn('No se pudo obtener el ID de la actividad:', error);
-                    }
-                }
-                
                 // Actualizar interfaz
                 this.leadManager.showNotification('Visita programada correctamente', 'success');
                 await this.leadManager.loadLeads();
                 this.leadManager.detailView.show(leadId);
                 this.closeScheduleVisitModal();
                 
-                // Refrescar calendario
-                if (window.appointmentCalendar) {
-                    await window.appointmentCalendar.loadAppointments();
-                }
-    
-                // Actualizar el estado del lead a 'visita' si no lo está ya
-                const lead = this.leadManager.leads.find(l => l.id == leadId);
-                if (lead && lead.status !== 'visita') {
-                    await this.leadManager.handleDrop(
-                        { preventDefault: () => {} },
-                        { dataset: { id: 'visita' } }
-                    );
-                }
-                
-                // Sincronizar con Google Calendar
-                try {
-                    const googleStatusResponse = await fetch('/api/auth/google_status.php');
-                    const googleStatus = await googleStatusResponse.json();
-                    
-                    if (googleStatus.success && googleStatus.connected && googleStatus.token_valid) {
-                        // Calcular hora de fin
-                        const endTime = new Date(localDateTime);
-                        endTime.setMinutes(endTime.getMinutes() + parseInt(visitDuration));
-                        
-                        // Obtener información del lead
-                        const leadData = result.data || this.leadManager.leads.find(l => l.id == leadId);
-                        const leadName = leadData?.name || 'Cliente';
-                        const propertyTitle = leadData?.property_title || leadData?.original_property_title || 'Propiedad';
-                        
-                        // Datos del evento
-                        const eventData = {
-                            summary: `Visita: ${leadName}`,
-                            location: propertyTitle,
-                            description: `Visita programada con ${leadName} para propiedad: ${propertyTitle}.\n\n${visitNotes || ''}`,
-                            start: {
-                                dateTime: localDateTime.toISOString(),
-                                timeZone: 'America/Mexico_City'
-                            },
-                            end: {
-                                dateTime: endTime.toISOString(),
-                                timeZone: 'America/Mexico_City'
-                            },
-                            reminders: {
-                                useDefault: false,
-                                overrides: [
-                                    {method: 'popup', minutes: 30},
-                                    {method: 'email', minutes: 60}
-                                ]
-                            },
-                            colorId: '4',
-                            source: {
-                                title: 'Sistema CRM MasterBroker',
-                                url: window.location.origin
-                            }
-                        };
-                        
-                        // Crear evento en Google Calendar
-                        const syncResponse = await fetch('/api/crm/calendario/create_visit_event.php', {
-                            method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/json',
-                                'Accept': 'application/json'
-                            },
-                            credentials: 'include',
-                            body: JSON.stringify({
-                                lead_id: leadId,
-                                activity_id: activityId,
-                                event_data: eventData
-                            })
-                        });
-                        
-                        const syncResult = await syncResponse.json();
-                        
-                        if (syncResult.success) {
-                            this.leadManager.showNotification(
-                                'Visita sincronizada con Google Calendar',
-                                'success'
-                            );
-                            
-                            // Mostrar enlace al evento si está disponible
-                            if (syncResult.event_url) {
-                                setTimeout(() => {
-                                    const notification = document.createElement('div');
-                                    notification.className = 'fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 max-w-md';
-                                    notification.innerHTML = `
-                                        <div class="flex items-center gap-3">
-                                            <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-                                            </svg>
-                                            <div>
-                                                <h4 class="font-medium">Evento creado en Google Calendar</h4>
-                                                <div class="flex mt-2">
-                                                    <a href="${syncResult.event_url}" target="_blank" 
-                                                       class="text-sm text-blue-600 hover:text-blue-800">
-                                                        Abrir en Google Calendar
-                                                    </a>
-                                                </div>
-                                            </div>
-                                            <button class="ml-auto text-gray-400 hover:text-gray-600" 
-                                                    onclick="this.parentElement.parentElement.remove()">
-                                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
-                                                          d="M6 18L18 6M6 6l12 12"/>
-                                                </svg>
-                                            </button>
-                                        </div>
-                                    `;
-                                    document.body.appendChild(notification);
-                                    
-                                    setTimeout(() => {
-                                        notification.remove();
-                                    }, 10000);
-                                }, 2000);
-                            }
-                        }
-                    }
-                } catch (syncError) {
-                    console.warn('Error al sincronizar con Google Calendar:', syncError);
-                }
-                
                 // Configurar recordatorio
                 if (this.leadManager.reminderSystem) {
                     this.leadManager.reminderSystem.createReminder(
-                        result.data || { id: leadId },
+                        { id: leadId, name: lead?.name || 'Cliente' },
                         'scheduled_visit',
                         localDateTime
                     );
                 }
+                
+                // Mostrar enlace al evento si está disponible
+                if (result.google_synced && result.google_event_url) {
+                    setTimeout(() => {
+                        const notification = document.createElement('div');
+                        notification.className = 'fixed bottom-4 right-4 bg-white p-4 rounded-lg shadow-lg z-50 max-w-md';
+                        notification.innerHTML = `
+                            <div class="flex items-center gap-3">
+                                <svg class="w-6 h-6 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                <div>
+                                    <h4 class="font-medium">Evento creado en Google Calendar</h4>
+                                    <div class="flex mt-2">
+                                        <a href="${result.google_event_url}" target="_blank" 
+                                           class="text-sm text-blue-600 hover:text-blue-800">
+                                            Abrir en Google Calendar
+                                        </a>
+                                    </div>
+                                </div>
+                                <button class="ml-auto text-gray-400 hover:text-gray-600" 
+                                        onclick="this.parentElement.parentElement.remove()">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                              d="M6 18L18 6M6 6l12 12"/>
+                                    </svg>
+                                </button>
+                            </div>
+                        `;
+                        document.body.appendChild(notification);
+                        
+                        setTimeout(() => {
+                            notification.remove();
+                        }, 10000);
+                    }, 2000);
+                }
             } else {
-                throw new Error(result.message || 'Error al programar visita');
+                throw new Error(result.error || 'Error al programar visita');
             }
         } catch (error) {
             console.error('Error al programar visita:', error);
@@ -3523,7 +3897,11 @@ function closeLeadDetailModal() {
 // Modificar la inicialización de LeadManager para incluir el calendario
 document.addEventListener('DOMContentLoaded', () => {
     window.leadManager = new LeadManager();
+    window.visitManager = new VisitManager();
     window.appointmentCalendar = new AppointmentCalendar(window.leadManager);
+    
+    // Integrar VisitManager con AppointmentCalendar
+    window.visitManager.integrateWithLeadCalendar(window.appointmentCalendar);
     
     // Exponer funciones globalmente
     window.showNewLeadModal = showNewLeadModal;

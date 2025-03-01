@@ -271,20 +271,22 @@
             
             <form id="scheduleVisitForm" class="space-y-4">
                 <input type="hidden" id="scheduleVisitLeadId">
+                <!-- Añadir campo oculto para ID de reprogramación -->
+                <input type="hidden" id="rescheduleVisitId" value="">
                 
                 <div>
                     <label class="block text-sm font-medium mb-1">Fecha de visita</label>
                     <input type="date" id="visitDate" required
-                          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                          data-tz="UTC-6">
+                        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                        data-tz="UTC-6">
                     <small class="text-xs text-gray-500">Zona horaria: CDMX (UTC-6)</small>
                 </div>
                 
                 <div>
                     <label class="block text-sm font-medium mb-1">Hora</label>
                     <input type="time" id="visitTime" required
-                          class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                          data-tz="UTC-6">
+                        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                        data-tz="UTC-6">
                     <small class="text-xs text-gray-500">Horario en CDMX</small>
                 </div>
                 
@@ -302,13 +304,21 @@
                 <div>
                     <label class="block text-sm font-medium mb-1">Notas adicionales</label>
                     <textarea id="visitNotes" rows="3"
-                           class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
-                           placeholder="Información adicional o instrucciones específicas..."></textarea>
+                        class="w-full p-2 border rounded focus:ring-2 focus:ring-blue-500"
+                        placeholder="Información adicional o instrucciones específicas..."></textarea>
+                </div>
+                
+                <!-- Añadir checkbox para sincronización con Google -->
+                <div class="mb-4">
+                    <label class="flex items-center">
+                        <input type="checkbox" id="syncWithGoogle" class="mr-2" checked>
+                        <span>Sincronizar con Google Calendar</span>
+                    </label>
                 </div>
                 
                 <div class="pt-2">
                     <button type="submit" 
-                          class="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">
+                        class="w-full py-2 px-4 bg-green-600 text-white rounded hover:bg-green-700">
                         Agendar Visita
                     </button>
                 </div>

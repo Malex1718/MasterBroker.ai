@@ -1,4 +1,6 @@
 <?php
+require_once __DIR__ . '/../../vendor/autoload.php';
+
 // Prevenir cualquier salida antes de los headers
 ob_start();
 
@@ -57,12 +59,11 @@ header('Access-Control-Allow-Methods: POST');
 header('Access-Control-Allow-Headers: Content-Type');
 
 // Incluir configuración de base de datos
-require_once __DIR__ . '../../../api/config/database.php';
+require_once __DIR__ . '/../../api/config/database.php';
 
 // Cargar variables de entorno
 $dotenv = Dotenv\Dotenv::createImmutable(__DIR__ . '/../../'); // Ajusta esta ruta según donde esté tu .env
 $dotenv->load();
-
 
 class Logger {
     private $logFile;
