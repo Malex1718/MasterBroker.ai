@@ -1,0 +1,1134 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Términos y Condiciones - Master Broker</title>
+    <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2" alt="Icono Master Broker">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/animation.css?v=1.0.1">
+    <style>
+        /* Encapsulamos todos los estilos dentro de .terminos-container */
+        .terminos-container {
+            margin-top: 76.8px;
+            background: var(--body);
+            font-family: var(--txt);
+            color: var(--colortxt);
+            line-height: 1.6;
+        }
+
+        .terminos-container * {
+            box-sizing: border-box;
+        }
+
+        .terminos-header {
+            background-color: var(--contenedor);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative; /* Cambiado de sticky a relative */
+            z-index: 1; /* Reducido el z-index */
+        }
+
+        .terminos-container .container {
+            display: flex;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .terminos-sidebar {
+            width: 300px;
+            position: sticky;
+            top: 120px;
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: var(--contenedor);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .terminos-content {
+            flex: 1;
+            max-width: 800px;
+            padding: 0 1rem;
+        }
+
+        .terminos-nav-link {
+            display: block;
+            padding: 0.875rem;
+            color: var(--colortxt);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            margin-bottom: 0.5rem;
+            font-family: var(--txt);
+            transition: all 0.2s;
+        }
+
+        .terminos-nav-link:hover {
+            background-color: var(--body);
+            border-left-color: var(--principal);
+            color: var(--principal);
+        }
+
+        .terminos-nav-link.active {
+            background-color: var(--body);
+            border-left-color: var(--principal);
+            color: var(--principal);
+            font-family: var(--txt-bold);
+        }
+
+        .terminos-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--contenedor);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .terminos-container h1 {
+            font-family: var(--titulo);
+            font-size: 2.5rem;
+            color: var(--colortxt);
+            margin-bottom: 1rem;
+        }
+
+        .terminos-container h2 {
+            font-family: var(--titulo);
+            font-size: 1.8rem;
+            color: var(--principal);
+            margin: 1.5rem 0;
+        }
+
+        .terminos-container h3 {
+            font-family: var(--titulo);
+            font-size: 1.4rem;
+            color: var(--principal_2);
+            margin: 1.5rem 0 1rem;
+        }
+
+        .terminos-container p,
+        .terminos-container li {
+            font-family: var(--txt);
+            color: var(--colorp);
+            font-size: 16px;
+            margin-bottom: 1rem;
+        }
+
+        .terminos-container ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .terminos-last-update {
+            font-family: var(--txt);
+            color: var(--colorp);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .terminos-back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--principal);
+            color: var(--colorwt);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: background-color 0.2s;
+            z-index: 2;
+        }
+
+        .terminos-back-to-top:hover {
+            background: var(--principal_2);
+        }
+
+        
+        .documentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .documento-card {
+            background: var(--body);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .documento-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .documento-card h3 {
+            color: var(--principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .documento-card p {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .documento-link {
+            color: var(--principal);
+            text-decoration: none;
+            font-family: var(--txt-bold);
+            transition: color 0.2s;
+        }
+
+        .documento-link:hover {
+            color: var(--principal_2);
+        }
+
+        .documento-card.current {
+            background: var(--principal);
+            border-color: var(--principal);
+        }
+
+        .documento-card.current h3,
+        .documento-card.current p {
+            color: var(--colorwt);
+        }
+
+        .documento-card.current .documento-link {
+            color: var(--colorwt);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        @media (max-width: 1024px) {
+            .terminos-container .container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .terminos-sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                margin-bottom: 2rem;
+            }
+
+            .terminos-content {
+                padding: 0;
+            }
+
+            .terminos-container p,
+            .terminos-container li {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .terminos-container {
+                margin-top: 76.8px; /* Ajustado para móviles */
+            }
+
+            .terminos-header {
+                padding: 1rem;
+            }
+
+            .terminos-section {
+                padding: 1rem;
+            }
+
+            .terminos-container h1 {
+                font-size: 2rem;
+            }
+
+            .terminos-container h2 {
+                font-size: 1.5rem;
+            }
+
+            .terminos-container h3 {
+                font-size: 1.2rem;
+            }
+
+            .terminos-container p,
+            .terminos-container li {
+                font-size: 12px;
+            }
+            
+            .documentos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="nav-container"></div>
+    </div>
+    <div class="terminos-container">
+        <header class="terminos-header">
+            <h1>Términos y Condiciones</h1>
+            <p class="terminos-last-update">Última actualización: 6 de febrero de 2025</p>
+        </header>
+
+        <div class="container">
+            <nav class="terminos-sidebar">
+                <a href="#introduccion" class="terminos-nav-link">1. Introducción</a>
+                <a href="#definiciones" class="terminos-nav-link">2. Definiciones</a>
+                <a href="#alcance" class="terminos-nav-link">3. Alcance Internacional</a>
+                <a href="#registro" class="terminos-nav-link">4. Registro y Cuentas</a>
+                <a href="#publicacion" class="terminos-nav-link">5. Publicación de Propiedades</a>
+                <a href="#integraciones" class="terminos-nav-link">6. Integraciones</a>
+                <a href="#datos" class="terminos-nav-link">7. Gestión de Datos</a>
+                <a href="#seguridad" class="terminos-nav-link">8. Seguridad</a>
+                <a href="#datos-sensibles" class="terminos-nav-link">9. Datos Sensibles</a>
+                <a href="#auditoria" class="terminos-nav-link">10. Auditoría</a>
+                <a href="#documentos-relacionados" class="terminos-nav-link">11. Documentos Legales Relacionados</a>
+            </nav>
+
+            <main class="terminos-content">
+                <section id="introduccion" class="terminos-section">
+                    <h2>1. Introducción</h2>
+                    <p>Bienvenido a Master Broker, la plataforma inmobiliaria que conecta propiedades con personas. Estos Términos y Condiciones establecen las reglas y regulaciones para el uso de nuestros servicios, incluyendo:</p>
+                    <ul>
+                        <li>El listado público de propiedades</li>
+                        <li>El sistema CRM para asesores inmobiliarios</li>
+                        <li>Las integraciones con servicios externos</li>
+                        <li>El uso de herramientas de inteligencia artificial</li>
+                    </ul>
+                    <p>Al utilizar nuestra plataforma, usted acepta estos términos en su totalidad. Si no está de acuerdo con alguna parte de estos términos, le recomendamos no utilizar nuestros servicios.</p>
+                </section>
+
+                <section id="definiciones" class="terminos-section">
+                    <h2>2. Definiciones</h2>
+                    <h3>2.1 Términos Generales</h3>
+                    <ul>
+                        <li><strong>Plataforma:</strong> El sitio web Master Broker, sus aplicaciones y servicios asociados.</li>
+                        <li><strong>Usuario:</strong> Cualquier persona que acceda o utilice la Plataforma.</li>
+                        <li><strong>Cliente:</strong> Usuario que busca o solicita información sobre propiedades.</li>
+                        <li><strong>Asesor Inmobiliario:</strong> Profesional del sector que utiliza la plataforma para publicar y gestionar propiedades.</li>
+                        <li><strong>Propiedad:</strong> Bien inmueble publicado en la Plataforma.</li>
+                        <li><strong>Lead:</strong> Potencial cliente que ha mostrado interés en una propiedad.</li>
+                    </ul>
+
+                    <h3>2.2 Servicios Específicos</h3>
+                    <ul>
+                        <li><strong>CRM:</strong> Sistema de gestión de relaciones con clientes para asesores inmobiliarios.</li>
+                        <li><strong>Listing:</strong> Sección pública donde se muestran las propiedades disponibles.</li>
+                        <li><strong>Integraciones:</strong> Conexiones con servicios externos como Meta, Google, y otros.</li>
+                        <li><strong>IA:</strong> Funcionalidades de inteligencia artificial proporcionadas por OpenAI y Anthropic.</li>
+                    </ul>
+                </section>
+
+                <section id="alcance" class="terminos-section">
+                    <h2>3. Alcance Internacional</h2>
+                    <h3>3.1 Disponibilidad del Servicio</h3>
+                    <p>Master Broker está disponible internacionalmente, con las siguientes consideraciones:</p>
+                    <ul>
+                        <li>Adaptación a regulaciones locales de cada país</li>
+                        <li>Soporte para múltiples monedas y formatos de medición</li>
+                        <li>Cumplimiento con leyes inmobiliarias internacionales</li>
+                        <li>Disponibilidad en múltiples idiomas</li>
+                    </ul>
+
+                    <h3>3.2 Restricciones Regionales</h3>
+                    <p>El acceso a ciertos servicios puede variar según:</p>
+                    <ul>
+                        <li>Regulaciones locales específicas</li>
+                        <li>Disponibilidad de integraciones en cada región</li>
+                        <li>Requisitos legales para transacciones inmobiliarias</li>
+                        <li>Restricciones de privacidad y protección de datos</li>
+                    </ul>
+                </section>
+
+                <section id="registro" class="terminos-section">
+                    <h2>4. Registro y Cuentas</h2>
+                    <h3>4.1 Tipos de Registro</h3>
+                    <p>Ofrecemos diferentes niveles de acceso:</p>
+                    <ul>
+                        <li><strong>Usuario Básico:</strong> Puede navegar y buscar propiedades sin registro</li>
+                        <li><strong>Usuario Registrado:</strong> Puede guardar favoritos y contactar asesores</li>
+                        <li><strong>Asesor Inmobiliario:</strong> Acceso completo al CRM y herramientas de publicación</li>
+                        <li><strong>Administrador:</strong> Gestión completa de la plataforma</li>
+                    </ul>
+
+                    <h3>4.2 Requisitos de Registro</h3>
+                    <p>Para registrarse como asesor inmobiliario, se requiere:</p>
+                    <ul>
+                        <li>Identificación oficial válida</li>
+                        <li>Credenciales profesionales verificables</li>
+                        <li>Información de contacto verificada</li>
+                        <li>Aceptación de políticas específicas para asesores</li>
+                    </ul>
+
+                    <h3>4.3 Responsabilidades de la Cuenta</h3>
+                    <p>Los usuarios son responsables de:</p>
+                    <ul>
+                        <li>Mantener la confidencialidad de sus credenciales</li>
+                        <li>Actualizar su información cuando sea necesario</li>
+                        <li>Reportar cualquier actividad sospechosa</li>
+                        <li>Cumplir con las políticas de uso de la plataforma</li>
+                    </ul>
+                </section>
+                <section id="publicacion" class="terminos-section">
+                    <h2>5. Publicación de Propiedades</h2>
+                    
+                    <h3>5.1 Requisitos de Publicación</h3>
+                    <p>Toda propiedad publicada en la plataforma debe cumplir con los siguientes requisitos:</p>
+                    <ul>
+                        <li>Información precisa y verificable sobre la propiedad</li>
+                        <li>Documentación legal vigente que acredite la facultad de comercialización</li>
+                        <li>Imágenes reales y actualizadas de la propiedad</li>
+                        <li>Precio y condiciones comerciales claras</li>
+                        <li>Ubicación exacta o aproximada según las políticas de privacidad</li>
+                    </ul>
+
+                    <h3>5.2 Contenido Multimedia</h3>
+                    <p>Las publicaciones deben incluir contenido multimedia que cumpla con:</p>
+                    <ul>
+                        <li><strong>Imágenes:</strong>
+                            <ul>
+                                <li>Mínimo 5 fotografías de calidad profesional</li>
+                                <li>Resolución mínima de 1200x800 píxeles</li>
+                                <li>Fotos actualizadas (no más de 6 meses de antigüedad)</li>
+                                <li>Sin marcas de agua de otros portales</li>
+                            </ul>
+                        </li>
+                        <li><strong>Videos:</strong>
+                            <ul>
+                                <li>Formato compatible con YouTube</li>
+                                <li>Duración recomendada de 2-5 minutos</li>
+                                <li>Calidad mínima de 1080p</li>
+                            </ul>
+                        </li>
+                        <li><strong>Tours Virtuales:</strong>
+                            <ul>
+                                <li>Compatibles con las plataformas especificadas</li>
+                                <li>Navegación fluida y completa</li>
+                                <li>Acceso sin restricciones para los usuarios</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h3>5.3 Información Requerida</h3>
+                    <p>Cada publicación debe incluir:</p>
+                    <ul>
+                        <li><strong>Datos Básicos:</strong>
+                            <ul>
+                                <li>Tipo de propiedad</li>
+                                <li>Superficie construida y total</li>
+                                <li>Número de habitaciones y baños</li>
+                                <li>Antigüedad de la construcción</li>
+                                <li>Disponibilidad de estacionamiento</li>
+                            </ul>
+                        </li>
+                        <li><strong>Información Comercial:</strong>
+                            <ul>
+                                <li>Precio de venta o renta</li>
+                                <li>Gastos de mantenimiento</li>
+                                <li>Impuestos aplicables</li>
+                                <li>Condiciones de pago aceptadas</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h3>5.4 Restricciones y Prohibiciones</h3>
+                    <p>No está permitido publicar:</p>
+                    <ul>
+                        <li>Propiedades sin autorización legal para su comercialización</li>
+                        <li>Información falsa o engañosa</li>
+                        <li>Contenido discriminatorio o inapropiado</li>
+                        <li>Propiedades en litigio o con problemas legales</li>
+                        <li>Publicaciones duplicadas de la misma propiedad</li>
+                    </ul>
+
+                    <h3>5.5 Vigencia y Actualización</h3>
+                    <p>Las publicaciones deben mantener:</p>
+                    <ul>
+                        <li>Actualización de disponibilidad en tiempo real</li>
+                        <li>Precios vigentes y actualizados</li>
+                        <li>Estado actual de la propiedad</li>
+                        <li>Información de contacto correcta</li>
+                    </ul>
+
+                    <h3>5.6 Moderación y Control</h3>
+                    <p>Master Broker se reserva el derecho de:</p>
+                    <ul>
+                        <li>Revisar y aprobar las publicaciones antes de hacerlas visibles</li>
+                        <li>Solicitar verificación adicional de la información</li>
+                        <li>Retirar publicaciones que incumplan estos términos</li>
+                        <li>Suspender cuentas que violen repetidamente las políticas</li>
+                        <li>Implementar sistemas automatizados de verificación de calidad</li>
+                    </ul>
+                </section>
+                <section id="integraciones" class="terminos-section">
+                    <h2>6. Integraciones y Servicios Externos</h2>
+
+                    <h3>6.1 Servicios de Meta</h3>
+                    <h4>6.1.1 WhatsApp Business</h4>
+                    <p>La integración con WhatsApp Business incluye:</p>
+                    <ul>
+                        <li>Mensajería automática y personalizada para leads</li>
+                        <li>Gestión centralizada de conversaciones</li>
+                        <li>Envío automatizado de catálogos de propiedades</li>
+                        <li>Programación de citas y recordatorios</li>
+                        <li>Integración con el CRM para seguimiento de leads</li>
+                    </ul>
+
+                    <h4>6.1.2 Facebook e Instagram</h4>
+                    <p>Las integraciones con redes sociales permiten:</p>
+                    <ul>
+                        <li>Publicación automática de propiedades</li>
+                        <li>Gestión de campañas publicitarias</li>
+                        <li>Marketplace de Facebook</li>
+                        <li>Instagram Shopping para propiedades</li>
+                        <li>Seguimiento de interacciones y métricas</li>
+                        <li>Transmisiones en vivo de propiedades</li>
+                    </ul>
+
+                    <h3>6.2 Servicios de Google</h3>
+                    <h4>6.2.1 Google Maps y Ubicación</h4>
+                    <ul>
+                        <li>Geolocalización precisa de propiedades</li>
+                        <li>Cálculo de distancias y rutas</li>
+                        <li>Visualización de puntos de interés cercanos</li>
+                        <li>Street View para vista exterior</li>
+                        <li>Información demográfica de la zona</li>
+                    </ul>
+
+                    <h4>6.2.2 Google Workspace</h4>
+                    <ul>
+                        <li>Calendar para gestión de citas y visitas</li>
+                        <li>Drive para almacenamiento de documentos</li>
+                        <li>Gmail para comunicaciones automatizadas</li>
+                        <li>Meet para videollamadas y visitas virtuales</li>
+                        <li>Forms para encuestas y recopilación de datos</li>
+                    </ul>
+
+                    <h4>6.2.3 YouTube</h4>
+                    <ul>
+                        <li>Canal automático por asesor/agencia</li>
+                        <li>Integración de videos de propiedades</li>
+                        <li>Transmisiones en vivo</li>
+                        <li>Analytics de visualizaciones</li>
+                        <li>Gestión de contenido multimedia</li>
+                    </ul>
+
+                    <h3>6.3 Inteligencia Artificial</h3>
+                    <h4>6.3.1 Servicios de IA</h4>
+                    <p>Las integraciones con OpenAI y Anthropic proporcionan:</p>
+                    <ul>
+                        <li>Generación automática de descripciones</li>
+                        <li>Análisis de mercado y tendencias</li>
+                        <li>Respuestas automatizadas a consultas</li>
+                        <li>Optimización de listados</li>
+                        <li>Recomendaciones personalizadas</li>
+                    </ul>
+
+                    <h4>6.3.2 Limitaciones y Responsabilidades</h4>
+                    <p>El usuario reconoce que:</p>
+                    <ul>
+                        <li>Las respuestas generadas por IA son sugerencias</li>
+                        <li>Se requiere supervisión humana</li>
+                        <li>La información debe ser verificada</li>
+                        <li>La IA complementa, no reemplaza, el criterio profesional</li>
+                    </ul>
+
+                    <h3>6.4 Autorizaciones y Permisos</h3>
+                    <p>Al utilizar estas integraciones, el usuario:</p>
+                    <ul>
+                        <li>Autoriza el acceso a datos necesarios para cada servicio</li>
+                        <li>Acepta las políticas de privacidad de cada plataforma</li>
+                        <li>Permite la sincronización de información entre servicios</li>
+                        <li>Se compromete a usar las integraciones de manera ética</li>
+                    </ul>
+
+                    <h3>6.5 Disponibilidad y Cambios</h3>
+                    <p>Master Broker se reserva el derecho de:</p>
+                    <ul>
+                        <li>Modificar o discontinuar integraciones</li>
+                        <li>Actualizar funcionalidades según cambios en APIs</li>
+                        <li>Implementar nuevas integraciones</li>
+                        <li>Ajustar permisos y accesos según necesidad</li>
+                    </ul>
+
+                    <h3>6.6 Costos Asociados</h3>
+                    <p>Los usuarios deben considerar:</p>
+                    <ul>
+                        <li>Costos de servicios premium de cada plataforma</li>
+                        <li>Gastos de publicidad en redes sociales</li>
+                        <li>Tarifas por uso de APIs</li>
+                        <li>Costos de almacenamiento adicional</li>
+                    </ul>
+                </section>
+                <section id="datos" class="terminos-section">
+                    <h2>7. Gestión de Datos</h2>
+
+                    <h3>7.1 Recopilación de Datos</h3>
+                    <h4>7.1.1 Datos Personales</h4>
+                    <p>Recopilamos los siguientes tipos de información:</p>
+                    <ul>
+                        <li><strong>Datos de Identificación:</strong>
+                            <ul>
+                                <li>Nombre completo</li>
+                                <li>Correo electrónico</li>
+                                <li>Número telefónico</li>
+                                <li>Documentos de identidad</li>
+                            </ul>
+                        </li>
+                        <li><strong>Datos Profesionales:</strong>
+                            <ul>
+                                <li>Credenciales inmobiliarias</li>
+                                <li>Historial profesional</li>
+                                <li>Referencias comerciales</li>
+                                <li>Certificaciones</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <h4>7.1.2 Datos de Uso</h4>
+                    <p>Se registra información sobre:</p>
+                    <ul>
+                        <li>Interacciones con la plataforma</li>
+                        <li>Búsquedas realizadas</li>
+                        <li>Propiedades visitadas</li>
+                        <li>Tiempo de permanencia</li>
+                        <li>Dispositivos utilizados</li>
+                    </ul>
+
+                    <h3>7.2 Almacenamiento y Seguridad</h3>
+                    <h4>7.2.1 Infraestructura</h4>
+                    <ul>
+                        <li>Servidores seguros con certificación internacional</li>
+                        <li>Cifrado de datos en tránsito y en reposo</li>
+                        <li>Copias de seguridad regulares</li>
+                        <li>Sistemas de recuperación ante desastres</li>
+                    </ul>
+
+                    <h4>7.2.2 Protección de Datos</h4>
+                    <ul>
+                        <li>Control de acceso basado en roles</li>
+                        <li>Monitoreo de actividad sospechosa</li>
+                        <li>Actualización regular de medidas de seguridad</li>
+                        <li>Protocolos de respuesta a incidentes</li>
+                    </ul>
+
+                    <h3>7.3 Uso y Procesamiento</h3>
+                    <h4>7.3.1 Finalidades del Uso</h4>
+                    <p>Los datos se utilizan para:</p>
+                    <ul>
+                        <li>Gestión de cuentas de usuario</li>
+                        <li>Procesamiento de solicitudes</li>
+                        <li>Mejora de servicios</li>
+                        <li>Análisis estadísticos</li>
+                        <li>Comunicaciones personalizadas</li>
+                    </ul>
+
+                    <h4>7.3.2 Procesamiento Automatizado</h4>
+                    <p>Incluye:</p>
+                    <ul>
+                        <li>Sistemas de recomendación</li>
+                        <li>Análisis de comportamiento</li>
+                        <li>Segmentación de usuarios</li>
+                        <li>Optimización de contenido</li>
+                    </ul>
+
+                    <h3>7.4 Compartir Información</h3>
+                    <h4>7.4.1 Terceros Autorizados</h4>
+                    <p>Los datos pueden compartirse con:</p>
+                    <ul>
+                        <li>Proveedores de servicios integrados</li>
+                        <li>Procesadores de pagos</li>
+                        <li>Servicios de análisis</li>
+                        <li>Autoridades competentes (cuando sea requerido)</li>
+                    </ul>
+
+                    <h4>7.4.2 Restricciones</h4>
+                    <p>No se compartirá información:</p>
+                    <ul>
+                        <li>Con fines comerciales no autorizados</li>
+                        <li>Con terceros no verificados</li>
+                        <li>Sin consentimiento explícito</li>
+                        <li>Fuera de los acuerdos establecidos</li>
+                    </ul>
+
+                    <h3>7.5 Derechos del Usuario</h3>
+                    <h4>7.5.1 Derechos ARCO</h4>
+                    <p>Los usuarios pueden ejercer sus derechos de:</p>
+                    <ul>
+                        <li>Acceso a sus datos personales</li>
+                        <li>Rectificación de información incorrecta</li>
+                        <li>Cancelación de datos</li>
+                        <li>Oposición al tratamiento</li>
+                    </ul>
+
+                    <h4>7.5.2 Procedimientos</h4>
+                    <p>Para ejercer estos derechos:</p>
+                    <ul>
+                        <li>Solicitud formal por escrito</li>
+                        <li>Verificación de identidad</li>
+                        <li>Respuesta en plazos establecidos</li>
+                        <li>Asistencia en el proceso</li>
+                    </ul>
+
+                    <h3>7.6 Retención y Eliminación</h3>
+                    <h4>7.6.1 Períodos de Retención</h4>
+                    <ul>
+                        <li>Datos de cuenta activa: Durante la vigencia</li>
+                        <li>Registros de transacciones: 5 años</li>
+                        <li>Datos de marketing: 2 años</li>
+                        <li>Logs de sistema: 1 año</li>
+                    </ul>
+
+                    <h4>7.6.2 Proceso de Eliminación</h4>
+                    <ul>
+                        <li>Eliminación segura de datos</li>
+                        <li>Verificación de borrado completo</li>
+                        <li>Notificación de confirmación</li>
+                        <li>Mantenimiento de registros de eliminación</li>
+                    </ul>
+                </section>
+                <section id="seguridad" class="terminos-section">
+                    <h2>8. Seguridad</h2>
+
+                    <h3>8.1 Medidas Técnicas</h3>
+                    <h4>8.1.1 Infraestructura</h4>
+                    <ul>
+                        <li>Servidores con certificación de seguridad internacional</li>
+                        <li>Firewalls de última generación</li>
+                        <li>Sistemas de detección y prevención de intrusiones (IDS/IPS)</li>
+                        <li>Balanceadores de carga con protección DDoS</li>
+                        <li>Cifrado SSL/TLS en todas las conexiones</li>
+                    </ul>
+
+                    <h4>8.1.2 Protección de Datos</h4>
+                    <ul>
+                        <li>Cifrado de extremo a extremo</li>
+                        <li>Almacenamiento segmentado de datos sensibles</li>
+                        <li>Tokenización de información financiera</li>
+                        <li>Aislamiento de ambientes (desarrollo/producción)</li>
+                        <li>Copias de seguridad cifradas</li>
+                    </ul>
+
+                    <h3>8.2 Control de Acceso</h3>
+                    <h4>8.2.1 Autenticación</h4>
+                    <ul>
+                        <li>Autenticación de múltiples factores (MFA)</li>
+                        <li>Políticas de contraseñas robustas</li>
+                        <li>Gestión de sesiones seguras</li>
+                        <li>Tokens de acceso temporales</li>
+                        <li>Verificación biométrica (cuando aplique)</li>
+                    </ul>
+
+                    <h4>8.2.2 Autorización</h4>
+                    <ul>
+                        <li>Control de acceso basado en roles (RBAC)</li>
+                        <li>Principio de mínimo privilegio</li>
+                        <li>Segregación de funciones</li>
+                        <li>Revisión periódica de permisos</li>
+                        <li>Registro de cambios de acceso</li>
+                    </ul>
+
+                    <h3>8.3 Monitoreo y Detección</h3>
+                    <h4>8.3.1 Sistemas de Monitoreo</h4>
+                    <ul>
+                        <li>Monitoreo 24/7 de la infraestructura</li>
+                        <li>Análisis de comportamiento en tiempo real</li>
+                        <li>Detección de anomalías</li>
+                        <li>Alertas automáticas</li>
+                        <li>Análisis de logs centralizados</li>
+                    </ul>
+
+                    <h4>8.3.2 Auditoría</h4>
+                    <ul>
+                        <li>Registro detallado de actividades</li>
+                        <li>Trazabilidad de operaciones</li>
+                        <li>Auditorías de seguridad periódicas</li>
+                        <li>Evaluaciones de vulnerabilidades</li>
+                        <li>Pruebas de penetración</li>
+                    </ul>
+
+                    <h3>8.4 Respuesta a Incidentes</h3>
+                    <h4>8.4.1 Protocolo de Respuesta</h4>
+                    <ul>
+                        <li>Equipo dedicado de respuesta a incidentes</li>
+                        <li>Procedimientos documentados de respuesta</li>
+                        <li>Canales de comunicación de emergencia</li>
+                        <li>Plan de continuidad del negocio</li>
+                        <li>Procedimientos de recuperación</li>
+                    </ul>
+
+                    <h4>8.4.2 Notificaciones</h4>
+                    <ul>
+                        <li>Protocolos de notificación a usuarios afectados</li>
+                        <li>Comunicación con autoridades competentes</li>
+                        <li>Informes de incidentes</li>
+                        <li>Actualizaciones de estado</li>
+                        <li>Medidas correctivas implementadas</li>
+                    </ul>
+
+                    <h3>8.5 Responsabilidades del Usuario</h3>
+                    <h4>8.5.1 Obligaciones de Seguridad</h4>
+                    <ul>
+                        <li>Mantener credenciales seguras</li>
+                        <li>Usar contraseñas fuertes y únicas</li>
+                        <li>Activar autenticación de dos factores</li>
+                        <li>Reportar actividades sospechosas</li>
+                        <li>Mantener dispositivos seguros</li>
+                    </ul>
+
+                    <h4>8.5.2 Prácticas Prohibidas</h4>
+                    <ul>
+                        <li>Compartir credenciales de acceso</li>
+                        <li>Intentar acceder a datos no autorizados</li>
+                        <li>Realizar ataques o pruebas de seguridad no autorizadas</li>
+                        <li>Introducir malware o código malicioso</li>
+                        <li>Intentar eludir medidas de seguridad</li>
+                    </ul>
+
+                    <h3>8.6 Actualizaciones de Seguridad</h3>
+                    <h4>8.6.1 Mantenimiento</h4>
+                    <ul>
+                        <li>Actualizaciones regulares de seguridad</li>
+                        <li>Parches de vulnerabilidades</li>
+                        <li>Mejoras en sistemas de protección</li>
+                        <li>Optimización de controles</li>
+                        <li>Renovación de certificaciones</li>
+                    </ul>
+                </section>
+                <section id="datos-sensibles" class="terminos-section">
+                    <h2>9. Datos Sensibles</h2>
+
+                    <h3>9.1 Clasificación de Datos Sensibles</h3>
+                    <h4>9.1.1 Documentación Legal</h4>
+                    <ul>
+                        <li>Escrituras y títulos de propiedad</li>
+                        <li>Contratos de compraventa</li>
+                        <li>Documentos de identificación</li>
+                        <li>Poderes notariales</li>
+                        <li>Documentos migratorios</li>
+                    </ul>
+
+                    <h4>9.1.2 Información Financiera</h4>
+                    <ul>
+                        <li>Estados de cuenta bancarios</li>
+                        <li>Comprobantes de ingresos</li>
+                        <li>Historial crediticio</li>
+                        <li>Información fiscal</li>
+                        <li>Datos de tarjetas de crédito</li>
+                    </ul>
+
+                    <h4>9.1.3 Datos Personales Sensibles</h4>
+                    <ul>
+                        <li>Información biométrica</li>
+                        <li>Datos familiares</li>
+                        <li>Referencias personales</li>
+                        <li>Historial de residencia</li>
+                        <li>Información laboral</li>
+                    </ul>
+
+                    <h3>9.2 Protecciones Especiales</h3>
+                    <h4>9.2.1 Medidas Técnicas</h4>
+                    <ul>
+                        <li>Cifrado de nivel militar</li>
+                        <li>Almacenamiento segmentado</li>
+                        <li>Acceso con autenticación reforzada</li>
+                        <li>Registros de auditoría detallados</li>
+                        <li>Sistemas de detección de fugas de datos</li>
+                    </ul>
+
+                    <h4>9.2.2 Controles de Acceso</h4>
+                    <ul>
+                        <li>Acceso limitado por necesidad de conocimiento</li>
+                        <li>Verificación multinivel</li>
+                        <li>Registros de cada consulta</li>
+                        <li>Bloqueo automático por inactividad</li>
+                        <li>Monitoreo de actividades sospechosas</li>
+                    </ul>
+
+                    <h3>9.3 Procesamiento y Transmisión</h3>
+                    <h4>9.3.1 Protocolos de Manejo</h4>
+                    <ul>
+                        <li>Validación de identidad antes del acceso</li>
+                        <li>Encriptación en tránsito y reposo</li>
+                        <li>Canales seguros de comunicación</li>
+                        <li>Verificación de destinatarios</li>
+                        <li>Límites de tiempo de acceso</li>
+                    </ul>
+
+                    <h4>9.3.2 Restricciones de Uso</h4>
+                    <ul>
+                        <li>Prohibición de copias no autorizadas</li>
+                        <li>Limitación de descargas</li>
+                        <li>Control de impresiones</li>
+                        <li>Restricción de compartir</li>
+                        <li>Bloqueo de capturas de pantalla</li>
+                    </ul>
+
+                    <h3>9.4 Cumplimiento Normativo</h3>
+                    <h4>9.4.1 Marco Legal</h4>
+                    <ul>
+                        <li>Ley Federal de Protección de Datos Personales</li>
+                        <li>Regulaciones financieras aplicables</li>
+                        <li>Normas de privacidad internacionales</li>
+                        <li>Requisitos sectoriales específicos</li>
+                        <li>Estándares de seguridad de la información</li>
+                    </ul>
+
+                    <h4>9.4.2 Documentación y Registros</h4>
+                    <ul>
+                        <li>Registros de consentimiento</li>
+                        <li>Bitácoras de acceso</li>
+                        <li>Historiales de modificación</li>
+                        <li>Reportes de incidentes</li>
+                        <li>Evaluaciones de impacto</li>
+                    </ul>
+
+                    <h3>9.5 Retención y Eliminación</h3>
+                    <h4>9.5.1 Políticas de Retención</h4>
+                    <ul>
+                        <li>Documentos legales: 10 años</li>
+                        <li>Información financiera: 5 años</li>
+                        <li>Datos de identificación: Durante la relación comercial</li>
+                        <li>Registros de transacciones: 7 años</li>
+                        <li>Datos de contacto: 2 años post-relación</li>
+                    </ul>
+
+                    <h4>9.5.2 Procedimientos de Eliminación</h4>
+                    <ul>
+                        <li>Borrado seguro certificado</li>
+                        <li>Destrucción física de medios</li>
+                        <li>Verificación de eliminación completa</li>
+                        <li>Certificados de destrucción</li>
+                        <li>Registros de eliminación</li>
+                    </ul>
+                </section>
+                <section id="auditoria" class="terminos-section">
+                    <h2>10. Auditoría</h2>
+
+                    <h3>10.1 Procesos de Auditoría</h3>
+                    <h4>10.1.1 Auditorías Internas</h4>
+                    <ul>
+                        <li>Revisión regular de operaciones</li>
+                        <li>Verificación de cumplimiento de políticas</li>
+                        <li>Control de calidad de publicaciones</li>
+                        <li>Monitoreo de actividad de usuarios</li>
+                        <li>Evaluación de desempeño del sistema</li>
+                    </ul>
+
+                    <h4>10.1.2 Auditorías Externas</h4>
+                    <ul>
+                        <li>Certificaciones de seguridad</li>
+                        <li>Evaluaciones de cumplimiento normativo</li>
+                        <li>Auditorías de terceros independientes</li>
+                        <li>Verificaciones de protección de datos</li>
+                        <li>Revisiones de estándares internacionales</li>
+                    </ul>
+
+                    <h3>10.2 Tipos de Auditoría</h3>
+                    <h4>10.2.1 Auditoría de Seguridad</h4>
+                    <ul>
+                        <li>Pruebas de penetración</li>
+                        <li>Evaluación de vulnerabilidades</li>
+                        <li>Revisión de controles de acceso</li>
+                        <li>Análisis de registros de seguridad</li>
+                        <li>Verificación de cifrado</li>
+                    </ul>
+
+                    <h4>10.2.2 Auditoría de Datos</h4>
+                    <ul>
+                        <li>Verificación de integridad de datos</li>
+                        <li>Control de calidad de información</li>
+                        <li>Revisión de permisos de acceso</li>
+                        <li>Validación de respaldos</li>
+                        <li>Comprobación de eliminación segura</li>
+                    </ul>
+
+                    <h4>10.2.3 Auditoría de Cumplimiento</h4>
+                    <ul>
+                        <li>Verificación de requisitos legales</li>
+                        <li>Cumplimiento de términos y condiciones</li>
+                        <li>Revisión de políticas internas</li>
+                        <li>Control de documentación obligatoria</li>
+                        <li>Validación de procesos regulatorios</li>
+                    </ul>
+
+                    <h3>10.3 Frecuencia y Alcance</h3>
+                    <h4>10.3.1 Periodicidad</h4>
+                    <ul>
+                        <li>Auditorías de seguridad: Trimestral</li>
+                        <li>Revisiones de cumplimiento: Semestral</li>
+                        <li>Evaluaciones de calidad: Mensual</li>
+                        <li>Auditorías externas: Anual</li>
+                        <li>Monitoreo continuo: 24/7</li>
+                    </ul>
+
+                    <h4>10.3.2 Alcance de Revisiones</h4>
+                    <ul>
+                        <li>Infraestructura tecnológica</li>
+                        <li>Procesos operativos</li>
+                        <li>Gestión de datos</li>
+                        <li>Servicios integrados</li>
+                        <li>Interacciones de usuarios</li>
+                    </ul>
+
+                    <h3>10.4 Reportes y Documentación</h3>
+                    <h4>10.4.1 Informes de Auditoría</h4>
+                    <ul>
+                        <li>Resultados detallados</li>
+                        <li>Hallazgos identificados</li>
+                        <li>Recomendaciones de mejora</li>
+                        <li>Métricas de cumplimiento</li>
+                        <li>Planes de acción propuestos</li>
+                    </ul>
+
+                    <h4>10.4.2 Seguimiento</h4>
+                    <ul>
+                        <li>Tracking de hallazgos</li>
+                        <li>Verificación de correcciones</li>
+                        <li>Monitoreo de implementación</li>
+                        <li>Evaluación de efectividad</li>
+                        <li>Documentación de resultados</li>
+                    </ul>
+
+                    <h3>10.5 Medidas Correctivas</h3>
+                    <h4>10.5.1 Implementación</h4>
+                    <ul>
+                        <li>Plan de acción inmediato</li>
+                        <li>Correcciones prioritarias</li>
+                        <li>Mejoras a largo plazo</li>
+                        <li>Actualizaciones de sistemas</li>
+                        <li>Refuerzo de controles</li>
+                    </ul>
+
+                    <h4>10.5.2 Verificación</h4>
+                    <ul>
+                        <li>Validación de correcciones</li>
+                        <li>Pruebas de efectividad</li>
+                        <li>Monitoreo post-implementación</li>
+                        <li>Evaluación de resultados</li>
+                        <li>Documentación de cambios</li>
+                    </ul>
+                </section>
+                <section id="documentos-relacionados" class="terminos-section">
+                    <h2>Documentos Legales Relacionados</h2>
+                    <p>Para una comprensión completa de nuestras políticas y términos, le recomendamos consultar también:</p>
+                    
+                    <div class="documentos-grid">
+                        <div class="documento-card current">
+                            <h3>Términos y Condiciones</h3>
+                            <p>Normas y condiciones generales de uso de la plataforma.</p>
+                            <a href="/legal/terminos-y-condiciones.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card">
+                            <h3>Política de Privacidad</h3>
+                            <p>Información sobre el tratamiento de sus datos personales.</p>
+                            <a href="/legal/politica-de-privacidad.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card">
+                            <h3>Política de Cookies</h3>
+                            <p>Detalles sobre el uso de cookies en nuestra plataforma.</p>
+                            <a href="/legal/politica-de-cookies.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card">
+                            <h3>Aviso Legal</h3>
+                            <p>Información legal sobre la titularidad y uso de la plataforma.</p>
+                            <a href="/legal/aviso-legal.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card">
+                            <h3>Política de Publicación</h3>
+                            <p>Normas para la publicación de propiedades en la plataforma.</p>
+                            <a href="/legal/politica-de-publicacion.html" class="documento-link">Leer más →</a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+
+        <button class="terminos-back-to-top" id="terminosBackToTop" title="Volver arriba">↑</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTop = document.getElementById('terminosBackToTop');
+            const navLinks = document.querySelectorAll('.terminos-nav-link');
+            const sections = document.querySelectorAll('.terminos-section');
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTop.style.display = 'flex';
+                } else {
+                    backToTop.style.display = 'none';
+                }
+
+                let currentSection = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (window.scrollY >= sectionTop - 100) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === currentSection) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 120,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+    <script src="/assets/js/animation.js?v=1.0.1"></script>
+    <script src="/assets/js/components.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js?v=1.0.1"></script>
+    <script src="/assets/js/loader.js?v=1.0.1"></script>
+</div>
+</body>
+</html>

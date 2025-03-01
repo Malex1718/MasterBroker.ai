@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Extras MasterBroker.ai</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --primary-dark: #1e40af;
+      --secondary: #10b981;
+      --secondary-light: #d1fae5;
+      --tertiary: #8b5cf6;
+      --tertiary-light: #ede9fe;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.5;
+      color: var(--gray-700);
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1000px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .header h1 {
+      color: var(--gray-900);
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: var(--gray-700);
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .extras-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+    }
+    
+    .extra-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      overflow: hidden;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .extra-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .card-header {
+      padding: 20px;
+      background: linear-gradient(45deg, var(--primary), var(--primary-dark));
+      color: white;
+    }
+    
+    .card-header.ai {
+      background: linear-gradient(45deg, #ec4899, var(--tertiary));
+    }
+    
+    .card-header.social {
+      background: linear-gradient(45deg, #0ea5e9, #0284c7);
+    }
+    
+    .card-header.team {
+      background: linear-gradient(45deg, var(--secondary), #059669);
+    }
+    
+    .card-header h3 {
+      margin: 0;
+      font-size: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .card-body {
+      padding: 20px;
+    }
+    
+    .extra-description {
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+    
+    .options-container {
+      margin-bottom: 20px;
+    }
+    
+    .option-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 12px;
+      border-radius: 8px;
+      margin-bottom: 10px;
+      transition: background-color 0.2s;
+      cursor: pointer;
+    }
+    
+    .option-row:hover {
+      background-color: var(--gray-100);
+    }
+    
+    .option-row.selected {
+      background-color: var(--primary-light);
+      border: 1px solid var(--primary);
+    }
+    
+    .option-info {
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .option-name {
+      font-weight: 600;
+      color: var(--gray-900);
+      margin-bottom: 4px;
+    }
+    
+    .option-detail {
+      font-size: 13px;
+      color: var(--gray-700);
+    }
+    
+    .option-price {
+      font-weight: 700;
+      color: var(--primary);
+    }
+    
+    .most-popular {
+      background-color: var(--accent-light);
+      color: var(--accent);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-left: 8px;
+    }
+    
+    .cta-button {
+      width: 100%;
+      padding: 12px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .cta-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .section-title {
+      font-size: 24px;
+      color: var(--gray-900);
+      margin-bottom: 20px;
+    }
+    
+    .token-levels {
+      display: flex;
+      gap: 15px;
+      overflow-x: auto;
+      padding-bottom: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .token-package {
+      flex: 0 0 auto;
+      width: 160px;
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      transition: transform 0.3s, box-shadow 0.3s;
+      background-color: white;
+    }
+    
+    .token-package:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .token-header {
+      padding: 15px;
+      text-align: center;
+      background: linear-gradient(45deg, #ec4899, var(--tertiary));
+      color: white;
+    }
+    
+    .token-amount {
+      font-size: 22px;
+      font-weight: 700;
+    }
+    
+    .token-label {
+      font-size: 14px;
+      opacity: 0.9;
+    }
+    
+    .token-body {
+      padding: 15px;
+      text-align: center;
+    }
+    
+    .token-price {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 5px;
+    }
+    
+    .token-detail {
+      font-size: 13px;
+      color: var(--gray-700);
+      margin-bottom: 15px;
+    }
+    
+    .token-button {
+      width: 100%;
+      padding: 8px;
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+    }
+    
+    .token-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .best-value-flag {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background-color: var(--accent);
+      color: white;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transform: rotate(3deg);
+    }
+    
+    .token-package-container {
+      position: relative;
+    }
+    
+    .social-networks {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+      gap: 15px;
+      margin-bottom: 30px;
+    }
+    
+    .social-network {
+      background-color: white;
+      border-radius: 8px;
+      padding: 15px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+      transition: transform 0.2s, box-shadow 0.2s;
+      cursor: pointer;
+    }
+    
+    .social-network:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    
+    .social-network.selected {
+      border: 2px solid var(--primary);
+      background-color: var(--primary-light);
+    }
+    
+    .network-icon {
+      font-size: 24px;
+      margin-bottom: 8px;
+    }
+    
+    .network-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--gray-800);
+      margin-bottom: 5px;
+    }
+    
+    .network-price {
+      font-size: 13px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    
+    .social-action {
+      margin-top: 20px;
+      text-align: center;
+    }
+    
+    .summary-section {
+      background-color: white;
+      border-radius: 12px;
+      padding: 25px;
+      margin-top: 40px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+    }
+    
+    .summary-title {
+      font-size: 20px;
+      color: var(--gray-900);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    
+    .summary-items {
+      margin-bottom: 20px;
+    }
+    
+    .summary-item {
+      display: flex;
+      justify-content: space-between;
+      padding: 12px 0;
+      border-bottom: 1px solid var(--gray-200);
+    }
+    
+    .summary-item-name {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 500;
+    }
+    
+    .summary-total {
+      display: flex;
+      justify-content: space-between;
+      padding-top: 15px;
+      font-weight: 700;
+      font-size: 18px;
+      color: var(--gray-900);
+    }
+    
+    .summary-actions {
+      margin-top: 20px;
+      display: flex;
+      gap: 15px;
+    }
+    
+    .summary-button {
+      flex: 1;
+      padding: 12px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+      text-align: center;
+    }
+    
+    .primary-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+    }
+    
+    .primary-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .secondary-button {
+      background-color: white;
+      color: var(--primary);
+      border: 1px solid var(--primary);
+    }
+    
+    .secondary-button:hover {
+      background-color: var(--primary-light);
+    }
+    
+    @media (max-width: 768px) {
+      .extras-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .token-levels {
+        justify-content: flex-start;
+      }
+      
+      .social-networks {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .summary-actions {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Optimiza tu experiencia MasterBroker.ai</h1>
+      <p>Personaliza tu cuenta con extras diseñados para aumentar tu productividad y maximizar tus resultados</p>
+    </div>
+    
+    <h2 class="section-title">Paquetes de Tokens IA</h2>
+    
+    <div class="token-levels">
+      <div class="token-package">
+        <div class="token-header">
+          <div class="token-amount">5,000</div>
+          <div class="token-label">tokens IA</div>
+        </div>
+        <div class="token-body">
+          <div class="token-price">$250 MXN</div>
+          <div class="token-detail">$0.05 por token</div>
+          <button class="token-button">Comprar</button>
+        </div>
+      </div>
+      
+      <div class="token-package-container">
+        <div class="best-value-flag">Mejor valor</div>
+        <div class="token-package">
+          <div class="token-header">
+            <div class="token-amount">15,000</div>
+            <div class="token-label">tokens IA</div>
+          </div>
+          <div class="token-body">
+            <div class="token-price">$600 MXN</div>
+            <div class="token-detail">$0.04 por token</div>
+            <button class="token-button">Comprar</button>
+          </div>
+        </div>
+      </div>
+      
+      <div class="token-package">
+        <div class="token-header">
+          <div class="token-amount">25,000</div>
+          <div class="token-label">tokens IA</div>
+        </div>
+        <div class="token-body">
+          <div class="token-price">$875 MXN</div>
+          <div class="token-detail">$0.035 por token</div>
+          <button class="token-button">Comprar</button>
+        </div>
+      </div>
+      
+      <div class="token-package">
+        <div class="token-header">
+          <div class="token-amount">50,000</div>
+          <div class="token-label">tokens IA</div>
+        </div>
+        <div class="token-body">
+          <div class="token-price">$1,500 MXN</div>
+          <div class="token-detail">$0.03 por token</div>
+          <button class="token-button">Comprar</button>
+        </div>
+      </div>
+      
+      <div class="token-package">
+        <div class="token-header">
+          <div class="token-amount">100,000</div>
+          <div class="token-label">tokens IA</div>
+        </div>
+        <div class="token-body">
+          <div class="token-price">$2,500 MXN</div>
+          <div class="token-detail">$0.025 por token</div>
+          <button class="token-button">Comprar</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="extras-grid">
+      <!-- Licencias Multi-Usuario -->
+      <div class="extra-card">
+        <div class="card-header team">
+          <h3>🧑‍💼 Licencias Multi-Usuario</h3>
+        </div>
+        <div class="card-body">
+          <div class="extra-description">
+            Comparte el acceso a tu cuenta con miembros de tu equipo mientras mantienes el control total.
+          </div>
+          
+          <div class="options-container">
+            <div class="option-row">
+              <div class="option-info">
+                <div class="option-name">1 usuario adicional</div>
+                <div class="option-detail">Ideal para asistentes personales</div>
+              </div>
+              <div class="option-price">$350/mes</div>
+            </div>
+            
+            <div class="option-row selected">
+              <div class="option-info">
+                <div class="option-name">3 usuarios adicionales <span class="most-popular">Más popular</span></div>
+                <div class="option-detail">Perfecto para equipos pequeños</div>
+              </div>
+              <div class="option-price">$800/mes</div>
+            </div>
+            
+            <div class="option-row">
+              <div class="option-info">
+                <div class="option-name">5 usuarios adicionales</div>
+                <div class="option-detail">Para equipos medianos</div>
+              </div>
+              <div class="option-price">$1,200/mes</div>
+            </div>
+            
+            <div class="option-row">
+              <div class="option-info">
+                <div class="option-name">10 usuarios adicionales</div>
+                <div class="option-detail">Para inmobiliarias grandes</div>
+              </div>
+              <div class="option-price">$2,000/mes</div>
+            </div>
+          </div>
+          
+          <button class="cta-button">Añadir licencias</button>
+        </div>
+      </div>
+      
+      <!-- Módulos de IA Especializada -->
+      <div class="extra-card">
+        <div class="card-header ai">
+          <h3>🧠 Módulos de IA Especializada</h3>
+        </div>
+        <div class="card-body">
+          <div class="extra-description">
+            Potencia tu cuenta con modelos de IA especializados para tareas inmobiliarias avanzadas.
+          </div>
+          
+          <div class="options-container">
+            <div class="option-row selected">
+              <div class="option-info">
+                <div class="option-name">Módulo de Descripción Premium <span class="most-popular">Más popular</span></div>
+                <div class="option-detail">Descripciones inmobiliarias de calidad profesional</div>
+              </div>
+              <div class="option-price">$400/mes</div>
+            </div>
+            
+            <div class="option-row">
+              <div class="option-info">
+                <div class="option-name">Análisis de Mercado Avanzado</div>
+                <div class="option-detail">Identificación de tendencias y oportunidades</div>
+              </div>
+              <div class="option-price">$600/mes</div>
+            </div>
+            
+            <div class="option-row">
+              <div class="option-info">
+                <div class="option-name">Recomendación de Precios</div>
+                <div class="option-detail">Sugerencias basadas en datos del mercado</div>
+              </div>
+              <div class="option-price">$550/mes</div>
+            </div>
+            
+            <div class="option-row">
+              <div class="option-info">
+                <div class="option-name">Asistente de Negociación</div>
+                <div class="option-detail">Apoyo en estrategias de negociación efectivas</div>
+              </div>
+              <div class="option-price">$700/mes</div>
+            </div>
+          </div>
+          
+          <button class="cta-button">Añadir módulos</button>
+        </div>
+      </div>
+    </div>
+    
+    <h2 class="section-title">Redes Sociales Adicionales</h2>
+    <p>Expande tu alcance con integraciones a plataformas adicionales. Selecciona las que deseas añadir:</p>
+    
+    <div class="social-networks">
+      <div class="social-network selected">
+        <div class="network-icon">📱</div>
+        <div class="network-name">WhatsApp</div>
+        <div class="network-price">Incluido</div>
+      </div>
+      
+      <div class="social-network selected">
+        <div class="network-icon">📸</div>
+        <div class="network-name">Instagram</div>
+        <div class="network-price">Incluido</div>
+      </div>
+      
+      <div class="social-network selected">
+        <div class="network-icon">👤</div>
+        <div class="network-name">Facebook</div>
+        <div class="network-price">Incluido</div>
+      </div>
+      
+      <div class="social-network">
+        <div class="network-icon">🔗</div>
+        <div class="network-name">LinkedIn</div>
+        <div class="network-price">+$250/mes</div>
+      </div>
+      
+      <div class="social-network">
+        <div class="network-icon">🎬</div>
+        <div class="network-name">TikTok</div>
+        <div class="network-price">+$300/mes</div>
+      </div>
+      
+      <div class="social-network">
+        <div class="network-icon">📺</div>
+        <div class="network-name">YouTube</div>
+        <div class="network-price">+$350/mes</div>
+      </div>
+      
+      <div class="social-network">
+        <div class="network-icon">✉️</div>
+        <div class="network-name">Gmail</div>
+        <div class="network-price">+$200/mes</div>
+      </div>
+      
+      <div class="social-network">
+        <div class="network-icon">🐦</div>
+        <div class="network-name">Twitter</div>
+        <div class="network-price">+$180/mes</div>
+      </div>
+    </div>
+    
+    <div class="social-action">
+      <button class="cta-button">Añadir redes seleccionadas</button>
+    </div>
+    
+    <div class="summary-section">
+      <h3 class="summary-title">📋 Resumen de extras seleccionados</h3>
+      
+      <div class="summary-items">
+        <div class="summary-item">
+          <div class="summary-item-name">🧑‍💼 3 usuarios adicionales</div>
+          <div>$800/mes</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-name">🧠 Módulo de Descripción Premium</div>
+          <div>$400/mes</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-name">🔗 LinkedIn</div>
+          <div>$250/mes</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-name">🎬 TikTok</div>
+          <div>$300/mes</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-name">✉️ Gmail</div>
+          <div>$200/mes</div>
+        </div>
+        <div class="summary-item">
+          <div class="summary-item-name">💰 Paquete de 15,000 tokens IA</div>
+          <div>$600 (único)</div>
+        </div>
+      </div>
+      
+      <div class="summary-total">
+        <div>Total mensual:</div>
+        <div>$1,950/mes</div>
+      </div>
+      
+      <div class="summary-actions">
+        <div class="summary-button primary-button">Confirmar extras</div>
+        <div class="summary-button secondary-button">Modificar selección</div>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

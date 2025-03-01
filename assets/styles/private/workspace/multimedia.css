@@ -1,0 +1,205 @@
+.subir_imagenes{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: calc(100% - 20px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+    margin-bottom: 40px;
+}
+
+.agregar_imagenes{
+    display: flex;
+    flex-direction: column;
+    background-color: var(--contenedor);
+    border: 2px dashed var(--principal);
+    box-shadow: 0 0 10px rgba(184, 146, 43, 0.3);
+    border-radius: 10px;
+    width: 160px;
+    height: 200px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    transition: all 0.3s ease;
+    position: relative; /* Necesario para el input absoluto */
+}
+
+.agregar_imagenes:hover{
+    box-shadow: 0 0 15px rgba(184, 146, 43, 0.5);
+    border-color: var(--principal);
+}
+
+.agregar_imagenes p{
+    color: var(--colortxt);
+    pointer-events: none; /* Evita que el texto interfiera */
+}
+
+.agregar_imagenes img{
+    height: 30px;
+    width: 30px;
+}
+
+.agregar_imagenes input[type="file"] {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    cursor: pointer;
+}
+
+.imagen_cargada{
+    position: relative;
+    cursor: move;
+    width: 180px;
+    height: 220px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    object-fit: cover;
+    overflow: hidden; /* Para asegurar que nada se salga del border-radius */
+    z-index: 1;
+}
+
+.imagen_cargada img{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover; /* Para asegurar que la imagen cubra bien el espacio */
+    z-index: 2;
+}
+
+.portada_badge{
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 20px;
+    padding: 5px 0;
+    background-color: var(--principal);
+    border-radius: 10px 10px 0 0;
+    color: white;
+    text-align: center;
+    font-weight: 500; /* Para mejor legibilidad */
+}
+
+.portada_badge span{
+    font-size: 16px;
+    vertical-align: middle; /* Para alinear mejor con el ícono */
+    margin-left: 5px;
+}
+
+.eliminar_imagen_cargada {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.eliminar_imagen_cargada img {
+    width: 15px;
+    height: 15px;
+    object-fit: contain;
+}
+
+.eliminar_imagen_cargada:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+.subir_videos {
+    width: calc(100% - 20px);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 10px;
+}
+
+.agregar_video {
+    display: flex;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.input_video {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: var(--body);
+    color: var(--colortxt);
+}
+
+.agregar_video_btn {
+    padding: 10px 20px;
+    background-color: var(--principal);
+    color: white;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.agregar_video_btn:hover {
+    opacity: 0.9;
+}
+
+.videos_container{
+    display: flex;
+    gap: 20px;
+}
+
+.video_cargado {
+    width: 300px;
+    position: relative;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+}
+
+.video_cargado iframe {
+    width: 100%;
+    height: 315px;
+    border-radius: 10px;
+}
+
+.eliminar_video {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: rgba(0, 0, 0, 0.5);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.3s ease;
+}
+
+.eliminar_video img {
+    width: 15px;
+    height: 15px;
+}
+
+.eliminar_video:hover {
+    background-color: rgba(255, 0, 0, 0.7);
+    transform: scale(1.1);
+}
+
+.botn_atras{
+    display: flex;
+}

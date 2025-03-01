@@ -1,0 +1,422 @@
+.destar {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInStagger 0.5s ease forwards;
+}
+
+.destar:nth-child(1) { animation-delay: 0.6s; }
+.destar:nth-child(2) { animation-delay: 0.8s; }
+.destar:nth-child(3) { animation-delay: 1s; }
+
+@keyframes fadeInStagger {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.descubrir_iz h1 {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.descubrir_iz h1 span {
+    display: inline-block;
+    animation: highlightText 1s ease forwards;
+    animation-delay: 0.8s;
+}
+
+.descubrir_iz p {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.4s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes highlightText {
+    0% {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.descubrir_de {
+    opacity: 0;
+    transform: translateX(50px);
+    animation: slideIn 1s ease forwards;
+    animation-delay: 0.3s;
+}
+
+.descubrir_ce {
+    opacity: 0;
+    transform: translate(-50%) scale(0.8);
+    animation: scaleIn 0.6s ease forwards;
+    animation-delay: 1.2s;
+}
+
+@keyframes slideIn {
+    from {
+        opacity: 0;
+        transform: translateX(50px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%) scale(1);
+    }
+}
+
+.descubrir_iz_butmas, .descubrir_iz_butpro {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.5s ease forwards;
+}
+
+.descubrir_iz_butmas { animation-delay: 1s; }
+.descubrir_iz_butpro { animation-delay: 1.2s; }
+
+/* Mejorar la interacción hover */
+.descubrir_iz_butmas:hover, .descubrir_iz_butpro:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    transition: all 0.3s ease;
+}
+
+.descubrir_iz_butmas:active, .descubrir_iz_butpro:active {
+    transform: translateY(0);
+}
+
+.intersec_info_tar {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInStagger 0.5s ease forwards;
+}
+
+/* Animación para cada tarjeta */
+.intersec_info_tar:nth-child(1) { animation-delay: 0.2s; }
+.intersec_info_tar:nth-child(2) { animation-delay: 0.4s; }
+.intersec_info_tar:nth-child(3) { animation-delay: 0.6s; }
+.intersec_info_tar:nth-child(4) { animation-delay: 0.8s; }
+
+/* Efecto hover mejorado */
+.intersec_info_tar {
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+.intersec_info_tar:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+}
+
+/* Animación para la flecha */
+.enviar_ser {
+    transition: transform 0.3s ease;
+}
+
+.intersec_info_tar:hover .enviar_ser {
+    transform: translate(5px, -5px);
+}
+
+/* Animación para el contenedor circular */
+.contenedor_ser {
+    transition: transform 0.3s ease;
+}
+
+.intersec_info_tar:hover .contenedor_ser {
+    transform: rotate(90deg);
+}
+
+/* Animación para el icono interno */
+.conten_ser {
+    transition: transform 0.3s ease;
+}
+
+.intersec_info_tar:hover .conten_ser {
+    transform: rotate(-45deg); /* Contrarrestar la rotación del padre */
+}
+
+/* Animación para el texto */
+.intersec_info_tar h2 {
+    transition: color 0.3s ease;
+}
+
+.intersec_info_tar:hover h2 {
+    color: var(--principal);
+}
+
+@keyframes fadeInStagger {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* propiedades */
+
+.property_tit h1 {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.property_tit p {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.3s;
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.buscador_exter_sup {
+    opacity: 0;
+    animation: slideInDown 0.6s ease forwards;
+    animation-delay: 0.6s;
+}
+
+@keyframes slideInDown {
+    from {
+        opacity: 0;
+        transform: translate(-50%, -30px);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, 0);
+    }
+}
+
+.filtros_exter_infer {
+    opacity: 0;
+    animation: fadeIn 0.8s ease forwards;
+    animation-delay: 0.8s;
+}
+
+.opciones_select {
+    opacity: 0;
+    transform: translateY(10px);
+    animation: fadeInStagger 0.5s ease forwards;
+}
+
+.opciones_select:nth-child(1) { animation-delay: 1s; }
+.opciones_select:nth-child(2) { animation-delay: 1.1s; }
+.opciones_select:nth-child(3) { animation-delay: 1.2s; }
+.opciones_select:nth-child(4) { animation-delay: 1.3s; }
+.opciones_select:nth-child(5) { animation-delay: 1.4s; }
+
+@keyframes fadeInStagger {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.select {
+    transition: border-color 0.3s ease, background-color 0.3s ease;
+}
+
+.select:hover {
+    border-color: var(--principal);
+}
+
+.buscador_inter_sup input {
+    transition: background-color 0.3s ease;
+}
+
+.buscador_inter_sup button {
+    transition: background-color 0.3s ease, transform 0.3s ease;
+}
+
+.buscador_inter_sup button:hover {
+    background-color: var(--principal_2);
+    transform: translateY(-2px);
+}
+
+.property_degra {
+    position: relative;
+    overflow: hidden; /* Esto evitará el desbordamiento */
+    background-image: linear-gradient(135deg, var(--border), var(--body));
+}
+
+.property_degra::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%; /* Cambiado de 200% a 100% */
+    height: 100%;
+    background: linear-gradient(90deg, 
+        transparent, 
+        rgb(26, 90, 137, 0.1), 
+        transparent
+    );
+    animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+    0% {
+        transform: translateX(-100%);
+    }
+    100% {
+        transform: translateX(200%); /* Ajustado para mantener el efecto original */
+    }
+}
+
+/* servicios */
+
+/* Animación para el título principal y descripción */
+.services_tit h1 {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.8s ease forwards;
+}
+
+.services_tit p {
+    opacity: 0;
+    animation: fadeInUp 0.8s ease forwards;
+    animation-delay: 0.3s;
+}
+
+/* Animación para las tarjetas de servicios */
+.intersec_info_tar {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInStagger 0.5s ease forwards;
+}
+
+.intersec_info_tar:nth-child(2) { animation-delay: 0.2s; }
+.intersec_info_tar:nth-child(3) { animation-delay: 0.4s; }
+.intersec_info_tar:nth-child(4) { animation-delay: 0.6s; }
+.intersec_info_tar:nth-child(5) { animation-delay: 0.8s; }
+
+/* Animaciones para las secciones al hacer scroll */
+.seccion_info_prop {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s ease;
+}
+
+.seccion_info_prop.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animación para las tarjetas de valores */
+.nosotros_valor {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.5s ease;
+}
+
+.nosotros_valor.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Animación para los íconos en círculos */
+.valor_img {
+    transition: all 0.3s ease;
+}
+
+.valor_img:hover {
+    transform: scale(1.1);
+    border-color: var(--principal_2);
+}
+
+/* Keyframes necesarios */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInStagger {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Animaciones base */
+.form_container form {
+    opacity: 0;
+    transform: translateY(20px);
+    transition: all 0.3s ease-in-out;
+    position: absolute;
+    width: 100%;
+    visibility: hidden;
+}
+
+/* Clase para mostrar el formulario con animación */
+.form_container form.active {
+    opacity: 1;
+    transform: translateY(0);
+    position: relative;
+    visibility: visible;
+}
+
+/* Clase para ocultar el formulario con animación */
+.form_container form.inactive {
+    opacity: 0;
+    transform: translateY(-20px);
+    visibility: hidden;
+}

@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/private/dashboard/datos.css?v=1.0.1">
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GLQZ7S926T"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <script src="https://accounts.google.com/gsi/client"></script>
+    <title>Master Broker.ai - Configuración de cuenta</title>
+</head>
+<body class="bg-gray-50">
+    <div id="loader">
+        <div class="spinner">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <div class="nav_sup">
+        <div id="nav-container"></div>
+    </div>
+
+    <div class="min-h-screen">
+        <div class="max-w-3xl mx-auto space-y-6">
+            <!-- Datos Personales -->
+            <div class="cuenta_datos">
+                <h2>Configuración de cuenta</h2>
+                
+                <div class="logo_de_empresa" style="display: none;">
+                    <h3>Logo de empresa</h3>
+                    <div class="cambiar_logo">
+                        <div class="mostrar_logo_cargado">
+                            <img src="/uploads/logos/logo.png?v=1.0.2" alt="Logo de la empresa">
+                        </div>
+                        <div class="file-input-wrapper">
+                            <label class="file-input-label"><span>Selecciona un nuevo logo</span></label>
+                            <input type="file" accept="image/*">
+                        </div>
+                    </div>
+                </div>
+                <div class="datosuser">
+                    <h3>Datos personales</h3>
+                    <label>
+                        Nombre
+                        <input type="text" class="w-full px-3 py-2 border rounded-lg">
+                    </label>
+                    <label>
+                        Apellido
+                        <input type="text" class="w-full px-3 py-2 border rounded-lg">
+                    </label>
+                    <label style="display: none;">
+                        Razón Social
+                        <input type="text" class="w-full px-3 py-2 border rounded-lg">
+                    </label>
+                    <div class="fiscal-condition-display">
+                        <span class="readonly-value"></span>
+                    </div>
+                    <label>
+                        RFC/CURP
+                        <input type="text" class="w-full px-3 py-2 border rounded-lg">
+                    </label>
+                </div>
+                <div class="datosuser">
+                    <h3>Datos de contacto</h3>
+                    <div class="correo_cuenta">
+                        <p>ejemplo@correo.com</p>
+                    </div>
+                    <label>
+                        Teléfono
+                        <input type="tel" pattern="[0-9]{10}"maxlength="10" placeholder="10 dígitos" title="Número telefónico a 10 dígitos" inputmode="numeric" required class="w-full px-3 py-2 border rounded-lg">
+                    </label>
+                    <label>
+                        Celular
+                        <input type="tel" pattern="[0-9]{10}"maxlength="10" placeholder="10 dígitos" title="Número telefónico a 10 dígitos" inputmode="numeric" required class="w-full px-3 py-2 border rounded-lg">
+                    </label>
+                </div>
+                <!-- Cuentas Conectadas -->
+                <div class="datosuser bg-white rounded-lg shadow-sm p-6">
+                    <h3>Cuentas conectadas</h3>
+                    
+                    <!-- WhatsApp Business -->
+                    <div class="flex items-center justify-between py-4 border-b">
+                        <div class="flex items-center gap-4">
+                            <img src="/assets/img/whatsapp_conect.png" alt="WhatsApp" class="h-8 w-8">
+                            <div>
+                                <h4>WhatsApp Business</h4>
+                                <p class="whatsapp-status text-sm text-gray-500">Conecta tu cuenta de WhatsApp Business</p>
+                            </div>
+                        </div>
+                        <button onclick="conectarWhatsApp()" class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                            Conectar WhatsApp
+                        </button>
+                    </div>
+
+                    <!-- Google -->
+                    <div class="flex items-center justify-between py-4">
+                        <div class="flex items-center gap-4">
+                            <img src="/assets/img/google.png" alt="Google" class="h-8 w-8">
+                            <div>
+                                <h4>Google</h4>
+                                <p class="google-status text-sm text-gray-500">Conecta tu cuenta de Google</p>
+                            </div>
+                        </div>
+                        <button data-google-connect onclick="conectarGoogle()" class="px-4 py-2 bg-blue-50 text-blue-600 rounded-lg hover:bg-blue-100">
+                            Conectar Google
+                        </button>
+                    </div>
+                </div>
+
+                <div class="datosuser bg-white rounded-lg shadow-sm p-6">
+                    <h3>Calendario y Disponibilidad</h3>
+                    
+                    <div class="mt-4 flex items-center justify-between bg-gradient-to-r from-blue-50 to-white rounded-lg p-4 border border-blue-100">
+                        <div class="flex items-center gap-4">
+                            <div class="bg-blue-100 p-3 rounded-full">
+                                <i data-lucide="calendar-days" class="h-7 w-7 text-blue-600"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-lg font-medium">Horarios de Disponibilidad</h4>
+                                <p class="text-sm text-gray-600">Configura tus horarios semanales y permite que tus clientes agendan citas en los espacios disponibles</p>
+                                <div class="flex items-center gap-2 mt-1">
+                                    <i data-lucide="info" class="h-4 w-4 text-blue-500"></i>
+                                    <span class="text-xs text-blue-600">Puedes sincronizar con Google Calendar (opcional)</span>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/dashboard/configuracion/calendario.html" class="px-5 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 flex items-center gap-2 transition-colors whitespace-nowrap">
+                            Configurar Calendario
+                            <i data-lucide="arrow-right" class="h-4 w-4"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Cambiar Contraseña -->
+                <div class="datosuser">
+                    <h3 class="ir_cambiar_contraseña">
+                        Contraseña
+                        <button id="ir_cambiar_contraseña">
+                            Cambiar contraseña 
+                            <i data-lucide="arrow-right"></i>
+                        </button>
+                    </h3>
+                </div>
+                <button id="guardar_datos">Guardar cambios</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cambiar Contraseña Form -->
+    <div class="cambiar_contrasena" style="display: none;">        
+        <div class="cuenta_datos">
+            <button id="regresar_a_datos">
+                <img src="/assets/img/flecha-pequena-izquierda.png?v=1.0.2" alt="">Atrás
+            </button>
+            <h2 style="margin-top: 20px;">Cambiar contraseña</h2>
+            <div class="datosuser">
+                <h3>Contraseña actual</h3>
+                <label>
+                    Contraseña
+                    <input type="password" name="current_password" placeholder="Ingresa tu contraseña actual">
+                </label>
+                <h3 style="margin-top: 20px;">Nueva contraseña</h3>
+                <label>
+                    Nueva contraseña
+                    <input type="password" name="new_password" placeholder="Ingresa una nueva contraseña. Debe tener mínimo 6 caracteres">
+                </label>
+                <label>
+                    Confirmar contraseña
+                    <input type="password" name="confirm_password">
+                </label>
+            </div>
+
+            <button id="guardar_contrasena">Guardar cambios</button>
+        </div>
+    </div>
+
+    <div id="footer_container"></div>
+    <script>
+        lucide.createIcons();
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/assets/js/user-data.js"></script>
+    <script src="/assets/js/components_private.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script src="/assets/js/loader.js"></script>
+</body>
+</html>

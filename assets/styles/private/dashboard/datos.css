@@ -1,0 +1,351 @@
+/* Estilos de la cuenta */
+.cuenta_datos {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    max-width: 768px;
+    background-color: var(--body);
+    border-radius: 0.75rem;
+    margin: 6.5rem auto;
+    box-shadow: 0 1px 3px (0, 0, 0, 0.1);
+}
+
+.footer{
+    border-top: none !important;
+    bottom: 0px;
+}
+
+.footer_infer{
+    border-top: 1px solid var(--border) !important;
+}
+
+.cuenta_datos h3{
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.cuenta_datos h2{
+    padding: 1.5rem;
+    background: var(--contenedor);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    margin: 0;
+    margin-bottom: 1.5rem;
+    font-size: 1.5rem;
+}
+
+/* Formularios */
+.cuenta_datos label {
+    display: flex;
+    flex-direction: column;
+    margin-top: 1.25rem;
+    color: var(--colortxt);
+}
+
+.cuenta_datos input {
+    padding: 0.75rem;
+    background-color: var(--contenedor);
+    border: 1px solid var(--border);
+    border-radius: 0.5rem;
+    outline: none;
+    margin-top: 0.5rem;
+    transition: all 0.2s;
+}
+
+.cuenta_datos input:focus {
+    border-color: var(--principal);
+    box-shadow: 0 0 0 2px rgb(26, 90, 137, 0.1);
+}
+
+/* Logo section */
+.logo_de_empresa {
+    padding: 1.5rem;
+    background: var(--contenedor);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    display: block !important;
+    margin-bottom: 1.5rem;
+}
+
+.logo_de_empresa h3{
+    margin: 0;
+}
+
+.cambiar_logo {
+    display: flex;
+    padding: 1.5rem 0;
+    align-items: center;
+    gap: 1.5rem;
+}
+
+.mostrar_logo_cargado {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 60px;
+    width: 100px;
+    background-color: var(--body);
+    border: 2px dashed var(--border);
+    border-radius: 0.5rem;
+}
+
+.mostrar_logo_cargado img {
+    max-height: 5rem;
+    max-width: 5rem;
+    object-fit: contain;
+}
+
+.file-input-wrapper {
+    position: relative;
+}
+
+.file-input-wrapper input[type="file"]::file-selector-button {
+    display: none;
+}
+
+/* Para navegadores más antiguos */
+.file-input-wrapper input[type="file"]::-webkit-file-upload-button {
+    display: none;
+}
+
+.file-input-wrapper input[type="file"] {
+    color: transparent;
+    padding: 0;
+}
+
+/* Para Firefox */
+.file-input-wrapper input[type="file"]::-moz-file-upload-button {
+    display: none;
+}
+
+.file-input-wrapper {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background-color: rgb(26, 90, 137, 0.1);
+    color: var(--principal);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+.file-input-wrapper input:hover {
+    background-color: rgb(26, 90, 137,0.15);
+}
+
+.file-input-label{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    margin: 0 !important;
+    width: 70%;
+    z-index: 1;
+}
+
+.file-input-label span{
+    color: var(--principal);
+}
+
+.file-input-wrapper input{
+    width: 100%;
+    margin: 0;
+    height: 40px;
+    background: transparent;
+    z-index: 2;
+    border: none;
+}
+
+.datosuser{
+    padding: 1.5rem;
+    background: var(--contenedor);
+    box-shadow: 0px 1px 2px rgba(0, 0, 0, 0.1);
+    border-radius: 0.75rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Correo y condición fiscal */
+.correo_cuenta, .fiscal-condition-display {
+    background-color: var(--sub_contenedor);
+    margin-top: 1.25rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+}
+
+.correo_cuenta p, .fiscal-condition-display p{
+    margin: 0px;
+    color: var(--colorp_2);
+}
+
+.readonly-value {
+    color: var(--colorp_2);
+}
+
+/* Botones */
+#guardar_datos, #guardar_contrasena {
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    background-color: var(--principal);
+    border: none;
+    color: var(--colorwt);
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+#guardar_datos:hover, #guardar_contrasena:hover {
+    opacity: 0.9;
+}
+
+#ir_cambiar_contraseña {
+    background: none;
+    border: none;
+    color: var(--principal);
+    font-size: 1rem;
+    padding: 0;
+    cursor: pointer;
+    text-align: left;
+    width: 200px;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+}
+
+#regresar_a_datos {
+    display: flex;
+    align-items: center;
+    background: none;
+    border: none;
+    font-size: 1rem;
+    gap: 0.625rem;
+    padding: 0;
+    padding-bottom: 0.3125rem;
+    width: 5rem;
+    border-bottom: 1px solid var(--principal);
+    cursor: pointer;
+}
+
+#regresar_a_datos img {
+    height: 1.5rem;
+}
+
+/* Contraseña */
+.password-toggle {
+    position: absolute;
+    right: 0.625rem;
+    top: 50%;
+    transform: translateY(-2.5px);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0.3125rem;
+}
+
+.ir_cambiar_contraseña{
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+.password-toggle img {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+input[type="password"] {
+    padding-right: 2.5rem !important;
+}
+
+/* Cuentas conectadas */
+.cuenta-conectada {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 0;
+    border-bottom: 1px solid var(--border);
+}
+
+.cuenta-conectada:last-child {
+    border-bottom: none;
+}
+
+.cuenta-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.cuenta-icon {
+    width: 2rem;
+    height: 2rem;
+}
+
+.cuenta-detalles h4 {
+    margin: 0;
+    font-weight: 500;
+    color: var(--colortxt);
+}
+
+.cuenta-detalles p {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--colortxt);
+    opacity: 0.7;
+}
+
+.btn-conectar {
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    background-color: rgb(26, 90, 137, 0.1);
+    color: var(--principal);
+    border: none;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-conectar:hover {
+    background-color: rgb(26, 90, 137, 0.15);
+}
+
+/* Responsive */
+@media (max-width: 767px) {
+    .cuenta_datos {
+        width: calc(100% - 2rem);
+        margin: 6.5rem auto;
+    }
+
+    .cambiar_logo {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .mostrar_logo_cargado {
+        width: 100%;
+        height: 7.5rem;
+    }
+
+    .file-input-wrapper {
+        width: 100%;
+    }
+
+    .file-input-wrapper label {
+        width: 100%;
+        text-align: center;
+    }
+
+    .cuenta_datos h4 {
+        margin: 0;
+    }
+
+    .fiscal-condition-display span,
+    .correo_cuenta p {
+        color: var(--colorp_2);
+    }
+
+    .ir_cambiar_contraseña {
+        padding: 1.25rem 0;
+    }
+}

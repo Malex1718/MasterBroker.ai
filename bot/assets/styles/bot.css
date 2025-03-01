@@ -1,0 +1,181 @@
+/* bot.css */
+.bot-container {
+    all: initial;
+    font-family: 'Urbanist', sans-serif;
+}
+
+.bot-container * {
+    all: unset;
+    box-sizing: border-box;
+}
+
+.bot-container button,
+.bot-container input,
+.bot-container div,
+.bot-container p,
+.bot-container h1,
+.bot-container h2,
+.bot-container h3,
+.bot-container span {
+    display: revert;
+    font-family: 'Urbanist', sans-serif;
+}
+
+.bot-container {
+    /* Variables específicas del bot */
+    --bot-primary: #2563eb;
+    --bot-primary-dark: #1a5a89;
+    --bot-bg: #ffffff;
+    --bot-text: #000000;
+    --bot-border: #e5e7eb;
+    --bot-gray: #f3f4f6;
+}
+
+/* Resto de los estilos del bot manteniendo el prefijo bot- */
+.bot-wrapper {
+    position: fixed;
+    bottom: 24px;
+    right: 24px;
+    z-index: 9999;
+    font-family: 'Urbanist', sans-serif;
+}
+
+.bot-wrapper * {
+  box-sizing: border-box;
+  font-family: inherit;
+}
+
+/* Chat Widget */
+.bot-wrapper .chat-widget {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+/* Contenedor del chat */
+.bot-wrapper .chat-container {
+  width: 400px;
+  height: 600px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  overflow: hidden;
+  background-color: white;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+/* Mensajes y contenido */
+.bot-wrapper .message {
+  max-width: 80%;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  border-radius: 0.5rem;
+  white-space: pre-line;
+}
+
+/* Indicador de escritura */
+.bot-wrapper .typing-indicator {
+  display: flex;
+  gap: 0.5rem;
+  padding: 1rem;
+  background-color: white;
+  border-radius: 0.5rem;
+  width: fit-content;
+}
+
+.bot-wrapper .typing-dot {
+  width: 8px;
+  height: 8px;
+  background-color: #2563eb;
+  border-radius: 50%;
+  animation: bot-bounce 1s infinite;
+}
+
+@keyframes bot-bounce {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+
+.bot-wrapper .typing-dot:nth-child(2) { animation-delay: 0.2s; }
+.bot-wrapper .typing-dot:nth-child(3) { animation-delay: 0.4s; }
+
+/* Botón flotante */
+.bot-wrapper .chat-toggle-button {
+  width: 60px;
+  height: 60px;
+  border-radius: 30px;
+  background-color: #2563eb;
+  border: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.bot-wrapper .chat-toggle-button:hover {
+  background-color: #1d4ed8;
+  transform: scale(1.1);
+}
+
+/* Área de input */
+.bot-wrapper .input-area {
+  padding: 1rem;
+  border-top: 1px solid #e5e7eb;
+}
+
+.bot-wrapper .input-container {
+  display: flex;
+  gap: 0.5rem;
+}
+
+/* Animaciones */
+@keyframes bot-soundwave {
+  0% { height: 4px; }
+  50% { height: 16px; }
+  100% { height: 4px; }
+}
+
+@keyframes bot-pulse {
+  0%, 100% {
+      opacity: 1;
+      transform: scale(1);
+  }
+  50% {
+      opacity: 0.5;
+      transform: scale(1.1);
+  }
+}
+
+.bot-wrapper .bot-animate-soundwave {
+  animation: bot-soundwave 0.5s ease-in-out infinite;
+}
+
+.bot-wrapper .bot-animate-pulse {
+  animation: bot-pulse 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+  .bot-wrapper .chat-container {
+      width: 100%;
+      height: 100%;
+      position: fixed;
+      bottom: 0;
+      right: 0;
+      margin: 0;
+      border-radius: 0;
+  }
+
+  .bot-wrapper .chat-toggle-button {
+      width: 50px;
+      height: 50px;
+  }
+}
+
+/* Estados de botones */
+.bot-wrapper button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}

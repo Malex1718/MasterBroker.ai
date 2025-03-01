@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lista de Espera - Pre-registro</title>
+    <link rel="stylesheet" href="waitlist.css">
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <div class="card-header">
+                <h1>¡Próximamente!</h1>
+                <p class="subtitle">Únete a nuestra lista de espera y sé de los primeros en acceder cuando lancemos</p>
+            </div>
+
+            <form id="waitlistForm" class="waitlist-form">
+                <div class="form-group">
+                    <label for="name">Nombre completo</label>
+                    <input type="text" id="name" name="name" required 
+                           class="form-input" placeholder="Tu nombre completo">
+                    <span class="error-message" id="nameError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="email">Correo electrónico</label>
+                    <input type="email" id="email" name="email" required 
+                           class="form-input" placeholder="tu@email.com">
+                    <span class="error-message" id="emailError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="phone">Teléfono (opcional)</label>
+                    <input type="tel" id="phone" name="phone" 
+                           class="form-input" placeholder="10 dígitos">
+                    <span class="error-message" id="phoneError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="userType">¿Cómo planeas usar nuestra aplicación?</label>
+                    <select id="userType" name="userType" required class="form-select">
+                        <option value="">Selecciona una opción</option>
+                        <option value="personal">Uso personal</option>
+                        <option value="business">Uso empresarial</option>
+                        <option value="developer">Desarrollador</option>
+                    </select>
+                    <span class="error-message" id="userTypeError"></span>
+                </div>
+
+                <button type="submit" class="submit-button">
+                    <span class="button-text">Unirme a la lista de espera</span>
+                    <div class="spinner" style="display: none;"></div>
+                </button>
+            </form>
+
+            <div id="successMessage" class="alert success" style="display: none;">
+                ¡Gracias por registrarte! Te notificaremos cuando la aplicación esté disponible.
+            </div>
+
+            <div id="errorMessage" class="alert error" style="display: none;">
+                Ha ocurrido un error. Por favor, intenta nuevamente.
+            </div>
+        </div>
+    </div>
+    <script src="/assets/js/waitlist.js"></script>
+</body>
+</html>

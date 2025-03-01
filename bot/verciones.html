@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Versiones de MAIA</title>
+    
+    <!-- React y ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    
+    <!-- Babel -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+        body {
+            margin: 0;
+            font-family: system-ui, -apple-system, sans-serif;
+            background: linear-gradient(135deg, #f6f8fc 0%, #ffffff 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            width: 100%;
+            min-height: 100vh;
+            padding: 40px;
+            box-sizing: border-box;
+            overflow-x: hidden;
+        }
+
+        .title {
+            text-align: center;
+            color: #1a365d;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 80px;
+            text-shadow: 0 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .versions-container {
+            display: flex;
+            align-items: flex-end;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 60px;
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .version-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 20px;
+            position: relative;
+        }
+
+        .circle {
+            border-radius: 50%;
+            background: linear-gradient(135deg, #3B82F6 0%, #2563EB 100%);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.2);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .circle::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+            border-radius: 50%;
+        }
+
+        .circle:hover {
+            transform: translateY(-8px) scale(1.05);
+            box-shadow: 0 16px 32px rgba(37, 99, 235, 0.3);
+        }
+
+        .version-label {
+            margin-top: 24px;
+            text-align: center;
+            position: relative;
+        }
+
+        .version-name {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #1e40af;
+            margin-top: 8px;
+            white-space: nowrap;
+            text-shadow: 0 1px 1px rgba(0,0,0,0.1);
+        }
+
+        .version-description {
+            font-size: 0.9rem;
+            color: #6b7280;
+            margin-top: 8px;
+            max-width: 180px;
+            text-align: center;
+            line-height: 1.4;
+        }
+
+        @media (max-width: 1200px) {
+            .versions-container {
+                gap: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+            
+            .versions-container {
+                gap: 30px;
+            }
+
+            .title {
+                font-size: 2rem;
+                margin-bottom: 40px;
+            }
+
+            .version-name {
+                font-size: 1rem;
+            }
+
+            .version-description {
+                font-size: 0.8rem;
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="root"></div>
+    <script type="text/babel">
+        function VersionCircle({ size, name, description }) {
+            return (
+                <div className="version-item">
+                    <div 
+                        className="circle"
+                        style={{
+                            width: `${size}px`,
+                            height: `${size}px`
+                        }}
+                    />
+                    <div className="version-label">
+                        <div className="version-name">{name}</div>
+                        <div className="version-description">{description}</div>
+                    </div>
+                </div>
+            );
+        }
+
+        function VersionVisualization() {
+            const versions = [
+                { 
+                    name: 'MAIA Essential', 
+                    size: 40,
+                    description: 'El punto de partida perfecto para tu journey'
+                },
+                { 
+                    name: 'MAIA Advance', 
+                    size: 240,
+                    description: 'Expande tus capacidades y posibilidades'
+                },
+                { 
+                    name: 'MAIA Professional', 
+                    size: 360,
+                    description: 'Potencia profesional para grandes desafíos'
+                },
+                { 
+                    name: 'MAIA Enterprise', 
+                    size: 480,
+                    description: 'Soluciones empresariales a gran escala'
+                },
+                { 
+                    name: 'MAIA Ultimate', 
+                    size: 720,
+                    description: 'La experiencia definitiva sin límites'
+                }
+            ];
+
+            return (
+                <div className="container">
+                    <h1 className="title">Evolución MAIA</h1>
+                    <div className="versions-container">
+                        {versions.map((v, index) => (
+                            <VersionCircle 
+                                key={index}
+                                name={v.name}
+                                size={v.size}
+                                description={v.description}
+                            />
+                        ))}
+                    </div>
+                </div>
+            );
+        }
+
+        // Renderizar la aplicación
+        const root = ReactDOM.createRoot(document.getElementById('root'));
+        root.render(<VersionVisualization />);
+    </script>
+</body>
+</html>

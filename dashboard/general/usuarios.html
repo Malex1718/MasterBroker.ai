@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Administrativo - Usuarios</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Urbanist:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/dashboard/general/assets/styles/admin.css">
+</head>
+<body>
+    <!-- Sidebar -->
+    <nav class="sidebar">
+        <div class="sidebar-header">
+            <h2>Admin Panel</h2>
+        </div>
+        <div class="sidebar-menu">
+            <a href="administracion.html" class="menu-item">
+                <i class="fas fa-home"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="usuarios.html" class="menu-item active">
+                <i class="fas fa-users"></i>
+                <span>Usuarios</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-building"></i>
+                <span>Propiedades</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-chart-line"></i>
+                <span>Estadísticas</span>
+            </a>
+            <a href="#" class="menu-item">
+                <i class="fas fa-cog"></i>
+                <span>Configuración</span>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hamburger Menu -->
+    <div class="hamburger-menu">
+        <input type="checkbox" id="menu-toggle">
+        <label for="menu-toggle" class="hamburger-label">
+            <span></span>
+        </label>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="header">
+            <h1>Usuarios</h1>
+        </header>
+
+        <!-- Stats Grid -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3>Usuarios Totales</h3>
+                    <i class="fas fa-users"></i>
+                </div>
+                <div class="stat-value">1,234</div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    12% este mes
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3>Usuarios Activos</h3>
+                    <i class="fas fa-user-check"></i>
+                </div>
+                <div class="stat-value">845</div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    5% este mes
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3>Nuevos Usuarios</h3>
+                    <i class="fas fa-user-plus"></i>
+                </div>
+                <div class="stat-value">325</div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    18% este mes
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-card-header">
+                    <h3>Agentes Inmobiliarios</h3>
+                    <i class="fas fa-id-badge"></i>
+                </div>
+                <div class="stat-value">156</div>
+                <div class="stat-trend">
+                    <i class="fas fa-arrow-up"></i>
+                    2% este mes
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts -->
+        <div class="charts-grid">
+            <div class="chart-container">
+                <h2>Registro de Usuarios</h2>
+                <div class="chart-wrapper">
+                    <canvas id="usersRegistrationChart"></canvas>
+                </div>
+            </div>
+            <div class="chart-container">
+                <h2>Distribución por Roles</h2>
+                <div class="chart-wrapper">
+                    <canvas id="userRolesChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Activity Section -->
+        <div class="activity-grid">
+            <div class="activity-card">
+                <h2>Usuarios Recientes</h2>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-indicator" style="background-color: var(--principal)"></div>
+                        <div class="activity-text">
+                            <div>Juan Pérez se registró como agente</div>
+                            <div class="activity-time">Hace 5 minutos</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-indicator" style="background-color: var(--principal_2)"></div>
+                        <div class="activity-text">
+                            <div>María García actualizó su perfil</div>
+                            <div class="activity-time">Hace 15 minutos</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-indicator" style="background-color: var(--bueno)"></div>
+                        <div class="activity-text">
+                            <div>Carlos López verificó su cuenta</div>
+                            <div class="activity-time">Hace 30 minutos</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="activity-card">
+                <h2>Alertas de Usuarios</h2>
+                <div class="activity-list">
+                    <div class="activity-item">
+                        <div class="activity-indicator" style="background-color: var(--error)"></div>
+                        <div class="activity-text">
+                            <div>Usuario #1234 requiere verificación</div>
+                            <div class="activity-time">Requiere atención</div>
+                        </div>
+                    </div>
+                    <div class="activity-item">
+                        <div class="activity-indicator" style="background-color: var(--principal_2)"></div>
+                        <div class="activity-text">
+                            <div>3 cuentas pendientes de activación</div>
+                            <div class="activity-time">Revisar documentación</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.0/chart.min.js"></script>
+    <script src="/dashboard/general/assets/js/admin.js"></script>
+    <script>
+        // Inicialización de las gráficas
+        document.addEventListener('DOMContentLoaded', function() {
+            // Gráfica de registro de usuarios
+            const usersCtx = document.getElementById('usersRegistrationChart').getContext('2d');
+            new Chart(usersCtx, {
+                type: 'line',
+                data: {
+                    labels: ['Ene', 'Feb', 'Mar', 'Abr', 'May', 'Jun'],
+                    datasets: [{
+                        label: 'Nuevos Usuarios',
+                        data: [65, 78, 90, 85, 99, 105],
+                        borderColor: '#1a5a89',
+                        tension: 0.4,
+                        fill: true,
+                        backgroundColor: 'rgba(26, 90, 137, 0.1)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+
+            // Gráfica de roles de usuario
+            const rolesCtx = document.getElementById('userRolesChart').getContext('2d');
+            new Chart(rolesCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Agentes', 'Usuarios', 'Administradores'],
+                    datasets: [{
+                        data: [156, 845, 12],
+                        backgroundColor: ['#1a5a89', '#288cd5', '#1fa953']
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false
+                }
+            });
+        });
+    </script>
+</body>
+</html>

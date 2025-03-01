@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script>
+        function initMap() {
+            // Esta función será llamada por Google Maps cuando esté listo
+            if (window.initializeMapAndForm) {
+                window.initializeMapAndForm();
+            }
+        }
+    </script>
+    <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCoW_xLs0GvHfIYfsqerIDHUqYQVlnLtfg&libraries=places&callback=initMap">
+    </script>
+    <link rel="shortcut icon" href="/assets/img/icon.png">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/private/workspace/publicador.css?v=1.0.1">
+    <title>Master Broker.ai - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="nav-container"></div>
+    </div>
+    <div class="proges_pubicador">
+        <div class="progreso_partes">
+            <div class="barra_progreso_partes">
+                <div class="barra_progreso_partes_complet"></div>
+            </div>
+            <div class="tipo_progres">
+                <div class="tipo_progres_numero active">
+                    <h2>1</h2>
+                </div>
+                <h4 class="active">Principales</h4>
+            </div>
+            <div class="tipo_progres">
+                <div class="tipo_progres_numero">
+                    <h2>2</h2>
+                </div>
+                <h4>Multimedia</h4>
+            </div>
+            <div class="tipo_progres">
+                <div class="tipo_progres_numero">
+                    <h2>3</h2>
+                </div>
+                <h4>Extras</h4>
+            </div>
+            <div class="tipo_progres">
+                <div class="tipo_progres_numero">
+                    <h2>4</h2>
+                </div>
+                <h4>Publicar</h4>
+            </div>
+        </div>
+    </div>       
+    <div class="titulo_publicador">
+        <h2>¡Hola, empecemos a crear tu aviso!</h2>
+    </div> 
+    <div class="container_publicador">
+        <h3>Selecciona el tipo de operación e inmueble</h3>
+        <div class="select_tip_inm_ope">
+            <div class="tipo_operacion_publicacion" id="operacionSelector">
+                <div class="selector_header">
+                    <span>Tipo de operación</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="tipo_operacion_opciones">
+                    <div class="opcion">
+                        <input type="radio" id="rentar" name="tipo_operacion" value="rentar">
+                        <label for="rentar">
+                            <span class="radio_custom"></span>
+                            Rentar
+                        </label>
+                    </div>
+                    
+                    <div class="opcion">
+                        <input type="radio" id="comprar" name="tipo_operacion" value="comprar">
+                        <label for="comprar">
+                            <span class="radio_custom"></span>
+                            Comprar
+                        </label>
+                    </div>
+                    
+                    <div class="opcion">
+                        <input type="radio" id="remates" name="tipo_operacion" value="remates">
+                        <label for="remates">
+                            <span class="radio_custom"></span>
+                            Remates
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="temporal" name="tipo_operacion" value="temporal">
+                        <label for="temporal">
+                            <span class="radio_custom"></span>
+                            Temporal / Vacacional
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="desarrollos" name="tipo_operacion" value="desarrollos">
+                        <label for="desarrollos">
+                            <span class="radio_custom"></span>
+                            Desarrollos
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="traspaso" name="tipo_operacion" value="traspaso">
+                        <label for="traspaso">
+                            <span class="radio_custom"></span>
+                            Traspaso
+                        </label>
+                    </div>
+
+                    <div class="opcion">
+                        <input type="radio" id="preventa" name="tipo_operacion" value="preventa">
+                        <label for="preventa">
+                            <span class="radio_custom"></span>
+                            Preventa
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="tipo_inmueble_publicacion" id="inmuebleSelector">
+                <div class="selector_header">
+                    <span>Tipo de inmueble</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+            
+                <div class="tipo_inmueble_opciones">
+                    <div class="opcion">
+                        <input type="radio" id="casa" name="tipo_inmueble" value="casa">
+                        <label for="casa">
+                            <span class="radio_custom"></span>
+                            Casa
+                        </label>
+                    </div>
+                    
+                    <div class="opcion">
+                        <input type="radio" id="departamento" name="tipo_inmueble" value="departamento">
+                        <label for="departamento">
+                            <span class="radio_custom"></span>
+                            Departamento
+                        </label>
+                    </div>
+                    
+                    <div class="opcion">
+                        <input type="radio" id="duplex" name="tipo_inmueble" value="duplex">
+                        <label for="duplex">
+                            <span class="radio_custom"></span>
+                            Dúplex
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="quinta" name="tipo_inmueble" value="quinta">
+                        <label for="quinta">
+                            <span class="radio_custom"></span>
+                            Quinta
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="villa" name="tipo_inmueble" value="villa">
+                        <label for="villa">
+                            <span class="radio_custom"></span>
+                            Villa
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="edificio" name="tipo_inmueble" value="edificio">
+                        <label for="edificio">
+                            <span class="radio_custom"></span>
+                            Edificio
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="oficina" name="tipo_inmueble" value="oficina">
+                        <label for="oficina">
+                            <span class="radio_custom"></span>
+                            Oficina
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="local" name="tipo_inmueble" value="local">
+                        <label for="local">
+                            <span class="radio_custom"></span>
+                            Local
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="bodega" name="tipo_inmueble" value="bodega">
+                        <label for="bodega">
+                            <span class="radio_custom"></span>
+                            Bodega comercial
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="nave" name="tipo_inmueble" value="nave">
+                        <label for="nave">
+                            <span class="radio_custom"></span>
+                            Nave industrial
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="terreno" name="tipo_inmueble" value="terreno">
+                        <label for="terreno">
+                            <span class="radio_custom"></span>
+                            Terreno/Lote
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="huerta" name="tipo_inmueble" value="huerta">
+                        <label for="huerta">
+                            <span class="radio_custom"></span>
+                            Huerta
+                        </label>
+                    </div>
+            
+                    <div class="opcion">
+                        <input type="radio" id="rancho" name="tipo_inmueble" value="rancho">
+                        <label for="rancho">
+                            <span class="radio_custom"></span>
+                            Rancho
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div class="tipo_variante_publicacion" id="varianteSelector">
+                <div class="selector_header">
+                    <span>Variante de inmueble</span>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m6 9 6 6 6-6"/>
+                    </svg>
+                </div>
+                <div class="tipo_variante_opciones">
+                    <!-- Las opciones se llenarán dinámicamente con JavaScript -->
+                </div>
+            </div>
+        </div>
+        <h3>¿Dónde está ubicado tu inmueble?</h3>
+        <div class="direccion_container">
+            <div class="input_direccion">
+                <input type="text" id="direccionInput" placeholder="Ingresa la dirección completa">
+            </div>
+            <div class="select_ubicacion">
+                <div class="tipo_estado_publicacion disabled" id="estadoSelector">
+                    <div class="selector_header">
+                        <span>Estado</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </div>
+                    <div class="tipo_estado_opciones">
+                        <!-- Se llenarán dinámicamente -->
+                    </div>
+                </div>
+        
+                <div class="tipo_ciudad_publicacion disabled" id="ciudadSelector">
+                    <div class="selector_header">
+                        <span>Ciudad</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </div>
+                    <div class="tipo_ciudad_opciones">
+                        <!-- Se llenarán dinámicamente -->
+                    </div>
+                </div>
+                <div class="tipo_colonia_publicacion disabled" id="coloniaSelector">
+                    <div class="selector_header">
+                        <span>Colonia</span>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="m6 9 6 6 6-6"/>
+                        </svg>
+                    </div>
+                    <div class="tipo_colonia_opciones">
+                        <!-- Se llenarán dinámicamente -->
+                    </div>
+                </div>
+            </div>
+            <div id="mapContainer" style="width: 100%; height: 300px;"></div>
+        </div>
+        <h3>Características principales</h3>
+        <div class="caracteristicas_container">
+            <div class="numeric_input_group">
+                <label>Recámaras (opcional)</label>
+                <div class="numeric_controls">
+                    <button class="numeric_btn" onclick="updateValue('recamaras', -1)">-</button>
+                    <div class="numeric_value" id="recamaras_value">0</div>
+                    <button class="numeric_btn" onclick="updateValue('recamaras', 1)">+</button>
+                </div>
+            </div>
+        
+            <div class="numeric_input_group">
+                <label>Baños (opcional)</label>
+                <div class="numeric_controls">
+                    <button class="numeric_btn" onclick="updateValue('banos', -1)">-</button>
+                    <div class="numeric_value" id="banos_value">0</div>
+                    <button class="numeric_btn" onclick="updateValue('banos', 1)">+</button>
+                </div>
+            </div>
+        
+            <div class="numeric_input_group">
+                <label>Medio baño (opcional)</label>
+                <div class="numeric_controls">
+                    <button class="numeric_btn" onclick="updateValue('mediobano', -1)">-</button>
+                    <div class="numeric_value" id="mediobano_value">0</div>
+                    <button class="numeric_btn" onclick="updateValue('mediobano', 1)">+</button>
+                </div>
+            </div>
+        
+            <div class="numeric_input_group">
+                <label>Estacionamientos (opcional)</label>
+                <div class="numeric_controls">
+                    <button class="numeric_btn" onclick="updateValue('estacionamientos', -1)">-</button>
+                    <div class="numeric_value" id="estacionamientos_value">0</div>
+                    <button class="numeric_btn" onclick="updateValue('estacionamientos', 1)">+</button>
+                </div>
+            </div>
+        </div>
+        <h3>Superficie</h3>
+        <div class="superficie_container">
+            <div class="superficie_grupo">
+                <label>Superficie construida</label>
+                <div class="input_superficie">
+                    <div class="unidad">m2</div>
+                    <input type="number" id="superficie_construida" placeholder="0">
+                </div>
+            </div>
+            
+            <div class="superficie_grupo">
+                <label>Superficie total</label>
+                <div class="input_superficie">
+                    <div class="unidad">m2</div>
+                    <input type="number" id="superficie_total" placeholder="0">
+                </div>
+            </div>
+        </div>
+        <h3>Antigüedad</h3>
+        <div class="antiguedad_container">
+            <div class="antiguedad_opciones">
+                <div class="opcion">
+                    <input type="radio" id="estrenar" name="antiguedad" value="estrenar">
+                    <label for="estrenar">
+                        <span class="radio_custom"></span>
+                        A estrenar
+                    </label>
+                </div>
+                
+                <div class="opcion">
+                    <input type="radio" id="anos_antiguedad" name="antiguedad" value="anos">
+                    <label for="anos_antiguedad">
+                        <span class="radio_custom"></span>
+                        Años de antigüedad
+                    </label>
+                </div>
+                <div class="input_anos_container" id="input_anos_container" style="display: none;">
+                    <input type="number" id="cantidad_anos" placeholder="Cantidad de años">
+                </div>
+                <div class="opcion">
+                    <input type="radio" id="construccion" name="antiguedad" value="construccion">
+                    <label for="construccion">
+                        <span class="radio_custom"></span>
+                        En construcción
+                    </label>
+                </div>
+        
+            </div>
+        </div>
+        <h3>Precio</h3>
+        <div class="precio_container">
+            <div class="precio_grupo">
+                <label>Precio del inmueble</label>
+                <div class="input_precio">
+                    <div class="unidad">$</div>
+                    <input type="number" id="precio_inmueble" placeholder="2,000">
+                </div>
+            </div>
+            
+            <div class="precio_grupo">
+                <label>Mantenimiento (opcional)</label>
+                <div class="input_precio">
+                    <div class="unidad">$</div>
+                    <input type="number" id="mantenimiento" placeholder="0">
+                </div>
+            </div>
+        </div>
+        <h3>Describe el inmueble</h3>
+        <div class="titulo_propiedad_container">
+            <label>Título del aviso</label>
+            <input type="text" id="titulo_propiedad" placeholder="Ej: Casa en venta con alberca en zona residencial" maxlength="100">
+            <div class="contador_caracteres">
+                <span id="contador_titulo">0</span>
+                <span>/100</span>
+            </div>
+        </div>
+        
+        <div class="descripcion_propiedad_container">
+            <label>Descripción</label>
+            <textarea id="descripcion_propiedad" placeholder="Describe las características más importantes de tu propiedad" maxlength="2000"></textarea>
+            <div class="contador_caracteres">
+                <span id="contador_descripcion">0</span>
+                <span>/2000</span>
+            </div>
+        </div>
+    </div>
+    <div class="botons_continuar_guardar">
+        <button class="botn_atras" style="display: none;">
+            <img src="/assets/img/flecha-pequena-izquierda.png" alt="Atrás">
+            Atras
+        </button>
+        <div class="botons_guarcon">
+            <button class="boton_guardar">
+                Guardar y salir
+            </button>
+            <button class="boton_continuar">
+                Continuar
+            </button>
+        </div>
+    </div>
+    <script src="/assets/js/publicador/principales.js?v=1.0.1"></script>
+    <script src="/assets/js/publicador.js?v=1.0.1"></script>
+    <script src="/assets/js/components_private.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js?v=1.0.1"></script>
+    <script src="/assets/js/loader.js?v=1.0.1"></script>
+</body>
+</html>

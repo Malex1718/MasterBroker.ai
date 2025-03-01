@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Configuración de Horarios</title>
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="/assets/styles/private/dashboard/calendario.css">
+   <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50">
+    <div class="p-6 bg-white rounded-lg shadow-sm max-w-6xl mx-auto mt-8">
+        <!-- Título y Acciones -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex gap-2 items-center">
+                <i data-lucide="calendar" class="w-6 h-6 text-blue-600"></i>
+                <h2 class="text-xl font-semibold">Horario de Disponibilidad</h2>
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="flex items-center gap-2 text-gray-600" id="togglePreview">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                    <span>Vista Previa</span>
+                </a>
+                <a href="#" class="text-blue-600" id="applyWorkweek">
+                    Aplicar Horario Laboral
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección de Copiar Horarios -->
+        <div class="mb-6">
+            <h3 class="text-base font-medium mb-3">Copiar Horario</h3>
+            <div class="flex items-center gap-4">
+                <select class="border p-2 rounded w-48" id="copyFrom">
+                    <option value="">Origen</option>
+                    <option value="monday">Lunes</option>
+                    <option value="tuesday">Martes</option>
+                    <option value="wednesday">Miércoles</option>
+                    <option value="thursday">Jueves</option>
+                    <option value="friday">Viernes</option>
+                    <option value="saturday">Sábado</option>
+                    <option value="sunday">Domingo</option>
+                </select>
+                <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400"></i>
+                <select class="border p-2 rounded w-48" id="copyTo">
+                    <option value="">Destino</option>
+                    <option value="monday">Lunes</option>
+                    <option value="tuesday">Martes</option>
+                    <option value="wednesday">Miércoles</option>
+                    <option value="thursday">Jueves</option>
+                    <option value="friday">Viernes</option>
+                    <option value="saturday">Sábado</option>
+                    <option value="sunday">Domingo</option>
+                </select>
+                <button class="flex items-center gap-2 text-blue-600 px-4 py-2 hover:bg-blue-50 rounded" id="copySchedule">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    Aplicar copia
+                </button>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">
+                <i data-lucide="info" class="w-4 h-4 inline-block"></i>
+                El horario del día origen se copiará al día destino, reemplazando cualquier configuración existente
+            </p>
+        </div>
+    
+        <!-- Configuración de días -->
+        <div id="scheduleContainer" class="space-y-6">
+            <template id="dayTemplate">
+                <div class="day-container border-b pb-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <input type="checkbox" class="w-4 h-4 text-blue-600 day-active">
+                        <span class="font-medium day-name"></span>
+                        <span class="text-sm text-gray-600 day-hours"></span>
+                    </div>
+                    
+                    <div class="slots-container ml-6 space-y-4" style="display: none;">
+                        <div class="errors text-red-600 text-sm"></div>
+                        <div class="slots-list space-y-3"></div>
+                        <button class="add-slot flex items-center gap-2 text-blue-600 hover:text-blue-700">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Agregar intervalo</span>
+                        </button>
+                    </div>
+                </div>
+            </template>
+    
+            <template id="slotTemplate">
+                <div class="flex items-center gap-4">
+                    <input type="time" class="border p-2 rounded w-32 slot-start">
+                    <span class="text-gray-500">a</span>
+                    <input type="time" class="border p-2 rounded w-32 slot-end">
+                    <select class="border p-2 rounded w-40 slot-type">
+                        <option value="available">Disponible</option>
+                        <option value="break">Descanso</option>
+                        <option value="lunch">Comida</option>
+                        <option value="meeting">Reunión</option>
+                        <option value="other">Otro</option>
+                    </select>
+                    <input type="text" placeholder="Descripción (opcional)" class="border p-2 rounded flex-1 slot-description">
+                    <button class="p-2 text-red-600 hover:bg-red-50 rounded delete-slot">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </template>
+        </div>
+    
+        <!-- Botones de acción -->
+        <div class="mt-6 flex justify-end gap-4">
+            <button id="saveDraft" class="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 rounded hover:bg-blue-100">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                Guardar Borrador
+            </button>
+            <button id="saveSchedule" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Guardar y Aplicar
+            </button>
+        </div>
+    
+        <!-- Notificación de borrador -->
+        <div id="draftNotice" class="mt-4 p-4 bg-yellow-50 text-yellow-800 rounded-lg" style="display: none;">
+            Hay un borrador guardado. Los cambios no se aplicarán hasta que guardes la configuración.
+        </div>
+    </div>
+
+    <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" style="backdrop-filter: blur(4px);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] flex flex-col">
+                <!-- Header del modal -->
+                <div class="flex items-center justify-between p-6 border-b">
+                    <h3 class="text-lg font-semibold">Vista Previa del Horario</h3>
+                    <button class="text-gray-400 hover:text-gray-600" id="closePreview">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <!-- Contenido del modal -->
+                <div id="previewContent" class="p-6 overflow-auto">
+                    <!-- El contenido se generará dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script>
+       // Inicializar los iconos de Lucide
+       lucide.createIcons();
+   </script>
+   <script src="/assets/js/schedule.js"></script>
+</body>
+</html>

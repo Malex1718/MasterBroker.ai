@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/private/dashboard/publicaciones.css?v=1.0.1">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <title>Master Broker.ai - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GLQZ7S926T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GLQZ7S926T');
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1035305135067666');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1035305135067666&ev=PageView&noscript=1"
+/></noscript>
+
+<!-- Combined Analytics Events -->
+<script>
+// Función unificada para rastrear eventos en ambas plataformas
+function trackAnalytics(eventName, eventData) {
+    // Google Analytics
+    gtag('event', eventName, eventData);
+    // Meta Pixel
+    fbq('track', eventName, eventData);
+}
+
+// Rastrear vistas de propiedades individuales
+function trackPropertyView(property) {
+    trackAnalytics('ViewContent', {
+        content_type: 'real_estate',
+        content_ids: [property.id],
+        content_name: property.name,
+        value: property.price,
+        currency: 'MXN',
+        content_category: property.type
+    });
+}
+
+// Rastrear formularios de contacto
+function trackLeadForm() {
+    trackAnalytics('Lead', {
+        content_category: 'real_estate_inquiry'
+    });
+}
+
+// Rastrear clicks en WhatsApp
+function trackWhatsAppClick() {
+    trackAnalytics('Contact', {
+        content_category: 'whatsapp_contact'
+    });
+}
+
+// Rastrear búsquedas de propiedades
+function trackPropertySearch(searchParams) {
+    trackAnalytics('Search', {
+        search_string: searchParams.query,
+        content_category: 'property_search'
+    });
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Para el formulario de contacto
+    const contactForm = document.getElementById('contactForm');
+    if(contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            trackLeadForm();
+        });
+    }
+
+    // Para el botón de WhatsApp
+    const whatsappBtn = document.querySelector('.button_whats_contac');
+    if(whatsappBtn) {
+        whatsappBtn.addEventListener('click', function() {
+            trackWhatsAppClick();
+        });
+    }
+
+    // Para el botón de Email
+    const emailBtn = document.querySelector('.button_email_contac');
+    if(emailBtn) {
+        emailBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'email_contact'
+            });
+        });
+    }
+
+    // Para el buscador de propiedades
+    const searchForm = document.querySelector('.buscador_inter_sup');
+    if(searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            trackPropertySearch({
+                query: this.querySelector('input').value
+            });
+        });
+    }
+
+    // Para ver teléfono
+    const phoneBtn = document.querySelector('.show-phone-btn');
+    if(phoneBtn) {
+        phoneBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'phone_view'
+            });
+        });
+    }
+});
+</script>
+<!-- End Analytics Implementation -->
+</head>
+</style>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="nav-container"></div>
+    </div>
+    <div class="dashboard_container">
+        <div class="filtros_publicaciones">
+            <label class="seleccionar_todas_publicaciones">
+                <input type="checkbox">
+                <span></span>
+                <p>Se encontro<h5>0 publicaciones</h5></p>
+            </label>
+            <div class="buscador_filtrado">
+                <div class="buscar_publicacion">
+                    <input type="text" placeholder="Título / ID / Código / Dirección">
+                </div>
+                <div class="buscar_publicacion">
+                    <select></select>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer_container"></div>
+
+    <script src="/assets/js/panel/properties.js?v=1.0.1"></script>
+    <script src="/assets/js/components_private.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js?v=1.0.1"></script>
+    <script src="/assets/js/session_check.js"></script>
+</body>
+</html>

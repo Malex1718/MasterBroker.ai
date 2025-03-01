@@ -1,0 +1,288 @@
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/img/icon.png">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/animation.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/inicio_sesion.css?v=1.0.1">
+    <title>Master Broker - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GLQZ7S926T"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+        gtag('config', 'G-GLQZ7S926T');
+    </script>
+
+    <!-- Meta Pixel Code -->
+    <script>
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '1035305135067666');
+    fbq('track', 'PageView');
+    </script>
+    <noscript><img height="1" width="1" style="display:none"
+    src="https://www.facebook.com/tr?id=1035305135067666&ev=PageView&noscript=1"
+    /></noscript>
+
+    <!-- Hotjar Tracking Code for Master Broker -->
+    <script>
+        (function(h,o,t,j,a,r){
+            h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+            h._hjSettings={hjid:5246817,hjsv:6};
+            a=o.getElementsByTagName('head')[0];
+            r=o.createElement('script');r.async=1;
+            r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+            a.appendChild(r);
+        })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+    </script>
+
+    <!-- Combined Analytics Events -->
+    <script>
+    // Función unificada para rastrear eventos en ambas plataformas
+    function trackAnalytics(eventName, eventData) {
+        // Google Analytics
+        gtag('event', eventName, eventData);
+        // Meta Pixel
+        fbq('track', eventName, eventData);
+    }
+
+    // Event Listeners para formularios
+    document.addEventListener('DOMContentLoaded', function() {
+        // Rastrear inicio de sesión
+        const loginForm = document.querySelector('.login_form');
+        if(loginForm) {
+            loginForm.addEventListener('submit', function(e) {
+                trackAnalytics('Login', {
+                    content_category: 'user_action',
+                    content_name: 'login_attempt'
+                });
+            });
+        }
+
+        // Rastrear registro
+        const registroForm = document.querySelector('.registro_form');
+        if(registroForm) {
+            registroForm.addEventListener('submit', function(e) {
+                const userType = document.getElementById('user_type').value;
+                trackAnalytics('CompleteRegistration', {
+                    content_category: 'user_action',
+                    content_name: 'registration',
+                    user_type: userType
+                });
+            });
+        }
+
+        // Rastrear cambios entre formularios
+        const registerLink = document.querySelector('.register_link');
+        if(registerLink) {
+            registerLink.addEventListener('click', function() {
+                trackAnalytics('StartRegistration', {
+                    content_category: 'user_action',
+                    content_name: 'registration_start'
+                });
+            });
+        }
+    });
+    </script>    
+</head>  
+</head>
+<style>
+    .descubrir_ce {
+        opacity: 0;
+        transform: translate(-50%) scale(0.8);
+        animation: scaleIn 0.6s ease forwards;
+    }
+
+    .descubrir_ce {
+        position: relative !important;
+        left: 50% !important;
+        transform: translate(-50%) !important;
+    }
+
+    @media (max-width: 767px) {
+
+    .descubrir{
+        width: calc(100% - 40px);
+        flex-direction: column-reverse;
+        padding: 20px;
+    }
+
+    .descubrir_ce {
+        left: 50% !important;
+        transform: translate(-50%) !important;
+    }
+}
+</style>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="descubrir_ce" style="position: relative; top: 0; margin-top: 40px;">
+        <div class="texto-circular" id="texto-circular"></div>
+        <div class="descubrir_ce_in">
+          <img src="/assets/img/master.png" alt="">
+        </div>
+    </div>
+    <div class="form_container">
+        <!-- Formulario de Login -->
+        <form class="login_form">
+            <div class="form_header">
+                <button type="button" class="back_button">
+                    <img src="/assets/img/flecha-pequena-izquierda.png" alt="Atrás">
+                    Atrás
+                </button>
+                <h1>¡Hola!</h1>
+                <p class="welcome_text">Ingresa a tu cuenta y accede a los avisos que contactaste, tus favoritos ¡y más!</p>
+            </div>
+
+            <div class="form_group">
+                <label>Correo electrónico</label>
+                <input type="email" name="email" placeholder="Correo electrónico" required>
+            </div>
+
+            <div class="form_group">
+                <label>Contraseña</label>
+                <div class="password_input">
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                    <button type="button" class="toggle_password">
+                        <img src="/assets/img/ojo.png" alt="Ver contraseña">
+                    </button>
+                </div>
+            </div>
+
+            <div class="form_footer">
+                <button type="submit" class="submit_button">Iniciar sesión</button>
+                <div class="register_prompt">
+                    <p>¿Aun no tienes una cuenta?</p>
+                    <a href="#" class="register_link">Regístrate aquí</a>
+                </div>
+            </div>
+        </form>
+    
+        <form class="registro_form">
+            <div class="form_header">
+                <button type="button" class="back_button">
+                    <img src="/assets/img/flecha-pequena-izquierda.png" alt="Atrás">
+                    Atrás
+                </button>
+                <h1>Ingresa los datos para crear tu perfil</h1>
+            </div>
+        
+            <!-- Tipo de usuario -->
+            <div class="form_group">
+                <label>Tipo de usuario</label>
+                <div class="custom_select">
+                    <select id="user_type" name="user_type" required>
+                        <option value="" disabled selected>Seleccionar</option>
+                        <option value="Regular">Inversionista</option>
+                        <option value="particular">Vendedor Particular</option>
+                        <option value="agency">Inmobiliaria</option>
+                        <option value="constructora">Constructora</option>
+                        <option value="corredor">Corredor</option>
+                    </select>
+                    <span class="select_arrow"></span>
+                </div>
+            </div>
+        
+            <!-- Campos comunes -->
+            <div class="form_group">
+                <label>Correo electrónico</label>
+                <input type="email" name="email" placeholder="Correo electrónico" required>
+            </div>
+        
+            <div class="form_group">
+                <label>Contraseña</label>
+                <div class="password_input">
+                    <input type="password" name="password" placeholder="Contraseña" required>
+                    <button type="button" class="toggle_password">
+                        <img src="/assets/img/ojo.png" alt="Ver contraseña">
+                    </button>
+                </div>
+                <span class="input_hint">6 caracteres mínimo</span>
+            </div>
+        
+            <div class="form_section">
+                <h2>Datos</h2>
+                
+                <!-- Campo Nombre (siempre visible) -->
+                <div class="form_group">
+                    <label>Nombre</label>
+                    <input type="text" name="first_name" placeholder="Nombre" required>
+                </div>
+        
+                <!-- Campo Apellido (condicional) -->
+                <div class="form_group" id="last_name_field" style="display: none;">
+                    <label>Apellido</label>
+                    <input type="text" name="last_name" placeholder="Apellido">
+                </div>
+        
+                <!-- Campos fiscales (inicialmente ocultos) -->
+                <div id="fiscal_fields" style="display: none;">
+                    <div class="form_group">
+                        <label>Razón social</label>
+                        <input type="text" name="business_name" placeholder="Razón social">
+                    </div>
+        
+                    <div class="form_group">
+                        <label>Condición fiscal</label>
+                        <div class="custom_select">
+                            <select name="fiscal_condition">
+                                <option value="" disabled selected>Seleccionar</option>
+                                <option value="curp">CURP</option>
+                                <option value="rfc_moral">RFC Persona Moral</option>
+                                <option value="rfc_fisica">RFC Persona Física</option>
+                            </select>
+                            <span class="select_arrow"></span>
+                        </div>
+                    </div>
+        
+                    <div class="form_group">
+                        <label>RFC/CURP</label>
+                        <input type="text" name="tax_id" placeholder="RFC/CURP">
+                    </div>
+                </div>
+        
+                <!-- Teléfonos -->
+                <div id="phone_field" class="form_group">
+                    <label>Teléfono (opcional)</label>
+                    <input type="tel" name="phone" placeholder="Teléfono">
+                </div>
+        
+                <div class="form_group">
+                    <label>Celular</label>
+                    <input type="tel" name="mobile" placeholder="Celular" required>
+                </div>
+            </div>
+        
+            <div class="form_footer">
+                <span class="terms_check">Al registrarme acepto los <a href="#">TyC y las politicas de privacidad</a></span>
+                <button type="submit" class="submit_button">Registrarme</button>
+            </div>
+        </form>
+    </div>
+    <script src="/assets/js/inicio_sesion.js"></script>
+    <script src="/assets/js/animation.js"></script>
+    <script src="/assets/js/loader.js"></script>
+</body>
+</html>

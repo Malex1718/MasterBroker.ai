@@ -1,0 +1,611 @@
+.dashboard_container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: calc(100% - 40px);
+    max-width: 1280px;
+    min-height: calc(100vh - 207.6px); /* Restamos el margin-top */
+    margin: 0 auto;
+    margin-top: 96.6px;
+    padding: 20px;
+}
+
+.footer{
+    border-top: none !important;
+    bottom: 0px;
+}
+
+.footer_infer{
+    border-top: 1px solid var(--border) !important;
+}
+
+.filtros_publicaciones{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: calc(100% - 32px);
+    padding: 8px 8px 8px 24px;
+    background-color: var(--border);
+    border-radius: 10px;
+}
+
+.seleccionar_todas_publicaciones{
+    display: flex;
+    gap: 10px;
+}
+
+.buscador_filtrado{
+    display: flex;
+    align-items: center;
+    gap: 20px;
+}
+
+.buscar_publicacion{
+    width: 240px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: var(--contenedor);
+}
+
+.buscar_publicacion input, .buscar_publicacion select{
+    width: calc(100% - 10px);
+    background-color: var(--contenedor);
+    border: none;
+    outline: none;
+    color: var(--colortxt);
+}
+
+.publicacion_tarjet_info{
+    display: flex;
+    align-items: center;
+    width: 100%;
+    background-color: var(--contenedor);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    user-select: none;
+}
+
+/* Estilos para ambos checkboxes */
+.seleccionar_todas_publicaciones,
+.seleccionar_publicacion {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--colortxt);
+    cursor: pointer;
+    font-family: var(--txt);
+    transition: transform 0.2s ease;
+}
+
+/* Ocultar el checkbox original */
+.seleccionar_todas_publicaciones input[type="checkbox"],
+.seleccionar_publicacion input[type="checkbox"] {
+    display: none;
+}
+
+/* Crear el nuevo checkbox personalizado */
+.seleccionar_todas_publicaciones span::before,
+.seleccionar_publicacion span::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    border: 2px solid var(--border);
+    background-color: var(--body);
+    border-radius: 4px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Estilo cuando el checkbox está marcado */
+.seleccionar_todas_publicaciones input[type="checkbox"]:checked + span::before,
+.seleccionar_publicacion input[type="checkbox"]:checked + span::before {
+    background-color: var(--principal);
+    border-color: var(--principal);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath fill='white' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    background-size: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+    animation: checkmark 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Efecto hover */
+.seleccionar_todas_publicaciones:hover span::before,
+.seleccionar_publicacion:hover span::before {
+    border-color: var(--principal);
+}
+
+/* Efecto focus para accesibilidad */
+.seleccionar_todas_publicaciones input[type="checkbox"]:focus + span::before,
+.seleccionar_publicacion input[type="checkbox"]:focus + span::before {
+    box-shadow: 0 0 0 2px var(--contenedor), 0 0 0 4px var(--principal);
+}
+
+/* Estilo del texto */
+.seleccionar_todas_publicaciones span,
+.seleccionar_publicacion span {
+    color: var(--colortxt);
+    font-size: 14px;
+    user-select: none;
+}
+
+/* Animación al marcar el checkbox */
+@keyframes checkmark {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+/* Mantener estilos específicos del texto para seleccionar_todas_publicaciones */
+.seleccionar_todas_publicaciones p {
+    margin: 0;
+    color: var(--colorp);
+}
+
+.seleccionar_todas_publicaciones h5{
+    position: relative;
+    font-size: 14px;
+    margin: 0;
+    margin-left: -7px;
+}
+
+.seleccionar_publicacion{
+    padding: 0px 20px;
+}
+
+.imagen_publicacion{
+    height: 120px;
+    width: 140px;
+    background-color: var(--body);
+    border-radius: 10px;
+
+}
+
+.imagen_publicacion img{
+    width: 100%;
+    height: 100%;
+    border-radius: 10px;
+    object-fit: cover;
+}
+
+.caracteristicas_publicacion{
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    border-left: 1px solid var(--border);
+    margin-left: 20px;
+}
+
+.detalles_publicaciones{
+    position: relative;
+    display: flex;
+}
+
+.info_porcentaje_propiedad{
+    position: relative;
+    display: flex;
+    padding-top: 10px;
+    justify-content: space-between;
+    width: 50%;
+}
+
+.info_propiedades{
+    display: flex;
+    width: 100%;
+    flex-direction: column;
+    gap: 5px;
+    margin-left: 8px;
+}
+
+.info_propiedades p{
+    margin: 0;
+}
+
+.info_propiedades h4{
+    margin: 0;
+}
+
+.porcentaje_estado{
+    width: 75px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-right: 20px;
+}
+
+.porcentaje_estado h4{
+    margin: 0;
+}
+
+.cara_progreso{
+    width: 30px;
+    height: 30px;
+}
+
+.cara_progreso img{
+    height: 30px;
+    filter: brightness(80%);
+}
+
+.estadistica_resumida{
+    display: flex;
+    width: calc(50% - 40px);
+    min-width: 430px;
+    flex-direction: column;
+    border-left: 1px solid var(--border);
+    padding: 10px 20px;
+    gap: 10px;
+}
+
+.desempeño{
+    position: relative;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    width: 100%;
+    height: 30px;
+}
+
+.desempeño img{
+    height: 90%;
+}
+
+.desempeño button{
+    position: absolute;
+    right: 0;
+    height: 100%;
+    background-color: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 20px;
+    transition: background-color 0.2s;
+}
+
+.desempeño button:hover{
+    background-color: var(--colorp);
+}
+
+.estadisticas{
+    display: flex;
+    height: 100%;
+    padding: 10px;
+    gap: 10px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    background-color: var(--body);
+}
+
+.estadistica{
+    width: 50%;
+    border-right: 1px solid var(--border);
+}
+
+.estadistica h4{
+    margin: 0;
+}
+
+.estadistica span{
+    margin: 0;
+    color: var(--colorp);
+}
+
+.valores_acciones{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    justify-content: space-between;
+    border-top: 1px solid var(--border);
+    padding: 5px;
+}
+
+.valores_unicos{
+    display: flex;
+    flex-direction: row;
+    gap: 10px;
+}
+
+.valores_unicos p{
+    margin: 0;
+    cursor: pointer;
+}
+
+.acciones_boton{
+    display: flex;
+    gap: 10px;
+    padding: 0 11px;
+    border-left: 1px solid var(--border);
+}
+
+.acciones_boton button{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    width: 25px;
+    background-color: var(--border);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    transition: background-color 0.2s;
+}
+
+.acciones_boton button:hover{
+    background-color: var(--colorp);
+}
+
+.acciones_boton button img{
+    height: 15px;
+}
+
+/* Contenedor del tooltip */
+.tooltip {
+    position: relative;
+}
+
+/* Estilo base del tooltip */
+.tooltip::before {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    padding: 6px 10px;
+    background-color: var(--contenedor);
+    color: var(--colortxt);
+    font-size: 12px;
+    font-family: var(--txt);
+    white-space: nowrap;
+    border-radius: 6px;
+    border: 1px solid var(--border);
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+    z-index: 1000;
+}
+
+/* Flecha del tooltip */
+.tooltip::after {
+    content: '';
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(4px);
+    border-width: 6px;
+    border-style: solid;
+    border-color: var(--border) transparent transparent transparent;
+    opacity: 0;
+    visibility: hidden;
+    transition: all 0.2s ease;
+}
+
+/* Mostrar tooltip en hover */
+.tooltip:hover::before,
+.tooltip:hover::after {
+    opacity: 1;
+    visibility: visible;
+    transform: translateX(-50%) translateY(0);
+}
+
+/* Asegurarse que los botones mantengan sus estilos actuales */
+.acciones_boton .tooltip {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 25px;
+    width: 25px;
+    background-color: var(--principal);
+    border: 1px solid var(--principal);
+    border-radius: 5px;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.acciones_boton .tooltip:hover {
+    background-color: var(--principal_2);
+    border-color: var(--principal_2);
+}
+
+.acciones_boton .tooltip img {
+    height: 15px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin: 20px 0;
+    background: var(--contenedor);
+    padding: 15px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+    margin-top: auto;
+    margin-bottom: 0
+}
+
+.pagination button {
+    padding: 8px 16px;
+    border: 1px solid var(--principal);
+    background-color: transparent;
+    color: var(--principal);
+    cursor: pointer;
+    border-radius: 4px;
+    font-family: var(--txt);
+    transition: all 0.3s ease;
+}
+
+.pagination button:hover:not(:disabled) {
+    background-color: var(--principal);
+    color: var(--colortxt);
+}
+
+.pagination button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+    border-color: var(--border);
+    color: var(--colorp);
+}
+
+.pagination button.active {
+    background-color: var(--principal);
+    color: var(--colortxt);
+}
+
+.page-numbers {
+    display: flex;
+    gap: 5px;
+    align-items: center;
+}
+
+.page-numbers span {
+    color: var(--colorp);
+    font-family: var(--txt);
+    padding: 0 5px;
+}
+
+@media (max-width: 1024px) {
+    .filtros_publicaciones{
+        width: calc(100% - 20px);
+        padding: 8px 8px 8px 12px;
+    }
+    .buscar_publicacion{
+        width: 200px;
+    }
+    .seleccionar_todas_publicaciones p {
+        display: none;
+    }
+    .seleccionar_todas_publicaciones h5 {
+        display: none;
+    }
+    .seleccionar_publicacion{
+        padding: 0px 10px;
+    }
+    .imagen_publicacion{
+        width: 130px;
+        height: 100px;
+    }
+    .info_propiedades{
+        max-width: 190px;
+    }
+    .info_propiedades h4, .info_propiedades p{
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .porcentaje_estado {
+        margin-right: 10px;
+    }
+    .estadistica_resumida{
+        min-width: auto;
+        width: calc(50% - 20px);
+        padding: 10px;
+    }
+    .estadistica span {
+        font-size: 12px;
+    }
+    .estadistica h4 {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 767px) {
+    .seleccionar_todas_publicaciones, .seleccionar_publicacion {
+        display: none;
+    }
+    
+    .filtros_publicaciones {
+        width: calc(100% - 16px);
+        padding: 8px;
+    }
+    .buscador_filtrado {
+        gap: 8px;
+    }
+    .buscar_publicacion{
+        width: 50%;
+    }
+    .publicacion_tarjet_info {
+        flex-direction: column;
+        align-items: start;
+        gap: 10px;
+        padding: 20px;
+        padding-bottom: 0;
+        width: calc(100% - 40px);
+    }
+    .imagen_publicacion {
+        position: relative;
+        left: 0;
+    }
+    .caracteristicas_publicacion {
+        width: 100%;
+        height: 100%;
+        border-left: none;
+        margin-left: 0px;
+    }
+    .detalles_publicaciones {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .info_porcentaje_propiedad {
+        flex-direction: row-reverse;
+        padding-top: 10px;
+        justify-content: start;
+        width: 100%;
+    }
+    .info_propiedades {
+        max-width: 300px;
+        margin-left: 0;
+    }
+    .porcentaje_estado {
+        position: absolute;
+        width: 75px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 10px;
+        margin-right: 20px;
+        top: -110px;
+        right: 0;
+    }
+    .estadistica_resumida {
+        min-width: auto;
+        width: 100%;
+        padding: 0px;
+        border-top: 1px solid var(--border);
+        border-left: none;
+        margin-bottom: 10px;
+    }
+    .valores_acciones{
+        flex-direction: column;
+        align-items: start;
+        justify-items: end;
+        gap: 10px;
+    }
+    .valores_unicos {
+        flex-direction: column;
+        gap: 10px;
+    }
+    .acciones_boton {
+        width: calc(100% - 20px);
+        padding: 10px;
+        padding-left: 0;
+        gap: 10px;
+        border-left: none;
+        border-top: 1px solid var(--border);
+    }
+}

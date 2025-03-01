@@ -1,0 +1,1131 @@
+body {
+    background-color: #f3f4f6;
+}
+/* Estilos de botones básicos */
+.btn {
+    padding: 8px 16px;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+.btn-primary {
+    background-color: #2563eb;
+    color: white;
+    border: none;
+}
+.btn-primary:hover {
+    background-color: #1d4ed8;
+}
+.btn-secondary {
+    background-color: white;
+    border: 1px solid #d1d5db;
+}
+.btn-secondary:hover {
+    background-color: #f9fafb;
+}
+.btn-maia {
+    background-color: #2055de;
+    color: white;
+    border: none;
+    padding: 8px 16px;
+    font-weight: 500;
+    transition: background-color 0.2s;
+}
+
+/* Estilos de botones de plataforma */
+.btn-platform-twitter {
+    width: 136px;
+    justify-content: center;
+    background-color: black;
+    color: white;
+}
+.btn-platform-facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+    color: white;
+    border: none;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    width: 136px;
+    justify-content: center;
+}
+.btn-platform-instagram {
+    background: linear-gradient(to top right, #f8752b, #d12e7a, #a332ac);
+    color: white;
+    border: none;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    width: 136px;
+    justify-content: center;
+}
+.btn-platform-linkedin {
+    background-color: #126bc4;
+    color: white;
+    border: none;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.1rem;
+    font-weight: 600;
+    width: 136px;
+    justify-content: center;
+}
+
+/* Estilos de cabecera de plataforma */
+.platform-header {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+    padding: 0.5rem;
+    border-radius: 0.5rem;
+    color: white;
+    font-weight: 600;
+}
+
+.platform-header span {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.platform-header-twitter span:last-child {
+    display: none;
+}
+
+.platform-header-linkedin {
+    gap: 0.1rem;
+}
+
+.platform-header-linkedin span:first-child {
+    order: 2;
+}
+
+.platform-header-twitter {
+    background-color: black;
+}
+
+.platform-header-facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+}
+
+.platform-header-instagram {
+    background: linear-gradient(to top right, #f8752b, #d12e7a, #a332ac);
+}
+
+.platform-header-linkedin {
+    background-color: #126bc4;
+}
+
+/* Efectos hover para cabeceras de plataforma */
+.platform-header:hover {
+    opacity: 0.95;
+    transition: opacity 0.2s;
+}
+
+/* Efectos hover para botones de plataforma */
+.btn-platform-twitter:hover,
+.btn-platform-facebook:hover,
+.btn-platform-instagram:hover,
+.btn-platform-linkedin:hover {
+    opacity: 0.9;
+}
+
+.btn-maia:hover {
+    background-color: #2055de;
+}
+
+/* Estilos de inputs y cards */
+.input-field {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    margin-bottom: 12px;
+}
+.card {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+/* Estilos del asistente AI */
+.ai-bubble {
+    background-color: #f3f4f6;
+    border-radius: 12px;
+    padding: 12px;
+    margin-top: 8px;
+    position: relative;
+}
+.ai-bubble::before {
+    content: '';
+    position: absolute;
+    top: -6px;
+    left: 24px;
+    width: 12px;
+    height: 12px;
+    background-color: #f3f4f6;
+    transform: rotate(45deg);
+}
+.loading-dots::after {
+    content: '...';
+    animation: loading 1.5s infinite;
+}
+@keyframes loading {
+    0% { content: '.'; }
+    33% { content: '..'; }
+    66% { content: '...'; }
+}
+
+/* Estilos del calendario */
+.calendar-cell {
+    min-height: 120px;
+}
+
+/* Utilidades de posicionamiento y layout */
+.fixed {
+    position: fixed;
+}
+.z-50 {
+    z-index: 50;
+}
+.shadow-lg {
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+}
+.grid-cols-7 {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+}
+.gap-4 {
+    gap: 1rem;
+}
+
+/* Estilos de transiciones */
+.transition-transform {
+    transition: transform 0.15s ease-in-out;
+}
+.translate-x-full {
+    transform: translateX(100%);
+}
+.-translate-x-full {
+    transform: translateX(-100%);
+}
+
+/* Estilos del panel de ajustes */
+.settings-modal {
+    background-color: rgba(0, 0, 0, 0.5);
+    backdrop-filter: blur(4px);
+}
+
+.settings-panel {
+    max-height: calc(100vh - 2rem);
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+}
+
+/* Estilos del switch toggle */
+.toggle-switch {
+    position: relative;
+    display: inline-block;
+    width: 2.75rem;
+    height: 1.5rem;
+}
+
+.toggle-switch input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+}
+
+.toggle-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: #e5e7eb;
+    transition: .4s;
+    border-radius: 9999px;
+}
+
+.toggle-slider:before {
+    position: absolute;
+    content: "";
+    height: 1.25rem;
+    width: 1.25rem;
+    left: 0.125rem;
+    bottom: 0.125rem;
+    background-color: white;
+    transition: .4s;
+    border-radius: 50%;
+}
+
+input:checked + .toggle-slider {
+    background-color: #2563eb;
+}
+
+input:checked + .toggle-slider:before {
+    transform: translateX(1.25rem);
+}
+
+/* Estilos de secciones de ajustes */
+.settings-section {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-section:last-child {
+    border-bottom: none;
+}
+
+.settings-heading {
+    font-size: 1.125rem;
+    font-weight: 500;
+    color: #111827;
+    margin-bottom: 1rem;
+}
+
+.settings-description {
+    font-size: 0.875rem;
+    color: #6b7280;
+    margin-bottom: 1rem;
+}
+
+/* Estilos de selectores */
+.settings-select {
+    width: 100%;
+    padding: 0.5rem;
+    border-radius: 0.375rem;
+    border: 1px solid #d1d5db;
+    background-color: white;
+    color: #374151;
+    font-size: 0.875rem;
+}
+
+.settings-select:focus {
+    outline: none;
+    ring: 2px;
+    ring-color: #2563eb;
+    border-color: #2563eb;
+}
+
+/* Estilos de tarjetas de redes sociales */
+.platform-card {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    border: 1px solid #e5e7eb;
+    transition: all 0.3s ease;
+}
+
+.platform-card:hover {
+    border-color: #2563eb;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.platform-card.connected {
+    background-color: #f8fafc;
+}
+
+/* Estilos de iconos de plataforma en ajustes */
+.platform-icon {
+    width: 2.5rem;
+    height: 2.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+    transition: opacity 0.2s;
+}
+
+.platform-icon img {
+    width: 1.25rem;
+    height: 1.25rem;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.platform-icon-twitter {
+    background-color: #000000;
+}
+
+.platform-icon-facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+}
+
+.platform-icon-instagram {
+    background: linear-gradient(to top right, #f8752b, #d12e7a, #a332ac);
+}
+
+.platform-icon-linkedin {
+    background-color: #126bc4;
+}
+
+.platform-icon:hover {
+    opacity: 0.9;
+}
+
+/* Estilos de tarjetas de plataforma en ajustes */
+.platform-settings-card {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    padding: 1rem;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.platform-settings-card:hover {
+    background-color: #f9fafb;
+}
+
+.platform-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.platform-status {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.platform-connected-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+/* Estilos de botones de acción de plataforma */
+.platform-action-btn {
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s;
+}
+
+.platform-reconnect-btn {
+    color: #4b5563;
+}
+
+.platform-reconnect-btn:hover {
+    color: #1f2937;
+}
+
+.platform-disconnect-btn {
+    color: #dc2626;
+}
+
+.platform-disconnect-btn:hover {
+    color: #b91c1c;
+}
+
+.platform-connect-btn {
+    color: #2563eb;
+}
+
+.platform-connect-btn:hover {
+    color: #1d4ed8;
+}
+
+/* Estilos de navegación lateral */
+.settings-nav-item {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    transition: all 0.2s ease;
+    cursor: pointer;
+}
+
+.settings-nav-item:hover {
+    background-color: #f3f4f6;
+}
+
+.settings-nav-item.active {
+    background-color: #eff6ff;
+    color: #2563eb;
+}
+
+.settings-nav-item svg {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Estilos de badges de estado */
+.status-badge {
+    display: inline-flex;
+    align-items: center;
+    padding: 0.25rem 0.75rem;
+    border-radius: 9999px;
+    font-size: 0.75rem;
+    font-weight: 500;
+}
+
+.status-badge-success {
+    background-color: #dcfce7;
+    color: #166534;
+}
+
+.status-badge-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+}
+
+.status-badge-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+}
+
+/* Estilos de botones de ajustes */
+.settings-btn {
+    padding: 0.5rem 1rem;
+    border-radius: 0.375rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.settings-btn-primary {
+    background-color: #2563eb;
+    color: white;
+}
+
+.settings-btn-primary:hover {
+    background-color: #1d4ed8;
+}
+
+.settings-btn-secondary {
+    background-color: transparent;
+    color: #4b5563;
+    border: 1px solid #d1d5db;
+}
+
+.settings-btn-secondary:hover {
+    background-color: #f9fafb;
+}
+
+.settings-btn-danger {
+    background-color: #dc2626;
+    color: white;
+}
+
+.settings-btn-danger:hover {
+    background-color: #b91c1c;
+}
+
+/* Platform Colors for Settings Icons - Corrección específica */
+.platform-settings-icon {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 8px;
+}
+
+.platform-settings-twitter {
+    background-color: #000000;
+}
+
+.platform-settings-facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+    color: white; /* Aseguramos que la letra 'f' sea blanca */
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+}
+
+.btn-platform-facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+    color: white;
+    border: none;
+    transition: opacity 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 700;
+    width: 136px;
+    justify-content: center;
+}
+
+.platform-settings-facebook span {
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.platform-settings-instagram {
+    background: linear-gradient(to top right, #f8752b, #d12e7a, #a332ac);
+}
+
+.platform-settings-linkedin {
+    background-color: #126bc4;
+}
+
+.platform-settings-tiktok{
+    background-color: #000000;
+}
+
+.platform-settings-icon img {
+    width: 25px;
+    height: 25px;
+    filter: brightness(0) invert(1);
+}
+
+/* Estilos adicionales para el panel de ajustes */
+.settings-container {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.settings-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.settings-content {
+    padding: 1.5rem;
+}
+
+.settings-footer {
+    padding: 1rem;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    justify-content: flex-end;
+    gap: 1rem;
+}
+
+/* Estilos para tooltips */
+.tooltip {
+    position: relative;
+    display: inline-block;
+}
+
+.tooltip .tooltip-text {
+    visibility: hidden;
+    background-color: #1f2937;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 0.5rem 1rem;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.75rem;
+    white-space: nowrap;
+    opacity: 0;
+    transition: opacity 0.2s;
+}
+
+.tooltip:hover .tooltip-text {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Estilos para mensajes de error y éxito */
+.message {
+    padding: 1rem;
+    border-radius: 0.5rem;
+    margin-bottom: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.message-success {
+    background-color: #dcfce7;
+    color: #166534;
+    border: 1px solid #86efac;
+}
+
+.message-error {
+    background-color: #fee2e2;
+    color: #991b1b;
+    border: 1px solid #fecaca;
+}
+
+.message-warning {
+    background-color: #fef3c7;
+    color: #92400e;
+    border: 1px solid #fde68a;
+}
+
+/* Contenedor principal del área de mensajes */
+.messages-container {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+    padding: 1rem;
+}
+
+/* Estilos para las burbujas de mensaje */
+.message-bubble-container {
+    display: flex;
+    width: 100%;
+    margin: 0.5rem 0;
+}
+
+/* Contenedor del mensaje del agente (derecha) */
+.message-bubble-container.agent {
+    justify-content: flex-end;
+}
+
+/* Contenedor del mensaje del usuario (izquierda) */
+.message-bubble-container.user {
+    justify-content: flex-start;
+}
+
+/* Burbuja de mensaje común */
+.message-bubble {
+    max-width: 60%; /* Ancho máximo fijo */
+    word-wrap: break-word; /* Permite que las palabras largas se rompan */
+    overflow-wrap: break-word; /* Asegura que el texto largo se ajuste */
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    white-space: pre-wrap; /* Preserva los saltos de línea pero permite el ajuste */
+}
+
+/* Burbuja del agente */
+.message-bubble.agent {
+    background-color: #2563eb;
+    color: white;
+    border-top-right-radius: 0;
+    margin-left: auto;
+}
+
+/* Burbujas de plataforma para usuarios */
+.message-bubble.instagram {
+    background: linear-gradient(to top right, #f8752b, #d12e7a, #a332ac);
+    color: white;
+    border-top-left-radius: 0;
+}
+
+.message-bubble.facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+    color: white;
+    border-top-left-radius: 0;
+}
+
+.message-bubble.twitter {
+    background-color: #000000;
+    color: white;
+    border-top-left-radius: 0;
+}
+
+/* Contenedor de tiempo y estado */
+.message-metadata {
+    font-size: 0.75rem;
+    margin-top: 0.25rem;
+    opacity: 0.8;
+}
+
+.message-input-container {
+    display: flex;
+    align-items: center; /* Centra los elementos verticalmente */
+    gap: 1rem; /* Espaciado entre botones */
+    background-color: #eef0f3; /* Color de fondo (ajusta según tu diseño) */
+    padding: 10px; /* Ajusta el espacio interno */
+    border-radius: 8px; /* Bordes redondeados */
+}
+
+.message-input-container button{
+    background-color: #eef0f3;
+    transition: all 0.3s;
+}
+
+
+.message-input-container button,
+.message-input-container textarea {
+    display: flex;
+    align-items: center; /* Centra íconos dentro del botón */
+    justify-content: center; /* Centra íconos horizontalmente */
+}
+
+textarea {
+    flex: 1; /* Ocupa el espacio restante */
+    resize: none; /* Evita que el usuario cambie el tamaño */
+    padding: 10px;
+
+    outline: none;
+    background-color: transparent;
+}
+
+/* Estilos del modal */
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 1rem;
+    z-index: 50;
+}
+
+.modal-container {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+    max-width: 28rem;
+    width: 100%;
+}
+
+/* Header del modal */
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1rem;
+    border-bottom: 1px solid #e5e7eb;
+}
+
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.modal-heading {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+
+.modal-close {
+    padding: 0.25rem;
+    border-radius: 9999px;
+    color: #6b7280;
+    transition: background-color 0.2s;
+}
+
+.modal-close:hover {
+    background-color: #f3f4f6;
+}
+
+.modal-close-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+}
+
+/* Contenido del modal */
+.modal-content {
+    padding: 1.5rem;
+}
+
+.auth-description {
+    color: #4b5563;
+    margin-bottom: 1.5rem;
+}
+
+/* Botones de autenticación */
+.auth-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.login-button {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.5rem;
+    font-weight: 500;
+    color: white;
+    transition: all 0.2s;
+    border: none;
+    cursor: pointer;
+}
+
+.login-button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+/* Estilos específicos por plataforma */
+.login-button-facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+}
+
+.login-button-facebook:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.login-button-twitter {
+    background-color: black;
+}
+
+.login-button-twitter:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+.login-button-instagram {
+    background: linear-gradient(to top right, #f8752b, #d12e7a, #a332ac);
+}
+
+.login-button-instagram:hover:not(:disabled) {
+    opacity: 0.9;
+}
+
+/* Iconos de plataforma */
+.platform-icon {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 0.5rem;
+}
+
+.platform-icon-facebook {
+    background: linear-gradient(to right, #1ba7fb, #0557E5);
+}
+
+.platform-icon-twitter {
+    background-color: black;
+}
+
+.platform-icon-instagram {
+    background: linear-gradient(to top right, #f8752b, #d12e7a, #a332ac);
+}
+
+.platform-icon-image {
+    width: 1.25rem;
+    height: 1.25rem;
+    object-fit: contain;
+    filter: brightness(0) invert(1);
+}
+
+.platform-icon-letter {
+    color: white;
+    font-weight: bold;
+    font-size: 1.5rem;
+}
+
+/* Estados de carga */
+.loading-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.loading-spinner {
+    width: 1.25rem;
+    height: 1.25rem;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+    border-top-color: white;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+/* Mensajes de error */
+.error-message {
+    margin-top: 1rem;
+    padding: 1rem;
+    background-color: #fee2e2;
+    border: 1px solid #fecaca;
+    border-radius: 0.5rem;
+    color: #991b1b;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.error-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* Plataforma no disponible */
+.platform-unavailable {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 0.5rem;
+    padding: 1rem;
+    text-align: center;
+}
+
+.unavailable-message {
+    color: #6b7280;
+}
+
+/* Footer del modal */
+.modal-footer {
+    background-color: #f9fafb;
+    padding: 1.5rem;
+    border-top: 1px solid #e5e7eb;
+    border-bottom-left-radius: 0.5rem;
+    border-bottom-right-radius: 0.5rem;
+}
+
+.footer-content {
+    font-size: 0.875rem;
+    color: #6b7280;
+}
+
+.permissions-title {
+    margin-bottom: 0.5rem;
+}
+
+.permissions-list {
+    list-style-type: disc;
+    padding-left: 1.25rem;
+    margin-bottom: 1rem;
+}
+
+.permission-item {
+    margin-bottom: 0.25rem;
+}
+
+.footer-note {
+    font-size: 0.75rem;
+    margin-top: 1rem;
+}
+
+/* Notas adicionales */
+.auth-note {
+    text-align: center;
+    color: #6b7280;
+    font-size: 0.875rem;
+    margin-top: 1rem;
+}
+
+/* Botón de icono */
+.button-icon {
+    width: 1.25rem;
+    height: 1.25rem;
+    flex-shrink: 0;
+}
+
+/* Contenedor de autenticación */
+.auth-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+}
+
+/* Estilo para el divisor */
+.divider-container {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin: 1rem 0;
+}
+
+.divider-line {
+    flex: 1;
+    height: 1px;
+    background-color: #e5e7eb;
+}
+
+.divider-text {
+    color: #6b7280;
+    font-size: 0.875rem;
+    padding: 0 0.5rem;
+}
+
+/* Estilos para plataformas próximamente */
+.platform-settings-card.coming-soon {
+    position: relative;
+    cursor: not-allowed;
+}
+
+.platform-settings-card.coming-soon::before {
+    content: 'Próximamente';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: rgba(0, 0, 0, 0.7);
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.5rem;
+    font-size: 0.875rem;
+    font-weight: 500;
+    z-index: 10;
+    opacity: 0;
+    transition: opacity 0.2s ease;
+}
+
+.platform-settings-card.coming-soon:hover::before {
+    opacity: 1;
+}
+
+.platform-settings-card.coming-soon {
+    opacity: 0.6;
+}
+
+.platform-settings-card.coming-soon:hover {
+    opacity: 0.7;
+}
+
+.platform-settings-card.coming-soon .platform-action-btn {
+    pointer-events: none;
+    opacity: 0.5;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+    .modal-container {
+        margin: 1rem;
+        width: calc(100% - 2rem);
+    }
+    
+    .modal-content {
+        padding: 1rem;
+    }
+    
+    .modal-footer {
+        padding: 1rem;
+    }
+}
+
+/* Estilos para el modo oscuro */
+@media (prefers-color-scheme: dark) {
+    .dark-mode .settings-container {
+        background-color: #1f2937;
+        color: #f3f4f6;
+    }
+
+    .dark-mode .settings-btn-secondary {
+        border-color: #4b5563;
+        color: #e5e7eb;
+    }
+
+    .dark-mode .settings-nav-item:hover {
+        background-color: #374151;
+    }
+
+    .dark-mode .settings-nav-item.active {
+        background-color: #2563eb;
+        color: white;
+    }
+}

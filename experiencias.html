@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="shortcut icon" href="/assets/img/icon.png">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.0">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.0">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.0">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.0">
+    <title>Master Broker - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+</head>
+<style>
+    @media (max-width: 1024px) {
+
+            /* Los dos primeros elementos ocupan 50% cada uno */
+        .destar:nth-child(1),
+        .destar:nth-child(2) {
+            width: auto !important; /* 50% menos el padding y el gap */
+        }
+
+        /* El tercer elemento ocupa el 100% */
+        .destar:nth-child(3) {
+            width: auto !important;
+        }
+
+        .destar h2 {
+            font-size: 24px !important;
+        }
+        .destar p {
+            width: 100%;
+            font-size: 14px !important;
+            margin: 0;
+            text-align: center !important;
+        }
+
+        .descubrir_iz_tar{
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .destar {
+        margin: 0;
+        padding: 15px 20px;
+        height: auto  !important;
+    }
+
+    /* Los dos primeros elementos ocupan 50% cada uno */
+    .destar:nth-child(1),
+    .destar:nth-child(2) {
+        width: calc(50% - 55px) !important; /* 50% menos el padding y el gap */
+    }
+
+    /* El tercer elemento ocupa el 100% */
+    .destar:nth-child(3) {
+        width: 100% !important;
+    }
+
+    .descubrir_iz_tar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        height: auto;
+        width: 100% !important;
+    }
+
+    }
+</style>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="banner-container"></div>
+        <div id="nav-container"></div>
+    </div>
+    <div class="descubrir">
+    </div>
+    <div class="seccion_info_prop" style="margin-top: 60px;">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp"class="deco_est_1">
+            <img src="/assets/img/realce.webp"class="deco_est_2">
+            <img src="/assets/img/realce.webp"class="deco_est_3">
+        </div>
+        <h1> Descubra un mundo de posibilidades</h1>
+        <div class="seccion_info_butt" style="flex-direction: column;">
+            <p style="width: 90%;"> Nuestra cartera de propiedades es tan diversa como sus sueños. Explore las siguientes categorías 
+                para encontrar la propiedad perfecta que resuene con su visión del hogar.
+            </p>
+        </div>
+        <div class="seccion_prop_tars">
+            <div class="seccion_info_tar">
+                <div class="tarjet_info_exper">
+                    <div class="puntuacion_estrella">
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png">
+                        </div>
+                    </div>
+                    <h2>Titulo de experiencia</h2>
+                    <p>Descripcion de experiencia</p>
+                    <div class="opinion_des">
+                        <div class="img_user">
+                            <img src="/assets/img/usuario.png">
+                        </div>
+                        <div class="des_user">
+                            <h3>Nombre de cliente</h3>
+                            <p>Direccion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer_container"></div>
+    <script src="/assets/js/animation.js"></script>
+    <script src="/assets/js/components.js"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script src="/assets/js/loader.js"></script>
+</body>
+</html>

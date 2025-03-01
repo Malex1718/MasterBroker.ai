@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Master Broker: Tu socio confiable en inversiones inmobiliarias. Especialistas en venta y renta de bienes raíces con más de 6 años de experiencia, más de 800 clientes satisfechos y 1000+ inmuebles vendidos.">
+    <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2" alt="Icono Master Broker">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/animation.css?v=1.0.1">
+        
+    <!-- React y ReactDOM -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/path/to/tailwind.config.js">
+    
+    <!-- Babel para JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="/bot/assets/styles/bot.css">
+
+    <title>Master Broker - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GLQZ7S926T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GLQZ7S926T');
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1035305135067666');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1035305135067666&ev=PageView&noscript=1"
+/></noscript>
+
+<!-- Hotjar Tracking Code for Master Broker -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5246817,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<!-- Combined Analytics Events -->
+<script>
+// Función unificada para rastrear eventos en ambas plataformas
+function trackAnalytics(eventName, eventData) {
+    // Google Analytics
+    gtag('event', eventName, eventData);
+    // Meta Pixel
+    fbq('track', eventName, eventData);
+}
+
+// Rastrear vistas de propiedades individuales
+function trackPropertyView(property) {
+    trackAnalytics('ViewContent', {
+        content_type: 'real_estate',
+        content_ids: [property.id],
+        content_name: property.name,
+        value: property.price,
+        currency: 'MXN',
+        content_category: property.type
+    });
+}
+
+// Rastrear formularios de contacto
+function trackLeadForm() {
+    trackAnalytics('Lead', {
+        content_category: 'real_estate_inquiry'
+    });
+}
+
+// Rastrear clicks en WhatsApp
+function trackWhatsAppClick() {
+    trackAnalytics('Contact', {
+        content_category: 'whatsapp_contact'
+    });
+}
+
+// Rastrear búsquedas de propiedades
+function trackPropertySearch(searchParams) {
+    trackAnalytics('Search', {
+        search_string: searchParams.query,
+        content_category: 'property_search'
+    });
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Para el formulario de contacto
+    const contactForm = document.getElementById('contactForm');
+    if(contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            trackLeadForm();
+        });
+    }
+
+    // Para el botón de WhatsApp
+    const whatsappBtn = document.querySelector('.button_whats_contac');
+    if(whatsappBtn) {
+        whatsappBtn.addEventListener('click', function() {
+            trackWhatsAppClick();
+        });
+    }
+
+    // Para el botón de Email
+    const emailBtn = document.querySelector('.button_email_contac');
+    if(emailBtn) {
+        emailBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'email_contact'
+            });
+        });
+    }
+
+    // Para el buscador de propiedades
+    const searchForm = document.querySelector('.buscador_inter_sup');
+    if(searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            trackPropertySearch({
+                query: this.querySelector('input').value
+            });
+        });
+    }
+
+    // Para ver teléfono
+    const phoneBtn = document.querySelector('.show-phone-btn');
+    if(phoneBtn) {
+        phoneBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'phone_view'
+            });
+        });
+    }
+});
+</script>
+<!-- End Analytics Implementation -->
+</head>
+<style>
+    @media (max-width: 767px) {
+        .descubrir{
+            width: calc(100% - 40px);
+            flex-direction: column-reverse;
+            padding: 20px;
+        }
+    }
+</style>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="banner-container"></div>
+        <div id="nav-container"></div>
+    </div>
+    <div class="descubrir">
+        <div class="descubrir_iz">
+            <h1>Descubra la propiedad de tus sueños con <span>Master Broker</span></h1>
+            <p>Tu viaje para encontrar la propiedad perfecta comienza aquí. Explore nuestros listados para encontrar la casa que se adapte a tus sueños</p>
+            <div class="descubrir_iz_mas">
+                <a href="/nosotros.html"><button class="descubrir_iz_butmas">Saber más</button></a>
+                <a href="/propiedades.html"><button class="descubrir_iz_butpro">Buscar propiedades</button></a>               
+            </div>
+            <div class="descubrir_iz_tar">
+                <div class="destar"> 
+                    <h2>800+</h2>
+                    <p>Clientes Satisfechos</p>
+                </div>
+                <div class="destar"> 
+                    <h2>1k+</h2>
+                    <p>Inmuebles Vendidos</p>
+                </div>
+                <div class="destar"> 
+                    <h2>6+</h2>
+                    <p>Años De Experiencia</p>
+                </div>
+            </div>
+        </div>
+        <div class="descubrir_de">
+            <img src="/assets/img/Ulumi.jpg?v=1.0.4" alt="Imagen principal de propiedad destacada">
+        </div>
+        <div class="descubrir_ce">
+            <div class="texto-circular" id="texto-circular"></div>
+            <div class="descubrir_ce_in">
+              <img src="/assets/img/master.png?v=1.0.2" alt="Logo Master Broker">
+            </div>
+        </div>
+    </div>
+    <div class="intersec_info">
+        <div class="intersec_info_bajo"></div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/localizacion-de-la-casa.png?v=1.0.2" alt="Icono de ubicación de casa">
+                </div>
+            </div>
+            <h2>Descubre el hogar de tus sueños</h2>
+        </div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/flecha-de-pico.png?v=1.0.2" alt="Icono de flecha de inversión">
+                </div>
+            </div>
+            <h2>Maximiza el valor de tu inversión</h2>
+        </div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/edificio.png?v=1.0.2" alt="Icono de edificio">
+                </div>
+            </div>
+            <h2>Gestiona tus propiedades sin complicaciones</h2>
+        </div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/brillo.png?v=1.0.2" alt="Icono de brillo">
+                </div>
+            </div>
+            <h2>Invierte de manera inteligente y segura</h2>
+        </div>
+    </div>
+    <div class="seccion_info_prop">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp?v=1.0.2" alt="Elemento decorativo estrella" class="deco_est_1">
+            <img src="/assets/img/realce.webp?v=1.0.2" alt="Elemento decorativo estrella" class="deco_est_2">
+            <img src="/assets/img/realce.webp?v=1.0.2" alt="Elemento decorativo estrella" class="deco_est_3">
+        </div>
+        <h1>Propiedades Destacadas</h1>
+        <div class="seccion_info_butt">
+            <p>Explore nuestra selección de propiedades destacadas. Cada listado ofrece una visión de casas e inversiones 
+                excepcionales disponibles a través de Master Broker. Haga clic en "Ver detalles" para obtener más información.
+            </p>
+            <a href="/propiedades.html"><button>Ver Todas Las Propiedades</button></a>
+        </div>
+        <div class="seccion_info_tars carousel-properties">
+            <div class="seccion_info_tar">
+            </div>
+            <div class="seccion_info_but">
+                <p><span>00</span> de <span class="total-pages">00</span></p>
+                <div class="info_but_doble">
+                    <button class="button next-button">
+                        <div class="button-box">
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </button>
+                    <button class="button prev-button" style="transform: rotate(180deg);">
+                        <div class="button-box">
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="seccion_info_prop" style="display: none;">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp?v=1.0.2" alt="Elemento decorativo estrella" class="deco_est_1">
+            <img src="/assets/img/realce.webp?v=1.0.2" alt="Elemento decorativo estrella" class="deco_est_2">
+            <img src="/assets/img/realce.webp?v=1.0.2" alt="Elemento decorativo estrella" class="deco_est_3">
+        </div>
+        <h1>Experiencias De Nuestros Clientes</h1>
+        <div class="seccion_info_butt">
+            <p>Lea las historias de éxito y los sinceros testimonios de nuestros valiosos clientes. 
+                Descubra por qué eligieron Master Broker para tus necesidades inmobiliarias.
+            </p>
+            <a href="/experiencias.html"><button>Ver Todas Las Experiencias</button></a>     
+        </div>
+        <div class="seccion_info_tars carousel-experiences">
+            <div class="seccion_info_tar">
+                <div class="tarjet_info_exper">
+                    <div class="puntuacion_estrella">
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png?v=1.0.2" alt="Icono de calificación">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png?v=1.0.2" alt="Icono de calificación">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png?v=1.0.2" alt="Icono de calificación">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png?v=1.0.2" alt="Icono de calificación">
+                        </div>
+                        <div class="estrella">
+                            <img src="/assets/img/estrella.png?v=1.0.2" alt="Icono de calificación">
+                        </div>
+                    </div>
+                    <h2>Titulo de experiencia</h2>
+                    <p>Descripcion de experiencia</p>
+                    <div class="opinion_des">
+                        <div class="img_user">
+                            <img src="/assets/img/usuario.png?v=1.0.2" alt="Avatar de usuario">
+                        </div>
+                        <div class="des_user">
+                            <h3>Nombre de cliente</h3>
+                            <p>Direccion</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="seccion_info_but">
+                <p><span>01</span> de <span class="total-pages">03</span></p>
+                <div class="info_but_doble">
+                    <button class="button">
+                        <div class="button-box">
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </button>
+                    <button class="button" style="transform: rotate(180deg);">
+                        <div class="button-box">
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40" xmlns="http://www.w3.org/2000/svg">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                            <span class="button-elem">
+                                <svg viewBox="0 0 46 40">
+                                    <path d="M46 20.038c0-.7-.3-1.5-.8-2.1l-16-17c-1.1-1-3.2-1.4-4.4-.3-1.2 1.1-1.2 3.3 0 4.4l11.3 11.9H3c-1.7 0-3 1.3-3 3s1.3 3 3 3h33.1l-11.3 11.9c-1 1-1.2 3.3 0 4.4 1.2 1.1 3.3.8 4.4-.3l16-17c.5-.5.8-1.1.8-1.9z"></path>
+                                </svg>
+                            </span>
+                        </div>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="root"></div>
+    <div id="footer_container"></div>
+    
+    <!-- Scripts -->
+    <script>
+        const text = "MASTER ◇ BROKER ◇ MASTER ◇ BROKER ◇ ";
+        const textContainer = document.getElementById('texto-circular');
+        const deg = 360 / text.length;
+        
+        text.split('').forEach((char, i) => {
+          const span = document.createElement('span');
+          span.innerText = char;
+          span.style.transform = `rotate(${deg * i}deg)`;
+          textContainer.appendChild(span);
+        });
+    </script>
+    <script src="/bot/assets/js/bot_simulado.js" type="text/babel"></script>
+    <script src="/assets/js/animation.js?v=1.0.1"></script>
+    <script src="/assets/js/components.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js?v=1.0.1"></script>
+    <script src="/assets/js/loader.js?v=1.0.1"></script>
+    <script src="/assets/js/redirec_ser.js?v=1.0.1"></script>
+    <script src="/assets/js/carousel.js?v=1.0.1"></script>
+</body>
+</html>

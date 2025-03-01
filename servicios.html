@@ -1,0 +1,387 @@
+<!--Servicios.html-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Servicios inmobiliarios premium en Master Broker: gestión de propiedades, maximización de inversiones, asesoría especializada y soluciones integrales para todas tus necesidades inmobiliarias.">
+    <link rel="shortcut icon" href="/assets/img/icon.png">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/animation.css?v=1.0.1">
+    <title>Master Broker - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GLQZ7S926T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GLQZ7S926T');
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1035305135067666');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1035305135067666&ev=PageView&noscript=1"
+/></noscript>
+
+<!-- Hotjar Tracking Code for Master Broker -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5246817,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<!-- Combined Analytics Events -->
+<script>
+// Función unificada para rastrear eventos en ambas plataformas
+function trackAnalytics(eventName, eventData) {
+    // Google Analytics
+    gtag('event', eventName, eventData);
+    // Meta Pixel
+    fbq('track', eventName, eventData);
+}
+
+// Rastrear vistas de propiedades individuales
+function trackPropertyView(property) {
+    trackAnalytics('ViewContent', {
+        content_type: 'real_estate',
+        content_ids: [property.id],
+        content_name: property.name,
+        value: property.price,
+        currency: 'MXN',
+        content_category: property.type
+    });
+}
+
+// Rastrear formularios de contacto
+function trackLeadForm() {
+    trackAnalytics('Lead', {
+        content_category: 'real_estate_inquiry'
+    });
+}
+
+// Rastrear clicks en WhatsApp
+function trackWhatsAppClick() {
+    trackAnalytics('Contact', {
+        content_category: 'whatsapp_contact'
+    });
+}
+
+// Rastrear búsquedas de propiedades
+function trackPropertySearch(searchParams) {
+    trackAnalytics('Search', {
+        search_string: searchParams.query,
+        content_category: 'property_search'
+    });
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Para el formulario de contacto
+    const contactForm = document.getElementById('contactForm');
+    if(contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            trackLeadForm();
+        });
+    }
+
+    // Para el botón de WhatsApp
+    const whatsappBtn = document.querySelector('.button_whats_contac');
+    if(whatsappBtn) {
+        whatsappBtn.addEventListener('click', function() {
+            trackWhatsAppClick();
+        });
+    }
+
+    // Para el botón de Email
+    const emailBtn = document.querySelector('.button_email_contac');
+    if(emailBtn) {
+        emailBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'email_contact'
+            });
+        });
+    }
+
+    // Para el buscador de propiedades
+    const searchForm = document.querySelector('.buscador_inter_sup');
+    if(searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            trackPropertySearch({
+                query: this.querySelector('input').value
+            });
+        });
+    }
+
+    // Para ver teléfono
+    const phoneBtn = document.querySelector('.show-phone-btn');
+    if(phoneBtn) {
+        phoneBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'phone_view'
+            });
+        });
+    }
+});
+</script>
+<!-- End Analytics Implementation -->
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="banner-container"></div>
+        <div id="nav-container"></div>
+    </div>
+    <div class="descubrir">
+    </div>
+    <div class="services">
+        <div class="services_tit">
+            <h1>Mejore su experiencia inmobiliaria</h1>
+            <p>En Master Broker, transformamos la búsqueda de propiedades en una experiencia excepcional, 
+                donde nuestros expertos guían cada paso de su camino hacia el hogar ideal, con servicios 
+                personalizados que se adaptan a sus sueños únicos.
+            </p>
+        </div>
+    </div>
+    <div class="intersec_info">
+        <div class="intersec_info_bajo"></div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/localizacion-de-la-casa.png?v=1.0.2" alt="Icono de ubicación de casa">
+                </div>
+            </div>
+            <h2>Descubre el hogar de tus sueños</h2>
+        </div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/flecha-de-pico.png?v=1.0.2" alt="Icono de flecha de inversión">
+                </div>
+            </div>
+            <h2>Maximiza el valor de tu inversión</h2>
+        </div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/edificio.png?v=1.0.2" alt="Icono de edificio">
+                </div>
+            </div>
+            <h2>Gestiona tus propiedades sin complicaciones</h2>
+        </div>
+        <div class="intersec_info_tar">
+            <div class="enviar_ser">
+                <img src="/assets/img/flecha-arriba-a-la-derecha.png?v=1.0.2" alt="Icono de flecha indicadora">
+            </div>
+            <div class="contenedor_ser">
+                <div class="conten_ser">
+                    <img src="/assets/img/brillo.png?v=1.0.2" alt="Icono de brillo">
+                </div>
+            </div>
+            <h2>Invierte de manera inteligente y segura</h2>
+        </div>
+    </div>
+
+    <section id="maximizar-valor">
+        <div class="seccion_info_prop">
+            <div class="deco_estrella">
+                <img src="/assets/img/realce.webp"class="deco_est_1">
+                <img src="/assets/img/realce.webp"class="deco_est_2">
+                <img src="/assets/img/realce.webp"class="deco_est_3">
+            </div>
+            <h1>Aumente el valor de su propiedad</h1>
+            <div class="seccion_info_butt" style="flex-direction: column;">
+                <p style="width: 80%;">En Master Broker convertimos la venta de su propiedad en una experiencia exitosa y sin complicaciones. 
+                    Nuestro servicio especializado maximiza el valor de su inmueble, combinando estrategias comprobadas de marketing, 
+                    asesoría experta y negociación profesional para asegurar los mejores resultados en su inversión.
+                </p>
+                <div class="nosotros_valores">
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/invertir-en-el-grafico-de-crecimiento.png" alt="">
+                            </div>
+                            <h2>Dominio de la valoración</h2>
+                        </div>
+                        <p>Determinamos el valor real de su propiedad mediante un análisis profesional y exhaustivo del mercado, 
+                            garantizando una tasación precisa que maximiza su potencial.
+                        </p>
+                    </div>
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/estadisticas.png" alt="">
+                            </div>
+                            <h2>Marketing estratégico</h2>
+                        </div>
+                        <p>Potenciamos su propiedad con estrategias de marketing innovadoras y dirigidas, 
+                            que van más allá del simple listado para atraer a los compradores ideales.
+                        </p>
+                    </div>
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/estrella-del-trofeo.png" alt="">
+                            </div>
+                            <h2>Éxito de cierre</h2>
+                        </div>
+                        <p>Aseguramos el éxito de su venta guiándole en cada paso del proceso de cierre, 
+                            desde la negociación hasta la firma final, con la experiencia y 
+                            atención al detalle que su inversión merece.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="gestion-inmobiliaria">
+        <div class="seccion_info_prop">
+            <div class="deco_estrella">
+                <img src="/assets/img/realce.webp"class="deco_est_1">
+                <img src="/assets/img/realce.webp"class="deco_est_2">
+                <img src="/assets/img/realce.webp"class="deco_est_3">
+            </div>
+            <h1>Gestión de la propiedad sin esfuerzo</h1>
+            <div class="seccion_info_butt" style="flex-direction: column;">
+                <p style="width: 80%;">En Master Broker transformamos la administración de su inmueble en una experiencia sin complicaciones, 
+                    ofreciendo un servicio integral que cuida su inversión mientras usted disfruta de la tranquilidad de tener 
+                    todo bajo control.
+                </p>
+                <div class="nosotros_valores">
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/sosteniendo-el-engranaje-de-mano.png" alt="">
+                            </div>
+                            <h2>Facilidad de mantenimiento</h2>
+                        </div>
+                        <p>Nos ocupamos de cada detalle del mantenimiento de su propiedad, desde las tareas rutinarias 
+                            hasta las emergencias, para que usted disfrute de total tranquilidad.
+                        </p>
+                    </div>
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/destellos.png" alt="">
+                            </div>
+                            <h2>Tranquilidad financiera</h2>
+                        </div>
+                        <p>Optimizamos la gestión financiera de su propiedad, desde el cobro puntual de alquileres hasta 
+                            la administración de gastos, garantizando la rentabilidad de su inversión con total transparencia.
+                        </p>
+                    </div>
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/legal.png" alt="">
+                            </div>
+                            <h2>Guardián legal</h2>
+                        </div>
+                        <p>Protegemos su inversión asegurando el cumplimiento de todas las normativas inmobiliarias vigentes, 
+                            mientras usted disfruta de la tranquilidad de una gestión legal impecable.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section id="inversiones-inteligentes">
+        <div class="seccion_info_prop">
+            <div class="deco_estrella">
+                <img src="/assets/img/realce.webp"class="deco_est_1">
+                <img src="/assets/img/realce.webp"class="deco_est_2">
+                <img src="/assets/img/realce.webp"class="deco_est_3">
+            </div>
+            <h1>Inversiones inteligentes, decisiones certeras</h1>
+            <div class="seccion_info_butt" style="flex-direction: column;">
+                <p style="width: 80%;">En Master Broker transformamos oportunidades en inversiones rentables, 
+                    brindándole asesoría estratégica y análisis de mercado detallado para construir una cartera 
+                    inmobiliaria sólida y exitosa.
+                </p>
+                <div class="nosotros_valores">
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/tienda-del-mercado.png" alt="">
+                            </div>
+                            <h2>Perspectiva del mercado</h2>
+                        </div>
+                        <p>Anticipamos tendencias y oportunidades con análisis de mercado precisos, 
+                            brindándole información estratégica para tomar decisiones de inversión ventajosas.
+                        </p>
+                    </div>
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/estadisticas.png" alt="">
+                            </div>
+                            <h2>Evaluación del ROI</h2>
+                        </div>
+                        <p>Maximizamos su potencial de inversión mediante un análisis detallado de rentabilidad, 
+                            permitiéndole identificar las oportunidades más lucrativas del mercado.
+                        </p>
+                    </div>
+                    <div class="nosotros_valor">
+                        <div class="valor_tit">
+                            <div class="valor_img">
+                                <img src="/assets/img/brillo.png" alt="">
+                            </div>
+                            <h2>Dominio de la diversificación</h2>
+                        </div>
+                        <p>Optimizamos su cartera inmobiliaria con estrategias de diversificación inteligentes, 
+                            equilibrando riesgos y oportunidades en diferentes propiedades y ubicaciones.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <div id="footer_container"></div>
+    <script src="/assets/js/animation.js"></script>
+    <script src="/assets/js/components.js"></script>
+    <script src="/assets/js/navigation.js"></script>
+    <script src="/assets/js/loader.js"></script>
+    <script src="/assets/js/redirec_ser.js"></script>
+</body>
+</html>

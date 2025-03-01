@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+   <meta charset="UTF-8">
+   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+   <title>Configuración de Horarios</title>
+   <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2">
+   <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+   <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+   <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+   <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+   <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+   <link rel="stylesheet" href="/assets/styles/private/dashboard/calendario.css">
+   <script src="https://unpkg.com/lucide@latest"></script>
+</head>
+<body class="bg-gray-50">
+    <div id="loader">
+        <div class="spinner">
+            <span></span><span></span><span></span><span></span>
+            <span></span><span></span><span></span><span></span>
+        </div>
+    </div>
+
+    <div class="nav_sup">
+        <div id="nav-container"></div>
+    </div>
+    <div class="max-w-6xl mx-auto px-6 mt-32 mb-2">
+        <a href="javascript:void(0)" onclick="navigateBack()" class="inline-flex items-center gap-2 py-2 px-3 bg-gray-100 hover:bg-blue-50 rounded-lg text-gray-700 hover:text-blue-600 transition-colors">
+          <i data-lucide="arrow-left" class="w-4 h-4"></i>
+          <span id="backButtonText">Volver</span>
+        </a>
+    </div>
+    <div class="p-6 bg-white rounded-lg shadow-sm max-w-6xl mx-auto mt-8 mb-16">
+        <!-- Título y Acciones -->
+        <div class="flex justify-between items-center mb-6">
+            <div class="flex gap-2 items-center">
+                <i data-lucide="calendar" class="w-6 h-6 text-blue-600"></i>
+                <h2 class="text-xl font-semibold">Horario de Disponibilidad</h2>
+            </div>
+            <div class="flex gap-4">
+                <a href="#" class="flex items-center gap-2 text-gray-600" id="togglePreview">
+                    <i data-lucide="eye" class="w-4 h-4"></i>
+                    <span>Vista Previa</span>
+                </a>
+                <a href="#" class="text-blue-600" id="applyWorkweek">
+                    Aplicar Horario Laboral
+                </a>
+            </div>
+        </div>
+
+        <!-- Sección de Copiar Horarios -->
+        <div class="mb-6">
+            <h3 class="text-base font-medium mb-3">Copiar Horario</h3>
+            <div class="flex items-center gap-4">
+                <select class="border p-2 rounded w-48" id="copyFrom">
+                    <option value="">Origen</option>
+                    <option value="monday">Lunes</option>
+                    <option value="tuesday">Martes</option>
+                    <option value="wednesday">Miércoles</option>
+                    <option value="thursday">Jueves</option>
+                    <option value="friday">Viernes</option>
+                    <option value="saturday">Sábado</option>
+                    <option value="sunday">Domingo</option>
+                </select>
+                <i data-lucide="arrow-right" class="w-5 h-5 text-gray-400"></i>
+                <select class="border p-2 rounded w-48" id="copyTo">
+                    <option value="">Destino</option>
+                    <option value="monday">Lunes</option>
+                    <option value="tuesday">Martes</option>
+                    <option value="wednesday">Miércoles</option>
+                    <option value="thursday">Jueves</option>
+                    <option value="friday">Viernes</option>
+                    <option value="saturday">Sábado</option>
+                    <option value="sunday">Domingo</option>
+                </select>
+                <button class="flex items-center gap-2 text-blue-600 px-4 py-2 hover:bg-blue-50 rounded" id="copySchedule">
+                    <i data-lucide="copy" class="w-4 h-4"></i>
+                    Aplicar copia
+                </button>
+            </div>
+            <p class="text-sm text-gray-500 mt-2">
+                <i data-lucide="info" class="w-4 h-4 inline-block"></i>
+                El horario del día origen se copiará al día destino, reemplazando cualquier configuración existente
+            </p>
+        </div>
+    
+        <!-- Configuración de días -->
+        <div id="scheduleContainer" class="space-y-6">
+            <template id="dayTemplate">
+                <div class="day-container border-b pb-6">
+                    <div class="flex items-center gap-2 mb-4">
+                        <input type="checkbox" class="w-4 h-4 text-blue-600 day-active">
+                        <span class="font-medium day-name"></span>
+                        <span class="text-sm text-gray-600 day-hours"></span>
+                    </div>
+                    
+                    <div class="slots-container ml-6 space-y-4" style="display: none;">
+                        <div class="errors text-red-600 text-sm"></div>
+                        <div class="slots-list space-y-3"></div>
+                        <button class="add-slot flex items-center gap-2 text-blue-600 hover:text-blue-700">
+                            <i data-lucide="plus" class="w-4 h-4"></i>
+                            <span>Agregar intervalo</span>
+                        </button>
+                    </div>
+                </div>
+            </template>
+    
+            <template id="slotTemplate">
+                <div class="flex items-center gap-4">
+                    <input type="time" class="border p-2 rounded w-32 slot-start">
+                    <span class="text-gray-500">a</span>
+                    <input type="time" class="border p-2 rounded w-32 slot-end">
+                    <select class="border p-2 rounded w-40 slot-type">
+                        <option value="available">Disponible</option>
+                        <option value="break">Descanso</option>
+                        <option value="lunch">Comida</option>
+                        <option value="meeting">Reunión</option>
+                        <option value="other">Otro</option>
+                    </select>
+                    <input type="text" placeholder="Descripción (opcional)" class="border p-2 rounded flex-1 slot-description">
+                    <button class="p-2 text-red-600 hover:bg-red-50 rounded delete-slot">
+                        <i data-lucide="trash-2" class="w-5 h-5"></i>
+                    </button>
+                </div>
+            </template>
+        </div>
+
+        <!-- Opción de sincronización con Google (versión mejorada) -->
+        <div class="mt-8 p-4 border border-blue-200 bg-blue-50 rounded-lg" id="googleSyncSection">
+            <div class="flex items-center">
+            <div class="flex-shrink-0 mr-3">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-blue-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                <line x1="16" y1="2" x2="16" y2="6"></line>
+                <line x1="8" y1="2" x2="8" y2="6"></line>
+                <line x1="3" y1="10" x2="21" y2="10"></line>
+                <path d="M9 16l2 2 4-4"></path>
+                </svg>
+            </div>
+            <div class="flex-1">
+                <div class="flex items-center">
+                <div class="relative flex items-center" id="syncCheckboxContainer">
+                    <!-- Checkbox estándar -->
+                    <input type="checkbox" id="syncWithGoogleEnabled" class="w-5 h-5 text-blue-600 border-blue-300 focus:ring-blue-500" disabled>
+                    <!-- Overlay del candado cuando está deshabilitado -->
+                    <div id="syncLockOverlay" class="absolute inset-0 bg-gray-200 bg-opacity-70 rounded flex items-center justify-center">
+                    <i data-lucide="lock" class="w-4 h-4 text-gray-600"></i>
+                    </div>
+                </div>
+                <label for="syncWithGoogleEnabled" class="ml-2 text-lg font-medium" id="syncLabel">
+                    Sincronizar con Google Calendar
+                </label>
+                <span class="ml-2 px-2 py-0.5 text-xs font-semibold bg-green-100 text-green-800 rounded-full">Recomendado</span>
+                </div>
+                <p class="mt-1 text-sm" id="syncDescription">
+                Mantén tu horario sincronizado automáticamente con tu cuenta de Google Calendar
+                </p>
+        
+                <!-- Estado de conexión -->
+                <div class="mt-3 flex items-center" id="googleConnectionStatus">
+                <div class="w-2 h-2 rounded-full bg-red-500 mr-2" id="connectionIndicator"></div>
+                <span class="text-sm text-gray-700" id="connectionMessage">
+                    No hay cuenta de Google conectada
+                </span>
+                <a href="/dashboard/configuracion/datos.html#google-connect" class="ml-3 text-sm text-blue-600 hover:text-blue-800 underline flex items-center gap-1">
+                    Conectar cuenta
+                    <i data-lucide="external-link" class="w-3 h-3"></i>
+                </a>
+                </div>
+            </div>
+            </div>
+        </div>
+    
+        <!-- Botones de acción -->
+        <div class="mt-6 flex justify-end gap-4">
+            <button id="saveDraft" class="flex items-center gap-2 px-4 py-2 text-blue-600 bg-blue-50 rounded hover:bg-blue-100">
+                <i data-lucide="save" class="w-4 h-4"></i>
+                Guardar Borrador
+            </button>
+            <button id="saveSchedule" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                Guardar y Aplicar
+            </button>
+        </div>
+    
+        <!-- Notificación de borrador -->
+        <div id="draftNotice" class="mt-4 p-4 bg-yellow-50 text-yellow-800 rounded-lg" style="display: none;">
+            Hay un borrador guardado. Los cambios no se aplicarán hasta que guardes la configuración.
+        </div>
+    </div>
+
+    <div id="previewModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden" style="backdrop-filter: blur(4px);">
+        <div class="flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-lg shadow-xl max-w-6xl w-full max-h-[90vh] flex flex-col">
+                <!-- Header del modal -->
+                <div class="flex items-center justify-between p-6 border-b">
+                    <h3 class="text-lg font-semibold">Vista Previa del Horario</h3>
+                    <button class="text-gray-400 hover:text-gray-600" id="closePreview">
+                        <i data-lucide="x" class="w-6 h-6"></i>
+                    </button>
+                </div>
+                <!-- Contenido del modal -->
+                <div id="previewContent" class="p-6 overflow-auto">
+                    <!-- El contenido se generará dinámicamente -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal de sincronización -->
+    <div id="syncModal" class="fixed inset-0 bg-gray-900 bg-opacity-50 z-50 flex items-center justify-center hidden">
+        <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4 shadow-xl">
+            <div class="flex flex-col items-center">
+                <div class="w-16 h-16 relative mb-4">
+                    <!-- Animación de sincronización -->
+                    <svg class="animate-spin text-blue-600" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    <!-- Icono de Google Calendar cuando completa -->
+                    <div id="syncCompleteIcon" class="absolute inset-0 flex items-center justify-center hidden">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-12 w-12 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                        <line x1="16" y1="2" x2="16" y2="6"></line>
+                        <line x1="8" y1="2" x2="8" y2="6"></line>
+                        <line x1="3" y1="10" x2="21" y2="10"></line>
+                        <path d="M9 16l2 2 4-4"></path>
+                        </svg>
+                    </div>
+                </div>
+                    <h3 id="syncModalTitle" class="text-xl font-medium text-gray-900 mb-2">Sincronizando con Google Calendar</h3>
+                    <p id="syncModalMessage" class="text-gray-600 text-center mb-4">Por favor espera mientras actualizamos tu calendario...</p>
+                    <div id="syncProgress" class="w-full bg-gray-200 rounded-full h-2.5 mb-4">
+                        <div id="syncProgressBar" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+                    
+                    <!-- Estadísticas de sincronización (inicialmente ocultas) -->
+                    <div id="syncStats" class="w-full text-sm text-gray-600 hidden">
+                    <div class="grid grid-cols-2 gap-2">
+                        <div>Slots actualizados:</div>
+                        <div id="syncUpdatedCount" class="text-right">0</div>
+                        <div>Eventos creados:</div>
+                        <div id="syncCreatedCount" class="text-right">0</div>
+                        <div>Eventos eliminados:</div>
+                        <div id="syncDeletedCount" class="text-right">0</div>
+                    </div>
+                </div>
+                
+                <!-- Botón (inicialmente deshabilitado) -->
+                <button id="syncModalBtn" class="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md opacity-50 cursor-not-allowed" disabled>
+                Espera por favor...
+                </button>
+            </div>
+        </div>
+    </div>
+    <div id="footer_container"></div>
+   <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+   <script>
+       // Inicializar los iconos de Lucide
+       lucide.createIcons();
+   </script>
+   <script>
+    // Script para manejar el botón de volver
+    document.addEventListener('DOMContentLoaded', function() {
+      // Intentar obtener la página de referencia
+      const referrer = document.referrer;
+      const backButtonText = document.getElementById('backButtonText');
+      
+      // Determinar texto apropiado según la página de origen
+      if (referrer.includes('datos.html')) {
+        backButtonText.textContent = 'Volver a Configuración de Cuenta';
+      } else if (referrer.includes('dashboard')) {
+        backButtonText.textContent = 'Volver al Dashboard';
+      } else {
+        backButtonText.textContent = 'Volver';
+      }
+      
+      // Inicializar íconos para este elemento
+      lucide.createIcons();
+    });
+    
+    function navigateBack() {
+      if (document.referrer) {
+        window.location.href = document.referrer;
+      } else {
+        window.location.href = '/dashboard/';
+      }
+    }
+  </script>
+   <script src="/assets/js/schedule.js"></script>
+   <script src="/assets/js/components_private.js?v=1.0.1"></script>
+   <script src="/assets/js/navigation.js"></script>
+   <script src="/assets/js/loader.js"></script>
+</body>
+</html>

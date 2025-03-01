@@ -1,0 +1,293 @@
+/* Estilos base compartidos para formularios */
+.login_form,
+.registro_form {
+    max-width: 400px;
+    width: calc(100% - 40px);
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Estilos del encabezado */
+.form_header {
+    margin-bottom: 30px;
+}
+
+.back_button {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: none;
+    border: none;
+    color: var(--colorp);
+    padding: 0;
+    margin-bottom: 20px;
+    cursor: pointer;
+}
+
+.back_button img {
+    width: 20px;
+    height: 20px;
+}
+
+.form_header h1 {
+    font-size: 32px;
+    color: var(--colortxt);
+    margin: 0;
+    margin-bottom: 16px;
+}
+
+/* Para el título más pequeño en el formulario de registro */
+.registro_form .form_header h1 {
+    font-size: 24px;
+    margin-bottom: 0;
+}
+
+.welcome_text {
+    color: var(--colorp);
+    font-size: 16px;
+    line-height: 1.5;
+    margin-bottom: 24px;
+}
+
+/* Estilos de grupos de formulario */
+.form_group {
+    margin-bottom: 24px;
+}
+
+.form_group label {
+    display: block;
+    color: var(--colorp);
+    margin-bottom: 8px;
+    font-family: var(--txt);
+}
+
+.form_group input,
+.custom_select select {
+    width: 100%;
+    height: 48px;
+    background-color: var(--contenedor);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 0 15px;
+    color: var(--colortxt);
+    font-family: var(--txt);
+    font-size: 14px;
+}
+
+.form_group input:focus,
+.custom_select select:focus {
+    outline: none;
+    border-color: var(--principal);
+}
+
+/* Estilos para select personalizado */
+.custom_select {
+    position: relative;
+}
+
+.custom_select select {
+    appearance: none;
+    cursor: pointer;
+    width: 100%; /* Corregido para selects */
+}
+
+.select_arrow {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--colorp);
+    pointer-events: none;
+}
+
+/* Estilos para input de contraseña */
+.password_input {
+    position: relative;
+}
+
+.toggle_password {
+    position: absolute;
+    right: 15px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+}
+
+.toggle_password img {
+    width: 20px;
+    height: 20px;
+    opacity: 1 !important;
+}
+
+.input_hint {
+    display: block;
+    font-size: 12px;
+    color: var(--colorp);
+    margin-top: 5px;
+}
+
+/* Estilos de sección de formulario */
+.form_section {
+    margin: 30px 0;
+}
+
+.form_section h2 {
+    color: var(--colorp);
+    font-size: 16px;
+    margin-bottom: 20px;
+}
+
+/* Estilos para términos y condiciones */
+.terms_check {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 20px;
+    color: var(--colorp);
+}
+
+.terms_check input[type="checkbox"] {
+    width: 16px;
+    height: 16px;
+    margin: 0;
+}
+
+.terms_check a,
+.register_link {
+    color: var(--principal);
+    text-decoration: none;
+}
+
+/* Estilos de botón submit */
+.submit_button {
+    width: 100%;
+    height: 48px;
+    background-color: var(--principal);
+    border: none;
+    border-radius: 10px;
+    color: var(--colorwt);
+    font-family: var(--txt);
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit_button:hover {
+    background-color: var(--principal_2);
+}
+
+/* Estilos para el área de registro */
+.register_prompt {
+    text-align: center;
+    margin-top: 16px;
+}
+
+.register_prompt p {
+    color: var(--colorp);
+    font-size: 14px;
+    margin-bottom: 8px;
+}
+
+.register_link:hover {
+    text-decoration: underline;
+}
+
+/* Estilos para inputs autocompletados */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus,
+input:-webkit-autofill:active {
+    -webkit-box-shadow: 0 0 0 30px var(--contenedor) inset !important;
+    -webkit-text-fill-color: var(--colortxt) !important;
+    caret-color: var(--colortxt);
+}
+
+/* Para Firefox */
+input:autofill {
+    background-color: var(--contenedor) !important;
+    color: var(--colortxt) !important;
+}
+
+/* Para Edge */
+input:-internal-autofill-selected {
+    background-color: var(--contenedor) !important;
+    color: var(--colortxt) !important;
+}
+
+/* Transición suave para inputs */
+.form_group input {
+    transition: background-color 0s 50000s, color 0s 50000s;
+}
+
+/* Agregar al CSS existente */
+
+.login_form,
+.registro_form {
+    opacity: 1;
+    transition: opacity 0.3s ease-in-out, display 0.3s ease-in-out;
+}
+
+.login_form.hide,
+.registro_form.hide {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Asegurar que los formularios tengan posición absoluta para la transición */
+.login_form,
+.registro_form {
+    position: relative;
+    width: 100%;
+}
+
+/* Ajustar el contenedor principal si es necesario */
+.form_container {
+    position: relative;
+    width: 100%;
+    max-width: 440px;
+    margin: 0 auto;
+}
+
+/* Media queries */
+@media (max-width: 767px) {
+    .descubrir_ce {
+        left: 50% !important;
+        transform: translate(-50%) !important;
+    }
+
+    .login_form,
+    .registro_form {
+        width: 90%;
+        max-width: 360px;
+        padding: 15px;
+    }
+    
+    .form_container {
+        width: 90%;
+        max-width: 390px;
+        margin: 0;
+    }
+    
+    .form_header h1 {
+        font-size: 28px;
+    }
+    
+    .welcome_text {
+        font-size: 14px;
+    }
+
+    .terms_check,
+    .terms_check a {
+        font-size: 12px;
+        flex-wrap: wrap;
+    }
+
+
+}

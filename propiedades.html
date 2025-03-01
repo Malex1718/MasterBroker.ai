@@ -1,0 +1,738 @@
+<!--Propiedades.html-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Explora nuestra selecta cartera de propiedades en venta y renta. Casas, departamentos, oficinas y más, con búsqueda personalizada para encontrar el inmueble perfecto que se ajuste a tus necesidades.">
+    <link rel="shortcut icon" href="/assets/img/icon.png">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/animation.css?v=1.0.1">
+            
+    <!-- React y ReactDOM -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.development.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.development.js"></script>
+
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="/path/to/tailwind.config.js">
+    
+    <!-- Babel para JSX -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.5/babel.min.js"></script>
+    
+    <!-- Lucide Icons -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lucide/0.263.1/lucide.min.js"></script>
+
+    <link rel="stylesheet" href="/bot/assets/styles/bot.css">
+    <title>Master Broker - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GLQZ7S926T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GLQZ7S926T');
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1035305135067666');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1035305135067666&ev=PageView&noscript=1"
+/></noscript>
+
+<!-- Hotjar Tracking Code for Master Broker -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5246817,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<!-- Combined Analytics Events -->
+<script>
+// Función unificada para rastrear eventos en ambas plataformas
+function trackAnalytics(eventName, eventData) {
+    // Google Analytics
+    gtag('event', eventName, eventData);
+    // Meta Pixel
+    fbq('track', eventName, eventData);
+}
+
+// Rastrear vistas de propiedades individuales
+function trackPropertyView(property) {
+    trackAnalytics('ViewContent', {
+        content_type: 'real_estate',
+        content_ids: [property.id],
+        content_name: property.name,
+        value: property.price,
+        currency: 'MXN',
+        content_category: property.type
+    });
+}
+
+// Rastrear formularios de contacto
+function trackLeadForm() {
+    trackAnalytics('Lead', {
+        content_category: 'real_estate_inquiry'
+    });
+}
+
+// Rastrear clicks en WhatsApp
+function trackWhatsAppClick() {
+    trackAnalytics('Contact', {
+        content_category: 'whatsapp_contact'
+    });
+}
+
+// Rastrear búsquedas de propiedades
+function trackPropertySearch(searchParams) {
+    trackAnalytics('Search', {
+        search_string: searchParams.query,
+        content_category: 'property_search'
+    });
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Para el formulario de contacto
+    const contactForm = document.getElementById('contactForm');
+    if(contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            trackLeadForm();
+        });
+    }
+
+    // Para el botón de WhatsApp
+    const whatsappBtn = document.querySelector('.button_whats_contac');
+    if(whatsappBtn) {
+        whatsappBtn.addEventListener('click', function() {
+            trackWhatsAppClick();
+        });
+    }
+
+    // Para el botón de Email
+    const emailBtn = document.querySelector('.button_email_contac');
+    if(emailBtn) {
+        emailBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'email_contact'
+            });
+        });
+    }
+
+    // Para el buscador de propiedades
+    const searchForm = document.querySelector('.buscador_inter_sup');
+    if(searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            trackPropertySearch({
+                query: this.querySelector('input').value
+            });
+        });
+    }
+
+    // Para ver teléfono
+    const phoneBtn = document.querySelector('.show-phone-btn');
+    if(phoneBtn) {
+        phoneBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'phone_view'
+            });
+        });
+    }
+});
+</script>
+<!-- End Analytics Implementation -->
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="banner-container"></div>
+        <div id="nav-container"></div>
+    </div>
+    <div class="descubrir">
+    </div>
+    <div class="property">
+        <div class="property_degra">
+            <div class="property_tit">
+                <h1>Mejore su experiencia inmobiliaria</h1>
+                <p>En Master Broker, transformamos la búsqueda de propiedades en una experiencia excepcional, 
+                    donde nuestros expertos guían cada paso de su camino hacia el hogar ideal, con servicios 
+                    personalizados que se adaptan a sus sueños únicos.
+                </p>
+            </div>
+        </div>
+        <div class="property_busca">
+            <div class="buscador_exter_sup">
+                <div class="buscador_inter_sup">
+                    <input type="text" placeholder="Ingresa ubicaciones o características (ej: 2 baños)">
+                    <button>
+                        <img src="/assets/img/busqueda.png" alt="">
+                        <span>Buscar propiedad</span>
+                    </button>
+                </div>
+            </div>
+            <div class="filtros_exter_infer">
+                <div class="opciones_select">
+                    <div class="select">
+                        <img src="/assets/img/punto-de-venta.png" alt="">
+                        <span>Tipo de operación</span>
+                        <label class="select_flecha">
+                            <input type="checkbox">
+                            <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                            </svg>
+                        </label>
+                    </div>
+                    <div class="opciones">
+                        <label class="radio_opcion">
+                            <input type="radio" name="operacion" value="1">
+                            <span>Renta</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="operacion" value="2">
+                            <span>Comprar</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="operacion" value="3">
+                            <span>Remates</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="operacion" value="4">
+                            <span>Temporal</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="operacion" value="5">
+                            <span>Desarrollos</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="operacion" value="6">
+                            <span>Traspaso</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="operacion" value="7">
+                            <span>Preventa</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="opciones_select">
+                    <div class="select">
+                        <img src="/assets/img/ciudad.png" alt="">
+                        <span>Tipo de inmueble</span>
+                        <label class="select_flecha">
+                            <input type="checkbox">
+                            <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
+                        </label>
+                    </div>
+                    <div class="opciones" style="width: calc(100% + 15px);">
+                        <!-- Casas -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="1">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa independiente</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="2">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa en condominio</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="3">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa de campo</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="4">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa de playa</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="5">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa tipo colonial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="6">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa moderna</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="7">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa rústica</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="8">
+                            <span class="checkbox_mark"></span>
+                            <span>Casa inteligente</span>
+                        </label>
+
+                        <!-- Departamentos -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="9">
+                            <span class="checkbox_mark"></span>
+                            <span>Departamento</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="10">
+                            <span class="checkbox_mark"></span>
+                            <span>Penthouse</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="11">
+                            <span class="checkbox_mark"></span>
+                            <span>Loft</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="12">
+                            <span class="checkbox_mark"></span>
+                            <span>Studio</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="13">
+                            <span class="checkbox_mark"></span>
+                            <span>Garden house</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="14">
+                            <span class="checkbox_mark"></span>
+                            <span>Departamento amueblado</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="15">
+                            <span class="checkbox_mark"></span>
+                            <span>Departamento tipo suite</span>
+                        </label>
+
+                        <!-- Dúplex -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="16">
+                            <span class="checkbox_mark"></span>
+                            <span>Dúplex horizontal</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="17">
+                            <span class="checkbox_mark"></span>
+                            <span>Dúplex vertical</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="18">
+                            <span class="checkbox_mark"></span>
+                            <span>Duplex con terraza</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="19">
+                            <span class="checkbox_mark"></span>
+                            <span>Duplex con jardín</span>
+                        </label>
+
+                        <!-- Quintas -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="20">
+                            <span class="checkbox_mark"></span>
+                            <span>Quinta campestre</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="21">
+                            <span class="checkbox_mark"></span>
+                            <span>Quinta residencial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="22">
+                            <span class="checkbox_mark"></span>
+                            <span>Quinta para eventos</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="23">
+                            <span class="checkbox_mark"></span>
+                            <span>Quinta recreativa</span>
+                        </label>
+
+                        <!-- Villas -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="24">
+                            <span class="checkbox_mark"></span>
+                            <span>Villa turística</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="25">
+                            <span class="checkbox_mark"></span>
+                            <span>Villa residencial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="26">
+                            <span class="checkbox_mark"></span>
+                            <span>Villa de lujo</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="27">
+                            <span class="checkbox_mark"></span>
+                            <span>Villa vacacional</span>
+                        </label>
+
+                        <!-- Edificios -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="28">
+                            <span class="checkbox_mark"></span>
+                            <span>Edificio residencial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="29">
+                            <span class="checkbox_mark"></span>
+                            <span>Edificio corporativo</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="30">
+                            <span class="checkbox_mark"></span>
+                            <span>Edificio mixto</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="31">
+                            <span class="checkbox_mark"></span>
+                            <span>Edificio histórico</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="32">
+                            <span class="checkbox_mark"></span>
+                            <span>Torre de apartamentos</span>
+                        </label>
+
+                        <!-- Oficinas -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="33">
+                            <span class="checkbox_mark"></span>
+                            <span>Oficina ejecutiva</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="34">
+                            <span class="checkbox_mark"></span>
+                            <span>Oficina tipo coworking</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="35">
+                            <span class="checkbox_mark"></span>
+                            <span>Oficina independiente</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="36">
+                            <span class="checkbox_mark"></span>
+                            <span>Suite ejecutiva</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="37">
+                            <span class="checkbox_mark"></span>
+                            <span>Oficina virtual</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="38">
+                            <span class="checkbox_mark"></span>
+                            <span>Consultorio</span>
+                        </label>
+
+                        <!-- Locales -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="39">
+                            <span class="checkbox_mark"></span>
+                            <span>Local comercial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="40">
+                            <span class="checkbox_mark"></span>
+                            <span>Local en plaza</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="41">
+                            <span class="checkbox_mark"></span>
+                            <span>Local en centro comercial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="42">
+                            <span class="checkbox_mark"></span>
+                            <span>Local en esquina</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="43">
+                            <span class="checkbox_mark"></span>
+                            <span>Local industrial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="44">
+                            <span class="checkbox_mark"></span>
+                            <span>Local para restaurante</span>
+                        </label>
+
+                        <!-- Bodegas -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="45">
+                            <span class="checkbox_mark"></span>
+                            <span>Bodega de almacenamiento</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="46">
+                            <span class="checkbox_mark"></span>
+                            <span>Bodega con oficinas</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="47">
+                            <span class="checkbox_mark"></span>
+                            <span>Bodega refrigerada</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="48">
+                            <span class="checkbox_mark"></span>
+                            <span>Mini-bodegas</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="49">
+                            <span class="checkbox_mark"></span>
+                            <span>Centro de distribución</span>
+                        </label>
+
+                        <!-- Naves industriales -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="50">
+                            <span class="checkbox_mark"></span>
+                            <span>Nave de producción</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="51">
+                            <span class="checkbox_mark"></span>
+                            <span>Nave de almacenamiento</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="52">
+                            <span class="checkbox_mark"></span>
+                            <span>Nave con área administrativa</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="53">
+                            <span class="checkbox_mark"></span>
+                            <span>Parque industrial</span>
+                        </label>
+
+                        <!-- Terrenos -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="54">
+                            <span class="checkbox_mark"></span>
+                            <span>Terreno urbano</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="55">
+                            <span class="checkbox_mark"></span>
+                            <span>Terreno campestre</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="56">
+                            <span class="checkbox_mark"></span>
+                            <span>Terreno industrial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="57">
+                            <span class="checkbox_mark"></span>
+                            <span>Terreno comercial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="58">
+                            <span class="checkbox_mark"></span>
+                            <span>Terreno agrícola</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="59">
+                            <span class="checkbox_mark"></span>
+                            <span>Terreno residencial</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="60">
+                            <span class="checkbox_mark"></span>
+                            <span>Lote</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="61">
+                            <span class="checkbox_mark"></span>
+                            <span>Solar</span>
+                        </label>
+
+                        <!-- Huertas -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="62">
+                            <span class="checkbox_mark"></span>
+                            <span>Huerta frutal</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="63">
+                            <span class="checkbox_mark"></span>
+                            <span>Huerta de hortalizas</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="64">
+                            <span class="checkbox_mark"></span>
+                            <span>Huerta orgánica</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="65">
+                            <span class="checkbox_mark"></span>
+                            <span>Huerta mixta</span>
+                        </label>
+
+                        <!-- Ranchos -->
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="66">
+                            <span class="checkbox_mark"></span>
+                            <span>Rancho ganadero</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="67">
+                            <span class="checkbox_mark"></span>
+                            <span>Rancho agrícola</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="68">
+                            <span class="checkbox_mark"></span>
+                            <span>Rancho mixto</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="69">
+                            <span class="checkbox_mark"></span>
+                            <span>Rancho turístico</span>
+                        </label>
+                        <label class="checkbox_opcion">
+                            <input type="checkbox" name="tipo_inmueble" value="70">
+                            <span class="checkbox_mark"></span>
+                            <span>Rancho con instalaciones</span>
+                        </label>
+                    </div>
+                </div>
+                <div class="opciones_select">
+                    <div class="select">
+                        <img src="/assets/img/billetes-de-dinero.png" alt="">
+                        <span>Rango de precios</span>
+                        <label class="select_flecha">
+                            <input type="checkbox">
+                            <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down"><path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path></svg>
+                        </label>
+                    </div>
+                    <div class="opciones" style="width: calc(100% + 15px);">
+                        <div class="opciones_inputs">
+                            <input type="text" placeholder="MXN | Desde">
+                            <input type="text" placeholder="MXN | Hasta">
+                        </div>
+                    </div>    
+                </div>
+                <div class="opciones_select">
+                    <div class="select">
+                        <img src="/assets/img/zona.png" alt="">
+                        <span>Superficie</span>
+                        <label class="select_flecha">
+                            <input type="checkbox">
+                            <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                            </svg>
+                        </label>
+                    </div>
+                    <div class="opciones" style="width: calc(100% + 15px);">
+                        <div class="opciones_inputs">
+                            <input type="text" placeholder="m² | Desde">
+                            <input type="text" placeholder="m² | Hasta">
+                        </div>
+                    </div>     
+                </div>
+                <div class="opciones_select">
+                    <div class="select">
+                        <img src="/assets/img/lineas-de-calendario.png" alt="">
+                        <span>Antigüedad</span>
+                        <label class="select_flecha">
+                            <input type="checkbox">
+                            <svg viewBox="0 0 512 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="chevron-down">
+                                <path d="M233.4 406.6c12.5 12.5 32.8 12.5 45.3 0l192-192c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L256 338.7 86.6 169.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l192 192z"></path>
+                            </svg>
+                        </label>
+                    </div>
+                    <div class="opciones">
+                        <label class="radio_opcion">
+                            <input type="radio" name="antiguedad" value="under_construction">
+                            <span>En construcción</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="antiguedad" value="new">
+                            <span>A estrenar</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="antiguedad" value="up_to_5">
+                            <span>Hasta 5 años</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="antiguedad" value="up_to_10">
+                            <span>Hasta 10 años</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="antiguedad" value="up_to_20">
+                            <span>Hasta 20 años</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="antiguedad" value="up_to_50">
+                            <span>Hasta 50 años</span>
+                        </label>
+                        <label class="radio_opcion">
+                            <input type="radio" name="antiguedad" value="more_than_50">
+                            <span>Más de 50 años</span>
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="seccion_info_prop">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp"class="deco_est_1">
+            <img src="/assets/img/realce.webp"class="deco_est_2">
+            <img src="/assets/img/realce.webp"class="deco_est_3">
+        </div>
+        <h1> Descubra un mundo de posibilidades</h1>
+        <div class="seccion_info_butt" style="flex-direction: column;">
+        </div>
+        <div class="seccion_prop_tars">
+            <div class="seccion_prop_tar"> 
+
+            </div>
+        </div>
+    </div>
+    <div id="root"></div>
+    <div id="footer_container"></div>
+    <script src="/bot/assets/js/bot_simulado.js" type="text/babel"></script>
+    <script src="/assets/js/property-loader.js?v=1.0.1"></script>
+    <script src="/assets/js/animation.js?v=1.0.1"></script>
+    <script src="/assets/js/components.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js?v=1.0.1"></script>
+    <script src="/assets/js/loader.js?v=1.0.1"></script>
+    <script src="/assets/js/filtros.js?v=1.0.1"></script>
+</body>
+</html>

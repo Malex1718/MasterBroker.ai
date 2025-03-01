@@ -1,0 +1,359 @@
+/* Estilos del contenedor principal */
+.comodidades_container {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+ }
+ 
+ /* Estilos para las secciones */
+ .seccion_comodidades {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-bottom: 15px;
+ }
+ 
+ .titulo_seccion {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: var(--contenedor);
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+ }
+ 
+ .titulo_seccion:hover {
+    background-color: var(--border);
+ }
+ 
+ .titulo_seccion h3 {
+    margin: 0;
+    color: var(--colortxt);
+    font-family: var(--titulo);
+    font-size: 16px;
+ }
+ 
+ .toggle_seccion {
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 5px;
+    color: var(--colortxt);
+ }
+ 
+ .toggle_seccion i {
+    font-size: 18px;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ }
+ 
+ /* Animación del ícono */
+ .toggle_seccion.active i {
+    transform: rotate(180deg);
+    color: var(--principal);
+ }
+ 
+ /* Animación del contenido */
+ .opciones_seccion {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+    padding: 20px;
+    border-top: 1px solid var(--border);
+    background-color: var(--body);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    max-height: 1000px;
+    opacity: 1;
+ }
+ 
+ .opciones_seccion.collapsed {
+    max-height: 0;
+    opacity: 0;
+    padding: 0 20px;
+    pointer-events: none;
+ }
+ 
+ /* Estilos para los checkboxes personalizados */
+ .opcion_check {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--colortxt);
+    cursor: pointer;
+    font-family: var(--txt);
+    transition: transform 0.2s ease;
+    opacity: 1;
+    transform: translateY(0);
+ }
+ 
+ .opcion_check:hover {
+    transform: translateY(-2px);
+ }
+ 
+ /* Ocultar el checkbox original */
+ .opcion_check input[type="checkbox"] {
+    display: none;
+ }
+ 
+ /* Crear el nuevo checkbox personalizado */
+ .opcion_check span::before {
+    content: '';
+    display: inline-block;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+    border: 2px solid var(--border);
+    background-color: var(--contenedor);
+    border-radius: 4px;
+    vertical-align: middle;
+    cursor: pointer;
+    transition: all 0.3s ease;
+ }
+ 
+ /* Estilo cuando el checkbox está marcado */
+ .opcion_check input[type="checkbox"]:checked + span::before {
+    background-color: var(--principal);
+    border-color: var(--principal);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' width='24' height='24'%3E%3Cpath fill='none' d='M0 0h24v24H0z'/%3E%3Cpath fill='white' d='M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41L9 16.17z'/%3E%3C/svg%3E");
+    background-size: 14px;
+    background-position: center;
+    background-repeat: no-repeat;
+ }
+ 
+ /* Efecto hover */
+ .opcion_check:hover span::before {
+    border-color: var(--principal);
+ }
+ 
+ /* Efecto focus para accesibilidad */
+ .opcion_check input[type="checkbox"]:focus + span::before {
+    box-shadow: 0 0 0 2px var(--contenedor), 0 0 0 4px var(--principal);
+ }
+ 
+ /* Estilo del texto */
+ .opcion_check span {
+    color: var(--colortxt);
+    font-size: 14px;
+    user-select: none;
+ }
+ 
+ /* Animación al marcar el checkbox */
+ @keyframes checkmark {
+    0% {
+        transform: scale(0.8);
+        opacity: 0.4;
+    }
+    50% {
+        transform: scale(1.1);
+        opacity: 0.8;
+    }
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+ }
+ 
+ .opcion_check input[type="checkbox"]:checked + span::before {
+    animation: checkmark 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+ }
+ 
+ /* Animaciones para el contenido */
+ @keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+ }
+ 
+ @keyframes fadeOutDown {
+    from {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    to {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+ }
+ 
+ /* Responsive */
+ @media (max-width: 768px) {
+    .opciones_seccion {
+        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    }
+    
+    .opcion_check span {
+        font-size: 13px;
+    }
+ }
+ 
+ @media (max-width: 480px) {
+    .opciones_seccion {
+        grid-template-columns: 1fr;
+    }
+    
+    .titulo_seccion {
+        padding: 12px 15px;
+    }
+    
+    .titulo_seccion h3 {
+        font-size: 14px;
+    }
+}
+
+.adicionales_container {
+    padding: 20px;
+    background-color: var(--contenedor);
+    border-radius: 10px;
+}
+
+.adicionales_container h2 {
+    color: var(--colortxt);
+    font-family: var(--titulo);
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.adicionales_grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
+}
+
+.campo_adicional {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo_adicional label {
+    color: var(--colortxt);
+    font-family: var(--txt);
+    font-size: 14px;
+}
+
+/* Estilos para el select */
+.select_custom {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: var(--body);
+    color: var(--colortxt);
+    font-family: var(--txt);
+    font-size: 14px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.select_custom:hover {
+    border-color: var(--principal);
+}
+
+.select_custom:focus {
+    outline: none;
+    border-color: var(--principal);
+    box-shadow: 0 0 0 2px rgba(184, 146, 43, 0.2);
+}
+
+/* Estilos para los inputs numéricos */
+.input_number {
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background-color: var(--body);
+    color: var(--colortxt);
+    font-family: var(--txt);
+    font-size: 14px;
+    transition: all 0.3s ease;
+}
+
+.input_number:hover {
+    border-color: var(--principal);
+}
+
+.input_number:focus {
+    outline: none;
+    border-color: var(--principal);
+    box-shadow: 0 0 0 2px rgba(184, 146, 43, 0.2);
+}
+
+/* Estilizar las flechas del input number */
+.input_number::-webkit-inner-spin-button,
+.input_number::-webkit-outer-spin-button {
+    opacity: 1;
+    height: 30px;
+    cursor: pointer;
+}
+
+.botn_atras{
+    display: flex;
+}
+
+/* Ajustes adicionales para el CSS */
+.titulo_seccion {
+    cursor: pointer;
+    user-select: none;
+}
+
+.titulo_seccion:hover {
+    background-color: var(--contenedor-hover);
+}
+
+.toggle_seccion {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    background: transparent;
+    border: none;
+    transition: background-color 0.3s ease;
+}
+
+.toggle_seccion:hover {
+    background-color: rgba(184, 146, 43, 0.1);
+}
+
+.toggle_seccion i {
+    transition: transform 0.3s ease, color 0.3s ease;
+}
+
+.opciones_seccion {
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow: hidden;
+}
+
+.opciones_seccion:not(.collapsed) {
+    padding: 20px;
+}
+
+.opcion_check {
+    transition: opacity 0.3s ease, transform 0.3s ease;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .adicionales_grid {
+        grid-template-columns: 1fr;
+    }
+
+    .adicionales_container {
+        padding: 15px;
+    }
+
+    .campo_adicional label {
+        font-size: 13px;
+    }
+    
+    .botn_atras{
+        display: flex;
+        width: 100px;
+        font-size: 12px;
+    }
+}

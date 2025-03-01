@@ -1,0 +1,245 @@
+/* Estilos para el historial */
+.activity-history {
+    position: relative;
+    padding: 24px 16px;
+    margin-top: 80px;
+}
+
+
+.footer{
+    border-top: none !important;
+}
+
+.footer_infer{
+    border-top: 1px solid var(--border) !important;
+}
+
+
+.history-container {
+    max-width: 1024px;
+    margin: 0 auto;
+}
+
+.history-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 24px;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    background-color: var(--contenedor);
+    padding: 16px;
+}
+
+.history-header h1 {
+    font-family: var(--titulo);
+    font-size: 24px;
+    color: var(--colortxt);
+}
+
+.activity-filter {
+    position: relative;
+    min-width: 200px;
+}
+
+.activity-filter select {
+    width: 100%;
+    padding: 8px 12px;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    background-color: var(--contenedor);
+    color: var(--colortxt);
+    font-family: var(--txt);
+    font-size: 14px;
+    appearance: none;
+    cursor: pointer;
+    transition: border-color 0.2s;
+}
+
+.activity-filter select:hover {
+    border-color: var(--principal);
+}
+
+.activity-filter select:focus {
+    outline: none;
+    border-color: var(--principal);
+}
+
+.activity-filter::after {
+    content: '';
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 0;
+    height: 0;
+    border-left: 5px solid transparent;
+    border-right: 5px solid transparent;
+    border-top: 5px solid var(--border);
+    pointer-events: none;
+}
+
+.filter-label {
+    font-family: var(--txt);
+    color: var(--colortxt);
+    margin-bottom: 8px;
+    display: block;
+}
+
+.activity-card {
+    position: relative;
+    background-color: var(--contenedor);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 16px;
+    transition: border-color 0.2s;
+}
+
+.activity-card:hover {
+    border-color: var(--principal);
+}
+
+.activity-content {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+}
+
+.activity-icon {
+    padding: 8px;
+    background-color: var(--body);
+    border: 1px solid var(--border);
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 10.7px auto;
+}
+
+.activity-icon img {
+    width: 25px;
+    height: 25px;
+}
+
+.activity-details {
+    flex: 1;
+}
+
+.property-title {
+    font-family: var(--txt-bold);
+    font-size: 16px;
+    color: var(--colortxt);
+    margin: 0;
+}
+
+.property-code {
+    font-family: var(--txt);
+    font-size: 14px;
+    color: var(--border);
+}
+
+.activity-message {
+    font-family: var(--txt);
+    color: var(--colortxt);
+    margin-bottom: 8px;
+    margin-top: 0;
+}
+
+.activity-footer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    font-size: 14px;
+    color: var(--border);
+}
+
+.activity-date {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.activity-date img {
+    width: 16px;
+    height: 16px;
+}
+
+.activity-price {
+    font-family: var(--txt-bold);
+}
+
+.activity-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    width: 100%;
+}
+
+.activity-title-container {
+    display: flex;
+    gap: 10px;
+}
+
+.delete-button {
+    background: none;
+    border: none;
+    padding: 8px;
+    cursor: pointer;
+    border-radius: 50%;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: var(--border);
+}
+
+.delete-button:hover {
+    background-color: var(--cancelado);
+}
+
+.delete-button img {
+    width: 20px;
+    height: 20px;
+    opacity: 0.7;
+    transition: opacity 0.2s;
+}
+
+.delete-button:hover img {
+    opacity: 1;
+}
+
+@keyframes fadeOut {
+    from { 
+        opacity: 1; 
+        transform: translateX(0); 
+    }
+    to { 
+        opacity: 0; 
+        transform: translateX(-20px); 
+    }
+}
+
+@media (max-width: 768px) {
+    .history-header{
+        flex-direction: column;
+    }
+
+    .activity-header {
+        flex-direction: column;
+    }
+    
+    .activity-footer {
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .delete-button{
+        position: absolute;
+        left: 26px;
+        bottom: 16px;
+    }
+}

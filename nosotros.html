@@ -1,0 +1,394 @@
+<!--Nosotros.html-->
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Descubre la historia y valores de Master Broker. Más de 6 años transformando la experiencia inmobiliaria con un equipo dedicado a convertir tus sueños de hogar en realidad mediante servicio personalizado y experto.">
+    <link rel="shortcut icon" href="/assets/img/icon.png">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/animation.css?v=1.0.1">
+    <title>Master Broker - Inversiones inmobiliarias, venta y renta de bienes raíces</title>
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-GLQZ7S926T"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-GLQZ7S926T');
+</script>
+
+<!-- Meta Pixel Code -->
+<script>
+!function(f,b,e,v,n,t,s)
+{if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+n.queue=[];t=b.createElement(e);t.async=!0;
+t.src=v;s=b.getElementsByTagName(e)[0];
+s.parentNode.insertBefore(t,s)}(window, document,'script',
+'https://connect.facebook.net/en_US/fbevents.js');
+fbq('init', '1035305135067666');
+fbq('track', 'PageView');
+</script>
+<noscript><img height="1" width="1" style="display:none"
+src="https://www.facebook.com/tr?id=1035305135067666&ev=PageView&noscript=1"
+/></noscript>
+
+<!-- Hotjar Tracking Code for Master Broker -->
+<script>
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5246817,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>
+
+<!-- Combined Analytics Events -->
+<script>
+// Función unificada para rastrear eventos en ambas plataformas
+function trackAnalytics(eventName, eventData) {
+    // Google Analytics
+    gtag('event', eventName, eventData);
+    // Meta Pixel
+    fbq('track', eventName, eventData);
+}
+
+// Rastrear vistas de propiedades individuales
+function trackPropertyView(property) {
+    trackAnalytics('ViewContent', {
+        content_type: 'real_estate',
+        content_ids: [property.id],
+        content_name: property.name,
+        value: property.price,
+        currency: 'MXN',
+        content_category: property.type
+    });
+}
+
+// Rastrear formularios de contacto
+function trackLeadForm() {
+    trackAnalytics('Lead', {
+        content_category: 'real_estate_inquiry'
+    });
+}
+
+// Rastrear clicks en WhatsApp
+function trackWhatsAppClick() {
+    trackAnalytics('Contact', {
+        content_category: 'whatsapp_contact'
+    });
+}
+
+// Rastrear búsquedas de propiedades
+function trackPropertySearch(searchParams) {
+    trackAnalytics('Search', {
+        search_string: searchParams.query,
+        content_category: 'property_search'
+    });
+}
+
+// Event Listeners
+document.addEventListener('DOMContentLoaded', function() {
+    // Para el formulario de contacto
+    const contactForm = document.getElementById('contactForm');
+    if(contactForm) {
+        contactForm.addEventListener('submit', function(e) {
+            trackLeadForm();
+        });
+    }
+
+    // Para el botón de WhatsApp
+    const whatsappBtn = document.querySelector('.button_whats_contac');
+    if(whatsappBtn) {
+        whatsappBtn.addEventListener('click', function() {
+            trackWhatsAppClick();
+        });
+    }
+
+    // Para el botón de Email
+    const emailBtn = document.querySelector('.button_email_contac');
+    if(emailBtn) {
+        emailBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'email_contact'
+            });
+        });
+    }
+
+    // Para el buscador de propiedades
+    const searchForm = document.querySelector('.buscador_inter_sup');
+    if(searchForm) {
+        searchForm.addEventListener('submit', function(e) {
+            trackPropertySearch({
+                query: this.querySelector('input').value
+            });
+        });
+    }
+
+    // Para ver teléfono
+    const phoneBtn = document.querySelector('.show-phone-btn');
+    if(phoneBtn) {
+        phoneBtn.addEventListener('click', function() {
+            trackAnalytics('Contact', {
+                content_category: 'phone_view'
+            });
+        });
+    }
+});
+</script>
+<!-- End Analytics Implementation -->
+</head>
+<style>
+    @media (max-width: 1024px) {
+
+            /* Los dos primeros elementos ocupan 50% cada uno */
+        .destar:nth-child(1),
+        .destar:nth-child(2) {
+            width: auto !important; /* 50% menos el padding y el gap */
+        }
+
+        /* El tercer elemento ocupa el 100% */
+        .destar:nth-child(3) {
+            width: auto !important;
+        }
+
+        .destar h2 {
+            font-size: 24px !important;
+        }
+        .destar p {
+            width: 100%;
+            font-size: 14px !important;
+            margin: 0;
+            text-align: center !important;
+        }
+
+        .descubrir_iz_tar{
+            flex-direction: row;
+            flex-wrap: nowrap;
+        }
+    }
+
+    @media (max-width: 767px) {
+        .destar {
+        margin: 0;
+        padding: 15px 20px;
+        height: auto  !important;
+    }
+
+    /* Los dos primeros elementos ocupan 50% cada uno */
+    .destar:nth-child(1),
+    .destar:nth-child(2) {
+        width: calc(50% - 55px) !important; /* 50% menos el padding y el gap */
+    }
+
+    /* El tercer elemento ocupa el 100% */
+    .destar:nth-child(3) {
+        width: 100% !important;
+    }
+
+    .descubrir_iz_tar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 20px;
+        height: auto;
+        width: 100% !important;
+    }
+
+    }
+</style>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="banner-container"></div>
+        <div id="nav-container"></div>
+    </div>
+    <div class="descubrir">
+    </div>
+    <div class="seccion_info_prop" style="margin-top: 100px;">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp"class="deco_est_1">
+            <img src="/assets/img/realce.webp"class="deco_est_2">
+            <img src="/assets/img/realce.webp"class="deco_est_3">
+        </div>
+        <h1>Nuestro viaje</h1>
+        <div class="seccion_info_butt" style="flex-direction: column;">
+            <p style="width: 80%;">Nuestra historia nace de un sueño ambicioso: transformar la experiencia inmobiliaria. 
+                Lo que comenzó como un pequeño equipo apasionado, hoy es una firma líder que ha ganado 
+                la confianza de miles de clientes gracias a nuestro compromiso con la excelencia y alianzas 
+                estratégicas que nos permiten ofrecer un servicio extraordinario.
+            </p>
+            <div class="descubrir_iz_tar" style="margin-top: 40px;">
+                <div class="destar" style="width: 220px;"> 
+                    <h2>800+</h2>
+                    <p>Clientes satisfechos</p>
+                </div>
+                <div class="destar" style="width: 220px;"> 
+                    <h2>1k+</h2>
+                    <p>Inmuebles para clientes</p>
+                </div>
+                <div class="destar" style="width: 220px;"> 
+                    <h2>6+</h2>
+                    <p> Años de experiencia</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="seccion_info_prop">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp"class="deco_est_1">
+            <img src="/assets/img/realce.webp"class="deco_est_2">
+            <img src="/assets/img/realce.webp"class="deco_est_3">
+        </div>
+        <h1>Nuestros valores</h1>
+        <div class="seccion_info_butt" style="flex-direction: column;">
+            <p style="width: 80%;">Impulsados por la búsqueda constante de la excelencia e innovación, 
+                nos dedicamos a transformar cada experiencia inmobiliaria en un momento extraordinario, 
+                donde la confianza y el compromiso con nuestros clientes marcan la diferencia.
+            </p>
+            <div class="nosotros_valores">
+                <div class="nosotros_valor">
+                    <div class="valor_tit">
+                        <div class="valor_img">
+                            <img src="/assets/img/estrellas.png" alt="">
+                        </div>
+                        <h2>Confianza</h2>
+                    </div>
+                    <p>Construimos relaciones sólidas basadas en la transparencia y honestidad, 
+                        el fundamento de toda transacción exitosa.</p>
+                </div>
+                <div class="nosotros_valor">
+                    <div class="valor_tit">
+                        <div class="valor_img">
+                            <img src="/assets/img/gorro-de-graduacion.png" alt="">
+                        </div>
+                        <h2>Excelencia</h2>
+                    </div>
+                    <p>Elevamos cada detalle, desde la selección de propiedades hasta la calidad de nuestros servicios.</p>
+                </div>
+                <div class="nosotros_valor">
+                    <div class="valor_tit">
+                        <div class="valor_img">
+                            <img src="/assets/img/usuarios.png" alt="">
+                        </div>
+                        <h2>Cliente en el Centro</h2>
+                    </div>
+                    <p>Sus sueños son nuestra prioridad. Escuchamos atentamente para convertir sus aspiraciones en realidad.</p>
+                </div>
+                <div class="nosotros_valor">
+                    <div class="valor_tit">
+                        <div class="valor_img">
+                            <img src="/assets/img/estrellas.png" alt="">
+                        </div>
+                        <h2>Compromiso</h2>
+                    </div>
+                    <p>Garantizamos el más alto estándar de profesionalismo en cada paso del camino.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="seccion_info_prop">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp"class="deco_est_1">
+            <img src="/assets/img/realce.webp"class="deco_est_2">
+            <img src="/assets/img/realce.webp"class="deco_est_3">
+        </div>
+        <h1>Nuestros logros</h1>
+        <div class="seccion_info_butt" style="flex-direction: column;">
+            <p style="width: 80%;">De un pequeño equipo con grandes sueños, surgió una plataforma inmobiliaria 
+                innovadora que hoy transforma la manera de conectar personas con sus hogares ideales.
+            </p>
+            <div class="nosotros_valores">
+                <div class="nosotros_valor">
+                    <div class="valor_tit">
+                        <h2>+ 6 años de excelencia</h2>
+                    </div>
+                    <p>Con más de 6 años en el sector, hemos acumulado una gran cantidad de conocimientos y experiencia.</p>
+                </div>
+                <div class="nosotros_valor">
+                    <div class="valor_tit">
+                        <h2>Clientes satisfechos</h2>
+                    </div>
+                    <p>Nuestro mayor logro es la satisfacción de nuestros clientes. Sus historias de éxito alimentan 
+                        nuestra pasión por lo que hacemos.
+                    </p>
+                </div>
+                <div class="nosotros_valor">
+                    <div class="valor_tit">
+                        <h2>Reconocimiento del sector</h2>
+                    </div>
+                    <p>Nos hemos ganado el respeto de nuestros colegas y de los líderes del sector, 
+                        con galardones y premios que reflejan nuestro compromiso con la excelencia.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="seccion_info_prop">
+        <div class="deco_estrella">
+            <img src="/assets/img/realce.webp"class="deco_est_1">
+            <img src="/assets/img/realce.webp"class="deco_est_2">
+            <img src="/assets/img/realce.webp"class="deco_est_3">
+        </div>
+        <h1>Conoce al equipo Master Broker</h1>
+        <div class="seccion_info_butt" style="flex-direction: column;">
+            <p style="width: 80%;">Somos un grupo apasionado de expertos inmobiliarios unidos por un propósito: 
+                convertir tus sueños de hogar en realidad, combinando experiencia profesional con un servicio personalizado 
+                que nos distingue.
+            </p>
+            <div class="nosotros_equipos">
+                <div class="nosotros_equipo">
+                    <div class="img_equipo">
+                        <img src="/assets/img/equipo/ceo.jpeg" alt="">
+                    </div>
+                    <h2>Luis Lopez</h2>
+                    <p>Presidente Ejecutivo</p>
+                </div>
+                <div class="nosotros_equipo">
+                    <div class="img_equipo">
+                        <img src="/assets/img/equipo/asesora_3.jpeg" alt="">
+                    </div>
+                    <h2>Gladys Sanvicente</h2>
+                    <p>Asesor en inversiones inmobiliarias</p>
+                </div>
+                <div class="nosotros_equipo">
+                    <div class="img_equipo">
+                        <img src="/assets/img/equipo/asesora_2.jpeg" alt="">
+                    </div>
+                    <h2>Azucena Lopez</h2>
+                    <p>Asesor en inversiones inmobiliarias</p>
+                </div>
+                <div class="nosotros_equipo">
+                    <div class="img_equipo">
+                        <img src="/assets/img/equipo/asesora_1.jpeg" alt="">
+                    </div>
+                    <h2>Monica Lopez</h2>
+                    <p>Asesor en inversiones inmobiliarias</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div id="footer_container"></div>
+    <script src="/assets/js/animation.js?v=1.0.1"></script>
+    <script src="/assets/js/components.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js?v=1.0.1"></script>
+    <script src="/assets/js/loader.js?v=1.0.1"></script>
+</body>
+</html>

@@ -1,0 +1,1164 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Planes MasterBroker.ai - Premium</title>
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --primary-dark: #1e40af;
+      --secondary: #10b981;
+      --secondary-light: #d1fae5;
+      --tertiary: #8b5cf6;
+      --tertiary-light: #ede9fe;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --red-light: #fee2e2;
+      --red: #ef4444;
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      line-height: 1.5;
+      color: var(--gray-700);
+      background-color: #f9fafb;
+      margin: 0;
+      padding: 20px;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      color: var(--gray-900);
+      font-size: 32px;
+      margin-bottom: 10px;
+    }
+    
+    .header p {
+      color: var(--gray-700);
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .subheader {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .value-badge {
+      display: inline-block;
+      background-color: var(--tertiary-light);
+      color: var(--tertiary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .tab {
+      padding: 12px 30px;
+      background-color: white;
+      border: 1px solid var(--gray-200);
+      cursor: pointer;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s;
+      min-width: 120px;
+      text-align: center;
+    }
+    
+    .tab:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+    
+    .tab:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .tab.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .tab:not(.active):hover {
+      background-color: var(--gray-100);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .plans-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    
+    .plan-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 340px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--gray-200);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    
+    .plan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .plan-card.popular {
+      border-top: 4px solid var(--primary);
+    }
+    
+    .plan-card.premium {
+      border-top: 4px solid var(--gold);
+    }
+    
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      right: 30px;
+      background-color: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .premium-badge {
+      position: absolute;
+      top: -12px;
+      right: 30px;
+      background-color: var(--gold);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .plan-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 10px;
+    }
+    
+    .plan-price {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 5px;
+    }
+    
+    .price-period {
+      color: var(--gray-700);
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .saving-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: var(--accent-light);
+      color: var(--accent);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .plan-description {
+      color: var(--gray-700);
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+    
+    .tokens-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+    
+    .properties-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: var(--gray-100);
+      color: var(--gray-700);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    
+    .features-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0 0 30px;
+      flex-grow: 1;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    
+    .feature-icon {
+      color: var(--primary);
+      margin-right: 10px;
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+    
+    .feature-icon.no {
+      color: var(--red);
+    }
+    
+    .cta-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    
+    .cta-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .cta-button.secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    
+    .cta-button.secondary:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .cta-button.gold {
+      background-color: var(--gold);
+    }
+    
+    .cta-button.gold:hover {
+      background-color: #e69009;
+    }
+    
+    .monthly-price {
+      font-size: 14px;
+      color: var(--gray-700);
+      text-decoration: line-through;
+      margin-bottom: 5px;
+    }
+    
+    .addons-container {
+      margin-top: 60px;
+    }
+    
+    .addons-header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .addon-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 20px;
+    }
+    
+    .addon-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 25px;
+      border: 1px solid var(--gray-200);
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.3s, box-shadow 0.3s;
+    }
+    
+    .addon-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 8px 15px rgba(0, 0, 0, 0.08);
+    }
+    
+    .recommended {
+      border-left: 4px solid var(--secondary);
+    }
+    
+    .recommended .addon-name {
+      color: var(--secondary);
+    }
+    
+    .addon-name {
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 5px;
+      display: flex;
+      align-items: center;
+    }
+    
+    .recommendation-badge {
+      background-color: var(--secondary-light);
+      color: var(--secondary);
+      padding: 3px 8px;
+      border-radius: 20px;
+      font-size: 12px;
+      margin-left: 10px;
+    }
+    
+    .addon-price {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 5px;
+    }
+    
+    .addon-description {
+      color: var(--gray-700);
+      margin-bottom: 15px;
+      font-size: 14px;
+    }
+    
+    .addon-features {
+      list-style-type: none;
+      padding: 0;
+      margin: 0 0 20px;
+    }
+    
+    .addon-feature {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 10px;
+      font-size: 14px;
+    }
+    
+    .addon-compatibility {
+      display: flex;
+      margin-top: 15px;
+      gap: 10px;
+    }
+    
+    .compatibility-badge {
+      padding: 3px 8px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 500;
+    }
+    
+    .compatibility-badge.basic {
+      background-color: #f3f4f6;
+      color: #6b7280;
+    }
+    
+    .compatibility-badge.pro {
+      background-color: #dbeafe;
+      color: #2563eb;
+    }
+    
+    .compatibility-badge.premium {
+      background-color: #fef3c7;
+      color: #d97706;
+    }
+    
+    .divider {
+      height: 1px;
+      background-color: var(--gray-200);
+      margin: 20px 0;
+    }
+    
+    .exclusive-feature {
+      background-color: var(--secondary-light);
+      padding: 2px 0;
+    }
+    
+    .roi-container {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 30px;
+      margin: 40px 0;
+    }
+    
+    .roi-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 20px;
+      text-align: center;
+    }
+    
+    .roi-items {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 20px;
+    }
+    
+    .roi-item {
+      padding: 20px;
+      background-color: var(--gray-100);
+      border-radius: 8px;
+    }
+    
+    .roi-value {
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    
+    .roi-description {
+      font-size: 15px;
+    }
+    
+    @media (max-width: 1100px) {
+      .addon-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .plans-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .plan-card {
+        max-width: 100%;
+      }
+      
+      .addon-grid {
+        grid-template-columns: 1fr;
+      }
+      
+      .tab {
+        padding: 10px 20px;
+        min-width: 100px;
+      }
+      
+      .roi-items {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tab {
+        padding: 8px 15px;
+        min-width: 80px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <h1>Planes Premium MasterBroker.ai</h1>
+      <p>La plataforma más avanzada para agentes inmobiliarios e inmobiliarias con tecnología de IA de vanguardia</p>
+    </div>
+    
+    <div class="subheader">
+      <div class="value-badge">Potenciado por IA avanzada de Claude, OpenAI y ElevenLabs</div>
+    </div>
+    
+    <div class="tabs">
+      <div class="tab active" onclick="showTab('monthly')">Mensual</div>
+      <div class="tab" onclick="showTab('annual')">Anual</div>
+    </div>
+    
+    <!-- Planes Mensuales -->
+    <div id="monthly-content" class="tab-content active">
+      <div class="plans-container">
+        <!-- Plan Básico Mensual -->
+        <div class="plan-card">
+          <div class="plan-name">Básico</div>
+          <div class="plan-price">$650 MXN</div>
+          <div class="price-period">por mes</div>
+          <div class="plan-description">Inicia tu presencia digital con herramientas esenciales potenciadas por IA.</div>
+          
+          <div class="tokens-badge">10,000 tokens IA</div>
+          <span class="properties-badge">5 propiedades</span>
+          
+          <ul class="features-list">
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Publicación de propiedades con SEO optimizado</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Mensajería interna con respuestas predefinidas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Perfil de agente profesional personalizable</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Notificaciones en tiempo real</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Estadísticas básicas y análisis de visitas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Optimización automática de imágenes</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon no">✗</span>
+              <span>Funciones avanzadas de IA</span>
+            </li>
+          </ul>
+          
+          <button class="cta-button">Comenzar Ahora</button>
+        </div>
+        
+        <!-- Plan Profesional Mensual -->
+        <div class="plan-card popular">
+          <div class="popular-badge">Más Popular</div>
+          <div class="plan-name">Profesional</div>
+          <div class="plan-price">$1,600 MXN</div>
+          <div class="price-period">por mes</div>
+          <div class="plan-description">Potencia tu negocio con herramientas avanzadas de IA para destacar en el mercado.</div>
+          
+          <div class="tokens-badge">30,000 tokens IA</div>
+          <span class="properties-badge">25 propiedades</span>
+          
+          <ul class="features-list">
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span><strong>Todo lo del plan Básico</strong></span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Asistente IA para descripciones profesionales</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Posición destacada en búsquedas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Analytics avanzado con seguimiento de leads</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Galerías multimedia optimizadas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Respuestas automatizadas personalizadas con IA</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Reportes de mercado mensuales</span>
+            </li>
+          </ul>
+          
+          <button class="cta-button">Seleccionar Plan</button>
+        </div>
+        
+        <!-- Plan Premium Mensual -->
+        <div class="plan-card premium">
+          <div class="premium-badge">Premium</div>
+          <div class="plan-name">Premium</div>
+          <div class="plan-price">$3,200 MXN</div>
+          <div class="price-period">por mes</div>
+          <div class="plan-description">La solución más completa con tecnología IA de vanguardia para agentes de alto rendimiento.</div>
+          
+          <div class="tokens-badge">80,000 tokens IA</div>
+          <span class="properties-badge">Ilimitadas</span>
+          
+          <ul class="features-list">
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span><strong>Todo lo del plan Profesional</strong></span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Propiedades ilimitadas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Posicionamiento prioritario garantizado</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Tours virtuales generados por IA</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Análisis predictivo de mercado personalizado</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Verificación "Agente Elite"</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Soporte VIP 24/7</span>
+            </li>
+          </ul>
+          
+          <button class="cta-button gold">Seleccionar Plan</button>
+        </div>
+      </div>
+      
+      <!-- Add-ons Mensuales -->
+      <div class="addons-container">
+        <div class="addons-header">
+          <h2>Complementos de Social Media Manager</h2>
+          <p>Potencia tu presencia en redes sociales con nuestros complementos premium</p>
+        </div>
+        
+        <div class="addon-grid">
+          <!-- Social Básico Mensual -->
+          <div class="addon-card">
+            <div class="addon-name">Social Básico</div>
+            <div class="addon-price">+$700 MXN/mes</div>
+            <div class="addon-description">Integra WhatsApp Business a tu flujo de trabajo para respuesta inmediata a clientes potenciales.</div>
+            
+            <ul class="addon-features">
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Integración profesional con WhatsApp Business</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Gestión centralizada de conversaciones</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Respuestas automáticas inteligentes</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>1 cuenta de WhatsApp Business</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Plantillas profesionales personalizables</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Estadísticas de respuesta y engagement</span>
+              </li>
+            </ul>
+            
+            <div class="addon-compatibility">
+              <span class="compatibility-badge basic">Básico</span>
+              <span class="compatibility-badge pro">Profesional</span>
+              <span class="compatibility-badge premium">Premium</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <button class="cta-button secondary">Agregar</button>
+          </div>
+          
+          <!-- Social Pro Mensual -->
+          <div class="addon-card recommended">
+            <div class="addon-name">Social Pro <span class="recommendation-badge">Recomendado</span></div>
+            <div class="addon-price">+$1,200 MXN/mes</div>
+            <div class="addon-description">Suite completa para WhatsApp, Instagram y Facebook en una plataforma unificada.</div>
+            
+            <ul class="addon-features">
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span><strong>Todo lo del Social Básico</strong></span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Integración completa con Instagram y Facebook</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Programación inteligente de publicaciones</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Asistente IA para respuestas personalizadas</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>2 cuentas por cada plataforma</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Analytics avanzado multired</span>
+              </li>
+            </ul>
+            
+            <div class="addon-compatibility">
+              <span class="compatibility-badge pro">Profesional</span>
+              <span class="compatibility-badge premium">Premium</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <button class="cta-button secondary">Agregar</button>
+          </div>
+          
+          <!-- Social Premium Mensual -->
+          <div class="addon-card">
+            <div class="addon-name">Social Premium</div>
+            <div class="addon-price">+$2,000 MXN/mes</div>
+            <div class="addon-description">Solución empresarial completa con IA avanzada para gestión integral de redes sociales.</div>
+            
+            <ul class="addon-features">
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span><strong>Todo lo del Social Pro</strong></span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Integración completa (WhatsApp, Instagram, Facebook, Gmail)</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Generación automática de contenido con IA</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Gestión avanzada de campañas multicanal</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Analytics predictivo con recomendaciones</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Cuentas ilimitadas en todas las plataformas</span>
+              </li>
+            </ul>
+            
+            <div class="addon-compatibility">
+              <span class="compatibility-badge premium">Premium</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <button class="cta-button secondary">Agregar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- Planes Anuales -->
+    <div id="annual-content" class="tab-content">
+      <div class="plans-container">
+        <!-- Plan Básico Anual -->
+        <div class="plan-card">
+          <div class="plan-name">Básico Anual</div>
+          <div class="monthly-price">$7,800 MXN</div>
+          <div class="plan-price">$6,240 MXN</div>
+          <div class="price-period">pago único anual</div>
+          <div class="saving-badge">¡Ahorras $1,560 MXN!</div>
+          
+          <div class="plan-description">Inicia tu presencia digital con herramientas esenciales potenciadas por IA.</div>
+          
+          <div class="tokens-badge">12,000 tokens IA/mes</div>
+          <span class="properties-badge">5 propiedades</span>
+          
+          <ul class="features-list">
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Publicación de propiedades con SEO optimizado</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Mensajería interna con respuestas predefinidas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Perfil de agente profesional personalizable</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Notificaciones en tiempo real</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Estadísticas básicas y análisis de visitas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">1 listing destacado mensual</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">20% extra de tokens IA</span>
+            </li>
+          </ul>
+          
+          <button class="cta-button">Suscribirme Anual</button>
+        </div>
+        
+        <!-- Plan Profesional Anual -->
+        <div class="plan-card popular">
+          <div class="popular-badge">Más Popular</div>
+          <div class="plan-name">Profesional Anual</div>
+          <div class="monthly-price">$19,200 MXN</div>
+          <div class="plan-price">$15,360 MXN</div>
+          <div class="price-period">pago único anual</div>
+          <div class="saving-badge">¡Ahorras $3,840 MXN!</div>
+          
+          <div class="plan-description">Potencia tu negocio con herramientas avanzadas de IA para destacar en el mercado.</div>
+          
+          <div class="tokens-badge">36,000 tokens IA/mes</div>
+          <span class="properties-badge">25 propiedades</span>
+          
+          <ul class="features-list">
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span><strong>Todo lo del plan Básico</strong></span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Asistente IA para descripciones profesionales</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Posición destacada en búsquedas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Analytics avanzado con seguimiento de leads</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Galerías multimedia optimizadas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">3 listings destacados mensuales</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">20% extra de tokens IA</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">Acceso prioritario a nuevas funciones</span>
+            </li>
+          </ul>
+          
+          <button class="cta-button">Suscribirme Anual</button>
+        </div>
+        
+        <!-- Plan Premium Anual -->
+        <div class="plan-card premium">
+          <div class="premium-badge">Premium</div>
+          <div class="plan-name">Premium Anual</div>
+          <div class="monthly-price">$38,400 MXN</div>
+          <div class="plan-price">$30,720 MXN</div>
+          <div class="price-period">pago único anual</div>
+          <div class="saving-badge">¡Ahorras $7,680 MXN!</div>
+          
+          <div class="plan-description">La solución más completa con tecnología IA de vanguardia para agentes de alto rendimiento.</div>
+          
+          <div class="tokens-badge">100,000 tokens IA/mes</div>
+          <span class="properties-badge">Ilimitadas</span>
+          
+          <ul class="features-list">
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span><strong>Todo lo del plan Profesional</strong></span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Propiedades ilimitadas</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Posicionamiento prioritario garantizado</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Tours virtuales generados por IA</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span>Análisis predictivo de mercado personalizado</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">6 listings destacados mensuales</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">25% extra de tokens IA</span>
+            </li>
+            <li class="feature-item">
+              <span class="feature-icon">✓</span>
+              <span class="exclusive-feature">2 sesiones de consultoría personalizada</span>
+            </li>
+          </ul>
+          
+          <button class="cta-button gold">Suscribirme Anual</button>
+        </div>
+      </div>
+      
+      <!-- Add-ons Anuales -->
+      <div class="addons-container">
+        <div class="addons-header">
+          <h2>Complementos Anuales de Social Media Manager</h2>
+          <p>Ahorra hasta un 20% en complementos con pago anual</p>
+        </div>
+        
+        <div class="addon-grid">
+          <!-- Social Básico Anual -->
+          <div class="addon-card">
+            <div class="addon-name">Social Básico Anual</div>
+            <div class="monthly-price">$8,400 MXN</div>
+            <div class="addon-price">$6,720 MXN/año</div>
+            <div class="saving-badge">¡Ahorras $1,680 MXN!</div>
+            
+            <div class="addon-description">Integra WhatsApp Business a tu flujo de trabajo para respuesta inmediata a clientes potenciales.</div>
+            
+            <ul class="addon-features">
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Integración profesional con WhatsApp Business</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Gestión centralizada de conversaciones</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Respuestas automáticas inteligentes</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>1 cuenta de WhatsApp Business</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span class="exclusive-feature">15% más de mensajes incluidos</span>
+              </li>
+            </ul>
+            
+            <div class="addon-compatibility">
+              <span class="compatibility-badge basic">Básico</span>
+              <span class="compatibility-badge pro">Profesional</span>
+              <span class="compatibility-badge premium">Premium</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <button class="cta-button secondary">Agregar</button>
+          </div>
+          
+          <!-- Social Pro Anual -->
+          <div class="addon-card recommended">
+            <div class="addon-name">Social Pro Anual <span class="recommendation-badge">Recomendado</span></div>
+            <div class="monthly-price">$14,400 MXN</div>
+            <div class="addon-price">$11,520 MXN/año</div>
+            <div class="saving-badge">¡Ahorras $2,880 MXN!</div>
+            
+            <div class="addon-description">Suite completa para WhatsApp, Instagram y Facebook en una plataforma unificada.</div>
+            
+            <ul class="addon-features">
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span><strong>Todo lo del Social Básico</strong></span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Integración completa con Instagram y Facebook</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Programación inteligente de publicaciones</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Asistente IA para respuestas personalizadas</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span class="exclusive-feature">20% más de mensajes incluidos</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span class="exclusive-feature">Biblioteca premium de plantillas</span>
+              </li>
+            </ul>
+            
+            <div class="addon-compatibility">
+              <span class="compatibility-badge pro">Profesional</span>
+              <span class="compatibility-badge premium">Premium</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <button class="cta-button secondary">Agregar</button>
+          </div>
+          
+          <!-- Social Premium Anual -->
+          <div class="addon-card">
+            <div class="addon-name">Social Premium Anual</div>
+            <div class="monthly-price">$24,000 MXN</div>
+            <div class="addon-price">$19,200 MXN/año</div>
+            <div class="saving-badge">¡Ahorras $4,800 MXN!</div>
+            
+            <div class="addon-description">Solución empresarial completa con IA avanzada para gestión integral de redes sociales.</div>
+            
+            <ul class="addon-features">
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span><strong>Todo lo del Social Pro</strong></span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Integración completa (WhatsApp, Instagram, Facebook, Gmail)</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Generación automática de contenido con IA</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span>Gestión avanzada de campañas multicanal</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span class="exclusive-feature">25% más de mensajes incluidos</span>
+              </li>
+              <li class="addon-feature">
+                <span class="feature-icon">✓</span>
+                <span class="exclusive-feature">Plan estratégico personalizado</span>
+              </li>
+            </ul>
+            
+            <div class="addon-compatibility">
+              <span class="compatibility-badge premium">Premium</span>
+            </div>
+            
+            <div class="divider"></div>
+            
+            <button class="cta-button secondary">Agregar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    
+    <!-- ROI Section -->
+    <div class="roi-container">
+      <div class="roi-title">Retorno de Inversión para Agentes Inmobiliarios</div>
+      
+      <div class="roi-items">
+        <div class="roi-item">
+          <div class="roi-value">10-15 horas</div>
+          <div class="roi-description">Ahorro mensual de tiempo en generación de contenido y respuestas a clientes</div>
+        </div>
+        
+        <div class="roi-item">
+          <div class="roi-value">+30%</div>
+          <div class="roi-description">Incremento promedio en tasa de respuesta de prospectos con asistente IA</div>
+        </div>
+        
+        <div class="roi-item">
+          <div class="roi-value">+1 venta</div>
+          <div class="roi-description">Promedio mensual adicional gracias a respuesta inmediata y seguimiento automatizado</div>
+        </div>
+        
+        <div class="roi-item">
+          <div class="roi-value">$10,000-15,000</div>
+          <div class="roi-description">Comisión promedio adicional mensual por venta generada</div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script>
+    function showTab(tabName) {
+      // Hide all tab contents
+      const tabContents = document.querySelectorAll('.tab-content');
+      tabContents.forEach(content => {
+        content.classList.remove('active');
+      });
+      
+      // Deactivate all tabs
+      const tabs = document.querySelectorAll('.tab');
+      tabs.forEach(tab => {
+        tab.classList.remove('active');
+      });
+      
+      // Activate selected tab and content
+      document.getElementById(tabName + '-content').classList.add('active');
+      
+      // Find the tab that was clicked and activate it
+      const clickedTab = Array.from(tabs).find(tab => 
+        tab.textContent.trim().toLowerCase().includes(tabName)
+      );
+      if (clickedTab) {
+        clickedTab.classList.add('active');
+      }
+    }
+  </script>
+</body>
+</html>

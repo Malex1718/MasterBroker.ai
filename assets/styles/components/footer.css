@@ -1,0 +1,285 @@
+
+.footer{
+    position: relative;
+    border-top: 2px solid var(--border) ;
+}
+
+.footer_super{
+    position: relative;
+    display: flex;
+    z-index: 1;
+    justify-content: space-between;
+    width: calc(100% - 160px);
+    height: 260px;
+    background-color: var(--contenedor);
+    padding-left: 80px;
+    padding-right: 80px;
+    border-bottom: 2px solid var(--border);
+}
+
+.footer_super_info{
+    width: 80%;
+    margin: 60px 0px 60px 0px;
+}
+
+.footer_super_info h2{
+    margin: 0;
+    font-size: 38px;
+    color: var(--colorwt);
+}
+
+.footer_super_info p{
+    font-size: 16px;
+    color: var(--colorwt);
+}
+
+.footer_super a{
+    align-self: center;
+}
+
+.footer_super button{
+    height: 40px;
+    align-self: center;
+    background-color: var(--principal);
+    border: none;
+    border-radius: 10px;
+    padding-left: 13px;
+    padding-right: 13px;
+    color: var(--colorwt);
+}
+
+.fondo_footer{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    left: 0;
+    z-index: -1;
+}
+
+.fondo_footer img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(50%);
+}
+
+.footer_med{
+    display: flex;
+    justify-content: space-between;
+    width: calc(100% - 160px);
+    height: 310px;
+    background-color: var(--body);
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-top: 80px;
+    gap: 20px;
+}
+
+.seccion_newsletter h3{
+    margin-bottom: 0;
+}
+
+.seccion_newsletter p{
+    margin-top: 0;
+}
+
+.seccion_newsletter_email{
+    display: flex;
+    padding: 10px;
+    width: 300px;
+    gap: 10px;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+}
+
+.seccion_newsletter_email input{
+    background-color: var(--body);
+    border: none;
+    outline: none;
+    font-size: 16px;
+    width: 230px;
+}
+
+.seccion_newsletter_email button{
+    background-color: transparent;
+    border: none;
+    margin: 0;
+    padding: 0;
+    margin-left: 10px;
+}
+
+.seccion_newsletter_email img{
+    height: 24px;
+}
+
+.seccion_newsletter_email form{
+    display: flex;
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 24px;
+}
+
+.seccion_redes_sociales{
+    display: flex;
+    gap: 10px;
+    margin: 5px;
+}
+
+.red_soc{
+    height: 40px;
+    width: 40px;
+}
+
+.red_soc img{
+    height: 100%;
+    width: 100%;
+    filter: brightness(60%);
+}
+
+.footer_infer{
+    position: relative;
+    display: flex;
+    justify-content: space-between;
+    row-gap: 10px;
+    height: 58px;
+    border-top: 2px solid var(--border);
+    background-color: var(--contenedor);
+    padding-left: 80px;
+    padding-right: 80px;
+    padding-top: 10px;
+}
+
+.footer_infer h3, .footer_infer a{
+    color: var(--colorp);
+    font-size: 16px;
+    margin: 0;
+}
+
+
+@media (max-width: 1024px) {
+    .footer_super{
+        flex-direction: column;
+        padding-left: 40px;
+        padding-right: 40px;
+        width: calc(100% - 80px);
+        height: 380px;
+        row-gap: 10px;
+    }
+
+    .footer_super_info{
+        margin-top: 40px;
+        margin-bottom: 0px;
+        width: 100%;
+    }
+
+    .footer_super_info p{
+        font-size: 18px;
+    }
+    
+    .footer_super a{
+        position: relative;
+        width: 50%;
+        padding-top: 16px;
+        padding-bottom: 16px;
+        top: -25px;
+    }
+
+    .footer_super button{
+        width: 100%;
+        font-size: 16px;
+        height: 48px;
+    }
+
+    .explorar-btn:hover {
+        background-color: var(--principal_2);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    }
+    
+    .footer_infer{
+        width: calc(100% - 40px);
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
+@media (max-width: 767px) {
+
+    .footer_super{
+        flex-direction: column;
+        padding-left: 40px;
+        padding-right: 40px;
+        width: calc(100% - 80px);
+        height: 430px;
+    }
+
+    .footer_super_info{
+        margin-top: 40px;
+        margin-bottom: 0px;
+        width: 100%;
+    }
+
+    .footer_super_info h2{
+        width: 100%;
+        font-size: 28px;
+    }
+    
+    .footer_super_info p{
+        font-size: 14px;
+    }
+    
+    .footer_super a{
+        position: relative;
+        width: 100%;
+    }
+
+    .footer_super button{
+        position: relative;
+        width: 100%;
+    }
+
+    .footer_med{
+        flex-direction: column;
+        padding: 0;
+        margin-top: 50px;
+        margin-left: 20px;
+        gap: 0;
+        height: auto;
+    }
+
+    .seccion_newsletter{
+        width: 320px;
+        height: 260px;
+    }
+
+    .seccion_newsletter h3{
+        width: 100%;
+        font-size: 16px;
+        margin-bottom: 10px;
+    }
+
+    .footer_infer{
+        flex-direction: column-reverse;
+        padding-left: 20px;
+        padding-right: 20px;
+        width: calc(100% - 40px);
+        height: auto;
+        justify-items: center;
+    }
+
+    .footer_infer_legal{
+        margin-bottom: 40px;
+    }
+
+    .footer_infer h3, .footer_infer a{
+        margin-bottom: 10px;
+        text-align: center;
+        font-size: 14px;
+    }
+
+    .seccion_redes_sociales{
+        margin-top: 20px;
+        margin-bottom: 20px;
+        justify-content: center;
+    }
+}

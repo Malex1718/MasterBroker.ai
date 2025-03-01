@@ -1,0 +1,768 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Política de Privacidad - Master Broker</title>
+    <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2" alt="Icono Master Broker">
+    <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+    <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+    <link rel="stylesheet" href="/assets/styles/public/animation.css?v=1.0.1">
+    <style>
+        /* Encapsulamos todos los estilos dentro de .privacidad-container */
+        .privacidad-container {
+            margin-top: 76.8px;
+            background: var(--body);
+            font-family: var(--txt);
+            color: var(--colortxt);
+            line-height: 1.6;
+        }
+
+        .privacidad-container * {
+            box-sizing: border-box;
+        }
+
+        .privacidad-header {
+            background-color: var(--contenedor);
+            padding: 2rem;
+            text-align: center;
+            border-bottom: 1px solid var(--border);
+            position: relative; /* Cambiado de sticky a relative */
+            z-index: 1; /* Reducido el z-index */
+        }
+
+        .privacidad-container .container {
+            display: flex;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 2rem;
+            gap: 2rem;
+        }
+
+        .privacidad-sidebar {
+            width: 300px;
+            position: sticky;
+            top: 120px; /* Ajustado para considerar la navegación */
+            height: calc(100vh - 150px);
+            overflow-y: auto;
+            padding: 1rem;
+            background-color: var(--contenedor);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .privacidad-content {
+            flex: 1;
+            max-width: 800px;
+            padding: 0 1rem;
+        }
+
+        .privacidad-nav-link {
+            display: block;
+            padding: 0.875rem;
+            color: var(--colortxt);
+            text-decoration: none;
+            border-left: 3px solid transparent;
+            margin-bottom: 0.5rem;
+            font-family: var(--txt);
+            transition: all 0.2s;
+        }
+
+        .privacidad-nav-link:hover {
+            background-color: var(--body);
+            border-left-color: var(--principal);
+            color: var(--principal);
+        }
+
+        .privacidad-nav-link.active {
+            background-color: var(--body);
+            border-left-color: var(--principal);
+            color: var(--principal);
+            font-family: var(--txt-bold);
+        }
+
+        .privacidad-section {
+            margin-bottom: 3rem;
+            padding: 2rem;
+            background: var(--contenedor);
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+
+        .privacidad-container h1 {
+            font-family: var(--titulo);
+            font-size: 2.5rem;
+            color: var(--colortxt);
+            margin-bottom: 1rem;
+        }
+
+        .privacidad-container h2 {
+            font-family: var(--titulo);
+            font-size: 1.8rem;
+            color: var(--principal);
+            margin: 1.5rem 0;
+        }
+
+        .privacidad-container h3 {
+            font-family: var(--titulo);
+            font-size: 1.4rem;
+            color: var(--principal_2);
+            margin: 1.5rem 0 1rem;
+        }
+
+        .privacidad-container p,
+        .privacidad-container li {
+            font-family: var(--txt);
+            color: var(--colorp);
+            font-size: 16px;
+            margin-bottom: 1rem;
+        }
+
+        .privacidad-container ul {
+            padding-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .privacidad-last-update {
+            font-family: var(--txt);
+            color: var(--colorp);
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+
+        .privacidad-back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--principal);
+            color: var(--colorwt);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            border: none;
+            cursor: pointer;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transition: background-color 0.2s;
+            z-index: 2;
+        }
+
+        .privacidad-back-to-top:hover {
+            background: var(--principal_2);
+        }
+
+        .documentos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-top: 1.5rem;
+        }
+
+        .documento-card {
+            background: var(--body);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+
+        .documento-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .documento-card h3 {
+            color: var(--principal);
+            margin-bottom: 0.5rem;
+        }
+
+        .documento-card p {
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+        }
+
+        .documento-link {
+            color: var(--principal);
+            text-decoration: none;
+            font-family: var(--txt-bold);
+            transition: color 0.2s;
+        }
+
+        .documento-link:hover {
+            color: var(--principal_2);
+        }
+
+        .documento-card.current {
+            background: var(--principal);
+            border-color: var(--principal);
+        }
+
+        .documento-card.current h3,
+        .documento-card.current p {
+            color: var(--colorwt);
+        }
+
+        .documento-card.current .documento-link {
+            color: var(--colorwt);
+            cursor: default;
+            pointer-events: none;
+        }
+
+        @media (max-width: 1024px) {
+            .privacidad-container .container {
+                flex-direction: column;
+                padding: 1rem;
+            }
+
+            .privacidad-sidebar {
+                width: 100%;
+                position: static;
+                height: auto;
+                margin-bottom: 2rem;
+            }
+
+            .privacidad-content {
+                padding: 0;
+            }
+
+            .privacidad-container p,
+            .privacidad-container li {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .privacidad-container {
+                margin-top: 76.8px; /* Ajustado para móviles */
+            }
+
+            .privacidad-header {
+                padding: 1rem;
+            }
+
+            .privacidad-section {
+                padding: 1rem;
+            }
+
+            .privacidad-container h1 {
+                font-size: 2rem;
+            }
+
+            .privacidad-container h2 {
+                font-size: 1.5rem;
+            }
+
+            .privacidad-container h3 {
+                font-size: 1.2rem;
+            }
+
+            .privacidad-container p,
+            .privacidad-container li {
+                font-size: 12px;
+            }
+
+            .documentos-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    <div class="nav_sup">
+        <div id="nav-container"></div>
+    </div>
+    <div class="privacidad-container">
+        <header class="privacidad-header">
+            <h1>Política de Privacidad</h1>
+            <p class="privacidad-last-update">Última actualización: 6 de febrero de 2025</p>
+        </header>
+
+        <div class="container">
+            <nav class="privacidad-sidebar">
+                <a href="#introduccion" class="privacidad-nav-link">1. Introducción y Alcance</a>
+                <a href="#definiciones" class="privacidad-nav-link">2. Definiciones Importantes</a>
+                <a href="#datos-recopilados" class="privacidad-nav-link">3. Datos que Recopilamos</a>
+                <a href="#uso-datos" class="privacidad-nav-link">4. Uso de la Información</a>
+                <a href="#base-legal" class="privacidad-nav-link">5. Base Legal del Tratamiento</a>
+                <a href="#compartir" class="privacidad-nav-link">6. Compartir Información</a>
+                <a href="#derechos" class="privacidad-nav-link">7. Sus Derechos</a>
+                <a href="#seguridad" class="privacidad-nav-link">8. Seguridad de Datos</a>
+                <a href="#cookies" class="privacidad-nav-link">9. Cookies y Tecnologías</a>
+                <a href="#menores" class="privacidad-nav-link">10. Menores de Edad</a>
+                <a href="#internacional" class="privacidad-nav-link">11. Transferencias Internacionales</a>
+                <a href="#cambios" class="privacidad-nav-link">12. Cambios en la Política</a>
+                <a href="#contacto" class="privacidad-nav-link">13. Contacto</a>
+                <a href="#documentos-relacionados" class="privacidad-nav-link">14. Documentos Legales Relacionados</a>
+            </nav>
+
+            <main class="privacidad-content">
+                <section id="introduccion" class="privacidad-section">
+                    <h2>1. Introducción y Alcance</h2>
+                    <p>Master Broker se compromete a proteger su privacidad y sus datos personales. Esta Política de Privacidad explica cómo recopilamos, utilizamos, almacenamos y protegemos su información cuando utiliza nuestra plataforma inmobiliaria y servicios asociados.</p>
+                
+                    <h3>1.1 Aplicabilidad</h3>
+                    <p>Esta política aplica a:</p>
+                    <ul>
+                        <li>Plataforma web de Master Broker</li>
+                        <li>Sistema CRM para agentes inmobiliarios</li>
+                        <li>Servicios de integración con terceros</li>
+                        <li>Todas las interacciones con nuestros servicios</li>
+                    </ul>
+                
+                    <h3>1.2 Responsable del Tratamiento</h3>
+                    <p>Master Broker es una plataforma digital de servicios inmobiliarios operada por Master Broker Digital Services, una empresa de tecnología especializada en el sector inmobiliario. Nuestras operaciones son completamente digitales, con presencia en línea a través de nuestra plataforma web.</p>
+                    
+                    <p>Datos de contacto:</p>
+                    <ul>
+                        <li>Correo electrónico oficial: customerservice@masterbroker.ai</li>
+                        <li>Sitio web: https://www.masterbroker.ai</li>
+                        <li>Plataforma operativa: https://www.masterbroker.ai</li>
+                    </ul>
+                </section>
+
+                <section id="definiciones" class="privacidad-section">
+                    <h2>2. Definiciones Importantes</h2>
+                    
+                    <h3>2.1 Términos Básicos</h3>
+                    <ul>
+                        <li><strong>Datos Personales:</strong> Cualquier información relacionada con una persona identificada o identificable.</li>
+                        <li><strong>Tratamiento:</strong> Cualquier operación realizada sobre datos personales.</li>
+                        <li><strong>Titular de los Datos:</strong> La persona física a quien corresponden los datos personales.</li>
+                        <li><strong>Consentimiento:</strong> Manifestación de voluntad libre, específica, informada e inequívoca.</li>
+                    </ul>
+
+                    <h3>2.2 Categorías de Usuarios</h3>
+                    <ul>
+                        <li><strong>Usuario General:</strong> Visitantes de la plataforma.</li>
+                        <li><strong>Cliente Registrado:</strong> Usuarios que han creado una cuenta.</li>
+                        <li><strong>Agente Inmobiliario:</strong> Profesionales del sector inmobiliario.</li>
+                        <li><strong>Propietario:</strong> Personas que publican propiedades.</li>
+                    </ul>
+                </section>
+
+                <section id="datos-recopilados" class="privacidad-section">
+                    <h2>3. Datos que Recopilamos</h2>
+
+                    <h3>3.1 Datos de Identificación</h3>
+                    <ul>
+                        <li>Nombre completo</li>
+                        <li>Información de contacto</li>
+                        <li>Documentos de identidad</li>
+                        <li>Dirección postal</li>
+                        <li>Información profesional</li>
+                    </ul>
+
+                    <h3>3.2 Datos de Propiedad</h3>
+                    <ul>
+                        <li>Información de inmuebles</li>
+                        <li>Documentación legal</li>
+                        <li>Fotografías y videos</li>
+                        <li>Precios y condiciones</li>
+                        <li>Historial de transacciones</li>
+                    </ul>
+
+                    <h3>3.3 Datos de Uso</h3>
+                    <ul>
+                        <li>Actividad en la plataforma</li>
+                        <li>Preferencias de búsqueda</li>
+                        <li>Interacciones con listados</li>
+                        <li>Historial de navegación</li>
+                        <li>Análisis de comportamiento</li>
+                    </ul>
+
+                    <h3>3.4 Datos Técnicos</h3>
+                    <ul>
+                        <li>Dirección IP</li>
+                        <li>Información del dispositivo</li>
+                        <li>Cookies y tecnologías similares</li>
+                        <li>Datos de localización</li>
+                        <li>Registros de acceso</li>
+                    </ul>
+                </section>
+
+                <section id="uso-datos" class="privacidad-section">
+                    <h2>4. Uso de la Información</h2>
+
+                    <h3>4.1 Propósitos Principales</h3>
+                    <p>Utilizamos su información personal para:</p>
+                    <ul>
+                        <li>Proporcionar y personalizar nuestros servicios inmobiliarios</li>
+                        <li>Procesar y gestionar solicitudes de propiedades</li>
+                        <li>Facilitar comunicaciones entre usuarios</li>
+                        <li>Verificar identidades y prevenir fraudes</li>
+                        <li>Mejorar y optimizar nuestra plataforma</li>
+                    </ul>
+
+                    <h3>4.2 Comunicaciones</h3>
+                    <p>Podemos utilizar su información para:</p>
+                    <ul>
+                        <li>Enviar notificaciones sobre propiedades</li>
+                        <li>Comunicar actualizaciones de servicio</li>
+                        <li>Proporcionar soporte al cliente</li>
+                        <li>Enviar información promocional (con su consentimiento)</li>
+                        <li>Responder a sus consultas y solicitudes</li>
+                    </ul>
+
+                    <h3>4.3 Análisis y Mejoras</h3>
+                    <ul>
+                        <li>Realizar investigación y análisis de mercado</li>
+                        <li>Desarrollar nuevas funcionalidades</li>
+                        <li>Mejorar la experiencia del usuario</li>
+                        <li>Generar estadísticas y reportes anónimos</li>
+                        <li>Optimizar nuestros algoritmos de búsqueda</li>
+                    </ul>
+                </section>
+
+                <section id="base-legal" class="privacidad-section">
+                    <h2>5. Base Legal del Tratamiento</h2>
+
+                    <h3>5.1 Consentimiento</h3>
+                    <p>Procesamos sus datos cuando:</p>
+                    <ul>
+                        <li>Se registra en nuestra plataforma</li>
+                        <li>Acepta recibir comunicaciones comerciales</li>
+                        <li>Proporciona información voluntariamente</li>
+                        <li>Utiliza funciones opcionales del servicio</li>
+                    </ul>
+
+                    <h3>5.2 Ejecución de Contrato</h3>
+                    <ul>
+                        <li>Gestión de cuenta de usuario</li>
+                        <li>Procesamiento de transacciones</li>
+                        <li>Prestación de servicios contratados</li>
+                        <li>Comunicaciones esenciales del servicio</li>
+                    </ul>
+
+                    <h3>5.3 Interés Legítimo</h3>
+                    <ul>
+                        <li>Mejora y personalización de servicios</li>
+                        <li>Prevención de fraude y seguridad</li>
+                        <li>Análisis y estadísticas internas</li>
+                        <li>Marketing directo (cuando sea aplicable)</li>
+                    </ul>
+
+                    <h3>5.4 Obligación Legal</h3>
+                    <ul>
+                        <li>Cumplimiento de regulaciones inmobiliarias</li>
+                        <li>Obligaciones fiscales y contables</li>
+                        <li>Requerimientos de autoridades</li>
+                        <li>Prevención de lavado de dinero</li>
+                    </ul>
+                </section>
+
+                <section id="compartir" class="privacidad-section">
+                    <h2>6. Compartir Información</h2>
+
+                    <h3>6.1 Terceros Autorizados</h3>
+                    <p>Podemos compartir información con:</p>
+                    <ul>
+                        <li>Agentes inmobiliarios verificados</li>
+                        <li>Proveedores de servicios tecnológicos</li>
+                        <li>Procesadores de pago</li>
+                        <li>Servicios de verificación de identidad</li>
+                        <li>Asesores profesionales y consultores</li>
+                    </ul>
+
+                    <h3>6.2 Requisitos Legales</h3>
+                    <p>Podemos divulgar información cuando:</p>
+                    <ul>
+                        <li>Sea requerido por ley</li>
+                        <li>En respuesta a procedimientos legales</li>
+                        <li>Para proteger derechos legales</li>
+                        <li>En casos de investigación de fraude</li>
+                    </ul>
+
+                    <h3>6.3 Transferencias Comerciales</h3>
+                    <p>En caso de:</p>
+                    <ul>
+                        <li>Fusión o adquisición</li>
+                        <li>Venta de activos empresariales</li>
+                        <li>Reestructuración corporativa</li>
+                        <li>Cambio de control empresarial</li>
+                    </ul>
+                </section>
+
+                <section id="derechos" class="privacidad-section">
+                    <h2>7. Sus Derechos</h2>
+
+                    <h3>7.1 Derechos ARCO</h3>
+                    <p>Usted tiene derecho a:</p>
+                    <ul>
+                        <li><strong>Acceso:</strong> Conocer qué datos personales tenemos sobre usted</li>
+                        <li><strong>Rectificación:</strong> Corregir datos inexactos o incompletos</li>
+                        <li><strong>Cancelación:</strong> Solicitar la eliminación de sus datos</li>
+                        <li><strong>Oposición:</strong> Oponerse al tratamiento de sus datos</li>
+                    </ul>
+
+                    <h3>7.2 Derechos Adicionales</h3>
+                    <ul>
+                        <li>Portabilidad de datos</li>
+                        <li>Limitación del tratamiento</li>
+                        <li>Retirar el consentimiento</li>
+                        <li>Presentar reclamaciones ante autoridades</li>
+                    </ul>
+
+                    <h3>7.3 Ejercicio de Derechos</h3>
+                    <p>Para ejercer sus derechos:</p>
+                    <ul>
+                        <li>Envíe solicitud a customerservice@masterbroker.ai</li>
+                        <li>Proporcione identificación válida</li>
+                        <li>Especifique qué derecho desea ejercer</li>
+                        <li>Detalle su solicitud específica</li>
+                    </ul>
+                </section>
+                <section id="seguridad" class="privacidad-section">
+                    <h2>8. Seguridad de Datos</h2>
+
+                    <h3>8.1 Medidas de Seguridad</h3>
+                    <p>Implementamos medidas técnicas y organizativas que incluyen:</p>
+                    <ul>
+                        <li>Cifrado de datos en tránsito y en reposo</li>
+                        <li>Firewalls y sistemas de detección de intrusiones</li>
+                        <li>Autenticación de dos factores</li>
+                        <li>Controles de acceso basados en roles</li>
+                        <li>Monitoreo continuo de seguridad</li>
+                    </ul>
+
+                    <h3>8.2 Protocolos de Seguridad</h3>
+                    <ul>
+                        <li>Copias de seguridad regulares</li>
+                        <li>Planes de recuperación ante desastres</li>
+                        <li>Protocolos de respuesta a incidentes</li>
+                        <li>Evaluaciones periódicas de vulnerabilidades</li>
+                        <li>Auditorías de seguridad</li>
+                    </ul>
+
+                    <h3>8.3 Responsabilidades del Usuario</h3>
+                    <p>Se recomienda a los usuarios:</p>
+                    <ul>
+                        <li>Mantener contraseñas seguras y únicas</li>
+                        <li>No compartir credenciales de acceso</li>
+                        <li>Cerrar sesión después de usar la plataforma</li>
+                        <li>Mantener sus dispositivos seguros</li>
+                        <li>Reportar actividades sospechosas</li>
+                    </ul>
+                </section>
+
+                <section id="cookies" class="privacidad-section">
+                    <h2>9. Cookies y Tecnologías</h2>
+
+                    <h3>9.1 Tipos de Cookies</h3>
+                    <ul>
+                        <li><strong>Cookies Esenciales:</strong> Necesarias para el funcionamiento del sitio</li>
+                        <li><strong>Cookies de Preferencias:</strong> Recuerdan sus configuraciones</li>
+                        <li><strong>Cookies Analíticas:</strong> Análisis de uso y rendimiento</li>
+                        <li><strong>Cookies de Marketing:</strong> Publicidad personalizada</li>
+                    </ul>
+
+                    <h3>9.2 Otras Tecnologías</h3>
+                    <ul>
+                        <li>Web beacons</li>
+                        <li>Píxeles de seguimiento</li>
+                        <li>Local storage</li>
+                        <li>SDK's móviles</li>
+                    </ul>
+
+                    <h3>9.3 Control de Cookies</h3>
+                    <p>Usted puede:</p>
+                    <ul>
+                        <li>Ajustar preferencias de cookies</li>
+                        <li>Gestionar configuración del navegador</li>
+                        <li>Eliminar cookies existentes</li>
+                        <li>Optar por no usar cookies no esenciales</li>
+                    </ul>
+                </section>
+
+                <section id="menores" class="privacidad-section">
+                    <h2>10. Menores de Edad</h2>
+
+                    <h3>10.1 Política de Uso</h3>
+                    <ul>
+                        <li>Servicios no dirigidos a menores de 18 años</li>
+                        <li>No recopilamos intencionalmente datos de menores</li>
+                        <li>Requieren autorización parental para uso limitado</li>
+                        <li>Eliminación inmediata de datos al detectar usuarios menores</li>
+                    </ul>
+
+                    <h3>10.2 Medidas de Protección</h3>
+                    <ul>
+                        <li>Verificación de edad en el registro</li>
+                        <li>Sistemas de detección de usuarios menores</li>
+                        <li>Procedimientos de eliminación de datos</li>
+                        <li>Canales de reporte para padres/tutores</li>
+                    </ul>
+                </section>
+
+                <section id="internacional" class="privacidad-section">
+                    <h2>11. Transferencias Internacionales</h2>
+
+                    <h3>11.1 Procesamiento Internacional</h3>
+                    <p>Sus datos pueden ser procesados en:</p>
+                    <ul>
+                        <li>Servidores ubicados internacionalmente</li>
+                        <li>Países con diferentes niveles de protección</li>
+                        <li>Proveedores de servicios globales</li>
+                        <li>Filiales y socios internacionales</li>
+                    </ul>
+
+                    <h3>11.2 Garantías de Transferencia</h3>
+                    <ul>
+                        <li>Cláusulas contractuales estándar</li>
+                        <li>Acuerdos de transferencia de datos</li>
+                        <li>Evaluaciones de impacto</li>
+                        <li>Medidas de seguridad adicionales</li>
+                    </ul>
+                </section>
+
+                <section id="cambios" class="privacidad-section">
+                    <h2>12. Cambios en la Política</h2>
+
+                    <h3>12.1 Actualizaciones</h3>
+                    <ul>
+                        <li>Revisiones periódicas de la política</li>
+                        <li>Notificación de cambios significativos</li>
+                        <li>Fecha de última actualización visible</li>
+                        <li>Versiones anteriores disponibles bajo solicitud</li>
+                    </ul>
+
+                    <h3>12.2 Comunicación de Cambios</h3>
+                    <p>Los cambios serán comunicados mediante:</p>
+                    <ul>
+                        <li>Notificaciones en la plataforma</li>
+                        <li>Correos electrónicos a usuarios registrados</li>
+                        <li>Avisos en el sitio web</li>
+                        <li>Solicitud de nuevo consentimiento cuando sea necesario</li>
+                    </ul>
+                </section>
+
+                <section id="contacto" class="privacidad-section">
+                    <h2>13. Contacto</h2>
+
+                    <h3>13.1 Información de Contacto</h3>
+                    <p>Para consultas sobre privacidad:</p>
+                    <ul>
+                        <li>Correo electrónico: customerservice@masterbroker.ai</li>
+                        <li>Oficial de Protección de Datos: Customer Service</li>
+                    </ul>
+
+                    <h3>13.2 Tiempos de Respuesta</h3>
+                    <ul>
+                        <li>Confirmación de recepción: 24-48 horas</li>
+                        <li>Respuesta inicial: 3-5 días hábiles</li>
+                        <li>Resolución de solicitudes: 15-30 días</li>
+                        <li>Actualizaciones de estado periódicas</li>
+                    </ul>
+                </section>
+                <section id="documentos-relacionados" class="privacidad-section">
+                    <h2>Documentos Legales Relacionados</h2>
+                    <p>Para una comprensión completa de nuestras políticas y términos, le recomendamos consultar también:</p>
+                    
+                    <div class="documentos-grid">
+                        <div class="documento-card">
+                            <h3>Términos y Condiciones</h3>
+                            <p>Normas y condiciones generales de uso de la plataforma.</p>
+                            <a href="/legal/terminos-y-condiciones.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card current">
+                            <h3>Política de Privacidad</h3>
+                            <p>Información sobre el tratamiento de sus datos personales.</p>
+                            <a href="/legal/politica-de-privacidad.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card">
+                            <h3>Política de Cookies</h3>
+                            <p>Detalles sobre el uso de cookies en nuestra plataforma.</p>
+                            <a href="/legal/politica-de-cookies.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card">
+                            <h3>Aviso Legal</h3>
+                            <p>Información legal sobre la titularidad y uso de la plataforma.</p>
+                            <a href="/legal/aviso-legal.html" class="documento-link">Leer más →</a>
+                        </div>
+                
+                        <div class="documento-card">
+                            <h3>Política de Publicación</h3>
+                            <p>Normas para la publicación de propiedades en la plataforma.</p>
+                            <a href="/legal/politica-de-publicacion.html" class="documento-link">Leer más →</a>
+                        </div>
+                    </div>
+                </section>
+            </main>
+        </div>
+        <button class="privacidad-back-to-top" id="privacidadBackToTop" title="Volver arriba">↑</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const backToTop = document.getElementById('privacidadBackToTop');
+            const navLinks = document.querySelectorAll('.privacidad-nav-link');
+            const sections = document.querySelectorAll('.privacidad-section');
+
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 300) {
+                    backToTop.style.display = 'flex';
+                } else {
+                    backToTop.style.display = 'none';
+                }
+
+                let currentSection = '';
+                sections.forEach(section => {
+                    const sectionTop = section.offsetTop;
+                    if (window.scrollY >= sectionTop - 100) {
+                        currentSection = section.getAttribute('id');
+                    }
+                });
+
+                navLinks.forEach(link => {
+                    link.classList.remove('active');
+                    if (link.getAttribute('href').substring(1) === currentSection) {
+                        link.classList.add('active');
+                    }
+                });
+            });
+
+            backToTop.addEventListener('click', function() {
+                window.scrollTo({
+                    top: 0,
+                    behavior: 'smooth'
+                });
+            });
+
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href').substring(1);
+                    const targetSection = document.getElementById(targetId);
+                    
+                    window.scrollTo({
+                        top: targetSection.offsetTop - 120,
+                        behavior: 'smooth'
+                    });
+                });
+            });
+        });
+    </script>
+    <script src="/assets/js/animation.js?v=1.0.1"></script>
+    <script src="/assets/js/components.js?v=1.0.1"></script>
+    <script src="/assets/js/navigation.js?v=1.0.1"></script>
+    <script src="/assets/js/loader.js?v=1.0.1"></script>
+</body>
+</html>
