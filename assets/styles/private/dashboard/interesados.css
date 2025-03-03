@@ -1109,3 +1109,100 @@
 #calendarView {
   grid-template-rows: 40px repeat(auto-fill, minmax(100px, auto)) !important;
 }
+
+/* Añadir estos estilos al CSS existente */
+
+/* Estilos para el área de arrastrar y soltar */
+#dropzone {
+  transition: all 0.3s ease;
+}
+
+#dropzone:hover {
+  border-color: #3b82f6;
+  background-color: rgba(59, 130, 246, 0.05);
+}
+
+/* Animación para la barra de progreso */
+@keyframes progressPulse {
+  0% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0.6;
+  }
+}
+
+#progressBar {
+  transition: width 0.3s ease;
+}
+
+#uploadProgress.uploading #progressBar {
+  animation: progressPulse 2s infinite;
+}
+
+/* Mejoras para los botones del modal */
+#cancelUpload, #submitUpload {
+  transition: all 0.2s ease;
+}
+
+#cancelUpload:hover {
+  background-color: #f3f4f6;
+}
+
+#submitUpload:hover {
+  background-color: #2563eb;
+}
+
+#submitUpload:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+
+/* Animación para la carga */
+@keyframes spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-spin {
+  animation: spin 1s linear infinite;
+}
+
+/* Mejoras para iconos de archivo */
+#fileIcon {
+  transition: color 0.3s ease;
+}
+
+/* Transiciones suaves */
+.transition-colors {
+  transition-property: background-color, border-color, color, fill, stroke;
+  transition-duration: 0.2s;
+}
+
+.duration-200 {
+  transition-duration: 0.2s;
+}
+
+/* Estilos para el select mejorado */
+select#documentType {
+  background-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 20 20'%3e%3cpath stroke='%236b7280' stroke-linecap='round' stroke-linejoin='round' stroke-width='1.5' d='M6 8l4 4 4-4'/%3e%3c/svg%3e");
+  background-position: right 0.5rem center;
+  background-repeat: no-repeat;
+  background-size: 1.5em 1.5em;
+  padding-right: 2.5rem;
+  -webkit-print-color-adjust: exact;
+  print-color-adjust: exact;
+}
+
+/* Mejoras al modal */
+.modal-content {
+  border-radius: 0.75rem;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1);
+}

@@ -2666,6 +2666,9 @@ class LeadDetailView {
     
         // Mostrar el modal
         document.getElementById('leadDetailModal').style.display = 'flex';
+        
+        // Añadir la sección de documentos
+        this.addDocumentSection();
     }
 
     scheduleVisit() {
@@ -2982,6 +2985,683 @@ class LeadDetailView {
                 </div>
             `);
         }
+    }
+
+    addDocumentSection() {
+        const lead = this.currentLead;
+        if (!lead) return;
+        
+        // Buscar la sección donde queremos insertar la gestión de documentos
+        const containerRight = document.querySelector('#leadDetailModal .lg\\:w-96');
+        if (!containerRight) return;
+        
+        // Verificar si ya existe una sección de documentos y eliminarla
+        const existingDocSection = containerRight.querySelector('.document-section');
+        if (existingDocSection) {
+            existingDocSection.remove();
+        }
+        
+        // Crear la sección de documentos
+        const docSection = document.createElement('div');
+        docSection.className = 'bg-white rounded-lg shadow-sm p-4 mb-4 document-section'; // Añadimos la clase document-section para identificarla
+        docSection.innerHTML = `
+            <h3 class="font-semibold mb-4 text-gray-700 flex justify-between items-center">
+                <span>Documentos</span>
+                <div class="flex gap-2">
+                    <button id="createFolderBtn" class="px-2 py-1 text-xs bg-blue-100 text-blue-700 rounded hover:bg-blue-200 flex items-center gap-1">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                        </svg>
+                        Crear carpeta
+                    </button>
+                    <button id="uploadFileBtn" class="px-2 py-1 text-xs bg-green-100 text-green-700 rounded hover:bg-green-200 flex items-center gap-1" style="display: none;">
+                        <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-8l-4-4m0 0L8 8m4-4v12"></path>
+                        </svg>
+                        Subir documento
+                    </button>
+                </div>
+            </h3>
+            <div id="folderInfo" class="mb-4"></div>
+            <div id="documentsList" class="space-y-2"></div>
+        `;
+        
+        // Insertar al inicio del contenedor derecho
+        containerRight.prepend(docSection);
+        
+        // Configurar eventos
+        document.getElementById('createFolderBtn').addEventListener('click', () => this.createDocumentFolder());
+        document.getElementById('uploadFileBtn').addEventListener('click', () => this.showUploadDialog());
+        
+        // Cargar documentos
+        this.loadLeadDocuments();
+    }
+    
+    // Modificar el método para cargar documentos
+    async loadLeadDocuments() {
+        if (!this.currentLead) return;
+        
+        try {
+            const response = await fetch(`/api/crm/documents/get_documents.php?lead_id=${this.currentLead.id}`);
+            const data = await response.json();
+            
+            const folderInfo = document.getElementById('folderInfo');
+            const documentsList = document.getElementById('documentsList');
+            const uploadBtn = document.getElementById('uploadFileBtn');
+            const createFolderBtn = document.getElementById('createFolderBtn');
+            
+            if (data.success) {
+                // Mostrar información de la carpeta
+                if (data.folder) {
+                    folderInfo.innerHTML = `
+                        <div class="flex items-center justify-between p-2 bg-blue-50 rounded folder-exists">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"></path>
+                                </svg>
+                                <a href="${data.folder.folder_url}" target="_blank" class="text-blue-600 hover:underline">${data.folder.folder_name}</a>
+                            </div>
+                            <button class="text-red-600 hover:text-red-800 delete-folder-btn" title="Eliminar carpeta">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                </svg>
+                            </button>
+                        </div>
+                    `;
+                    uploadBtn.style.display = 'flex'; // Mostrar botón de subida
+                    
+                    // Ocultar botón de crear carpeta ya que existe una carpeta
+                    if (createFolderBtn) {
+                        createFolderBtn.style.display = 'none';
+                    }
+                    
+                    this.currentFolderId = data.folder.folder_id;
+                    
+                    // Añadir event listener al botón de eliminar carpeta
+                    const deleteFolderBtn = document.querySelector('.delete-folder-btn');
+                    if (deleteFolderBtn) {
+                        deleteFolderBtn.addEventListener('click', () => {
+                            this.confirmDeleteFolder(data.folder.folder_id, data.folder.folder_name);
+                        });
+                    }
+                } else {
+                    folderInfo.innerHTML = '<p class="text-gray-500 text-sm">No hay carpeta creada para este cliente.</p>';
+                    uploadBtn.style.display = 'none';
+                    
+                    // Mostrar botón de crear carpeta
+                    if (createFolderBtn) {
+                        createFolderBtn.style.display = 'flex';
+                        createFolderBtn.disabled = false;
+                        createFolderBtn.innerHTML = `
+                            <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                            </svg>
+                            Crear carpeta
+                        `;
+                    }
+                }
+                
+                // Mostrar documentos
+                if (data.documents && data.documents.length > 0) {
+                    documentsList.innerHTML = data.documents.map(doc => `
+                        <div class="flex items-center justify-between p-2 border-b">
+                            <div class="flex items-center gap-2">
+                                <svg class="w-5 h-5 text-gray-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                </svg>
+                                <div>
+                                    <div class="font-medium">${doc.document_name}</div>
+                                    <div class="text-xs text-gray-500">${doc.document_type} - ${new Date(doc.created_at).toLocaleString()}</div>
+                                </div>
+                            </div>
+                            <div class="flex items-center gap-2">
+                                <a href="${doc.document_url}" target="_blank" class="text-blue-600 hover:text-blue-800">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14"></path>
+                                    </svg>
+                                </a>
+                                <button class="text-red-600 hover:text-red-800 delete-document" data-document-id="${doc.document_id}" data-document-name="${doc.document_name}">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path>
+                                    </svg>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('');
+                    
+                    // Agregar event listeners a los botones de eliminar
+                    document.querySelectorAll('.delete-document').forEach(button => {
+                        button.addEventListener('click', (event) => {
+                            const documentId = event.currentTarget.dataset.documentId;
+                            const documentName = event.currentTarget.dataset.documentName;
+                            this.confirmDeleteDocument(documentId, documentName);
+                        });
+                    });
+                } else {
+                    documentsList.innerHTML = '<p class="text-gray-500 text-sm">No hay documentos disponibles.</p>';
+                }
+            } else {
+                folderInfo.innerHTML = `<p class="text-red-500 text-sm">Error: ${data.error}</p>`;
+                documentsList.innerHTML = '';
+                
+                // Asegurar que el botón de crear carpeta esté disponible en caso de error
+                if (createFolderBtn) {
+                    createFolderBtn.style.display = 'flex';
+                    createFolderBtn.disabled = false;
+                }
+            }
+        } catch (error) {
+            console.error('Error cargando documentos:', error);
+            document.getElementById('folderInfo').innerHTML = `<p class="text-red-500 text-sm">Error al cargar documentos.</p>`;
+            document.getElementById('documentsList').innerHTML = '';
+            
+            // Asegurar que el botón de crear carpeta esté disponible en caso de error
+            const createFolderBtn = document.getElementById('createFolderBtn');
+            if (createFolderBtn) {
+                createFolderBtn.style.display = 'flex';
+                createFolderBtn.disabled = false;
+            }
+        }
+    }
+
+    // Método para crear carpeta
+    async createDocumentFolder() {
+        if (!this.currentLead) return;
+        
+        // Verificar si ya existe una carpeta
+        const folderInfo = document.getElementById('folderInfo');
+        if (folderInfo.querySelector('.folder-exists')) {
+            this.leadManager.showNotification('Ya existe una carpeta para este cliente', 'warning');
+            return;
+        }
+        
+        // Deshabilitar el botón para evitar clics múltiples
+        const createFolderBtn = document.getElementById('createFolderBtn');
+        if (createFolderBtn) {
+            createFolderBtn.disabled = true;
+            createFolderBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-blue-700" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                Creando...
+            `;
+        }
+        
+        try {
+            const response = await fetch('/api/crm/documents/create_folder.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    client_name: this.currentLead.name,
+                    lead_id: this.currentLead.id
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.leadManager.showNotification('Carpeta creada correctamente', 'success');
+                this.loadLeadDocuments(); // Recargar documentos
+            } else {
+                throw new Error(data.error || 'Error al crear carpeta');
+            }
+        } catch (error) {
+            console.error('Error creando carpeta:', error);
+            this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+            
+            // Restaurar el botón en caso de error
+            if (createFolderBtn) {
+                createFolderBtn.disabled = false;
+                createFolderBtn.innerHTML = `
+                    <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path>
+                    </svg>
+                    Crear carpeta
+                `;
+            }
+        }
+    }    
+
+    // Método para confirmar la eliminación de la carpeta
+    confirmDeleteFolder(folderId, folderName) {
+        if (!this.currentLead) return;
+        
+        // Crear modal de confirmación
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content max-w-md">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4">Confirmar eliminación de carpeta</h3>
+                    <p class="text-gray-600 mb-4">¿Estás seguro de que deseas eliminar la carpeta "${folderName || 'de documentos'}" y todos sus documentos?</p>
+                    <div class="p-3 bg-yellow-50 border border-yellow-200 rounded text-yellow-700 mb-4">
+                        <strong>Advertencia:</strong> Esta acción eliminará todos los documentos de la carpeta y no se puede deshacer.
+                    </div>
+                    <div class="flex justify-end gap-3">
+                        <button id="cancelDeleteFolder" class="px-4 py-2 border rounded hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button id="confirmDeleteFolder" class="px-4 py-2 text-white rounded bg-red-600 hover:bg-red-700">
+                            Eliminar carpeta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Event listeners para los botones
+        document.getElementById('cancelDeleteFolder').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        const confirmDeleteBtn = document.getElementById('confirmDeleteFolder');
+        confirmDeleteBtn.addEventListener('click', async () => {
+            try {
+                // Cambiar estado del botón
+                confirmDeleteBtn.disabled = true;
+                confirmDeleteBtn.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Eliminando...
+                `;
+                
+                await this.deleteFolder(folderId);
+                modal.remove();
+            } catch (error) {
+                console.error('Error al eliminar carpeta:', error);
+                this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+                
+                // Restaurar estado del botón
+                confirmDeleteBtn.disabled = false;
+                confirmDeleteBtn.textContent = 'Eliminar carpeta';
+                
+                modal.remove();
+            }
+        });
+    }    
+
+    // Método para eliminar la carpeta
+    async deleteFolder(folderId) {
+        if (!this.currentLead) return;
+        
+        try {
+            const response = await fetch('/api/crm/documents/delete_folder.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    folder_id: folderId,
+                    lead_id: this.currentLead.id
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.leadManager.showNotification('Carpeta y documentos eliminados correctamente', 'success');
+                
+                // Mostrar el botón de crear carpeta nuevamente
+                const createFolderBtn = document.getElementById('createFolderBtn');
+                if (createFolderBtn) {
+                    createFolderBtn.style.display = 'flex';
+                    createFolderBtn.disabled = false;
+                }
+                
+                // Recargar la sección de documentos
+                this.loadLeadDocuments();
+                this.currentFolderId = null;
+            } else {
+                throw new Error(data.error || 'Error al eliminar carpeta');
+            }
+        } catch (error) {
+            console.error('Error eliminando carpeta:', error);
+            this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+            throw error;
+        }
+    }
+
+    // Agregar este método a la clase LeadDetailView
+    confirmDeleteDocument(documentId, documentName) {
+        if (!this.currentLead) return;
+        
+        // Crear modal de confirmación
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content max-w-md">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4">Confirmar eliminación</h3>
+                    <p class="text-gray-600 mb-4">¿Estás seguro de que deseas eliminar el documento "${documentName}"?</p>
+                    <div class="flex justify-end gap-3">
+                        <button id="cancelDelete" class="px-4 py-2 border rounded hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button id="confirmDelete" class="px-4 py-2 text-white rounded bg-red-600 hover:bg-red-700">
+                            Eliminar
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Event listeners para los botones
+        document.getElementById('cancelDelete').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        document.getElementById('confirmDelete').addEventListener('click', async () => {
+            try {
+                await this.deleteDocument(documentId);
+                modal.remove();
+            } catch (error) {
+                console.error('Error al eliminar documento:', error);
+                this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+                modal.remove();
+            }
+        });
+    }
+
+    // Método para eliminar el documento
+    async deleteDocument(documentId) {
+        if (!this.currentLead) return;
+        
+        try {
+            const response = await fetch('/api/crm/documents/delete_document.php', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    document_id: documentId,
+                    lead_id: this.currentLead.id
+                })
+            });
+            
+            const data = await response.json();
+            
+            if (data.success) {
+                this.leadManager.showNotification('Documento eliminado correctamente', 'success');
+                // Recargar la lista de documentos
+                this.loadLeadDocuments();
+            } else {
+                throw new Error(data.error || 'Error al eliminar documento');
+            }
+        } catch (error) {
+            console.error('Error eliminando documento:', error);
+            this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+            throw error;
+        }
+    }
+
+    // Método para mostrar diálogo de subida mejorado
+    showUploadDialog() {
+        if (!this.currentLead || !this.currentFolderId) return;
+        
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content max-w-md" style="padding:0;">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-6 text-center">Subir Documento</h3>
+                    
+                    <form id="uploadDocForm" class="space-y-5">
+                        <!-- Tipo de documento con iconos -->
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium mb-2 text-gray-700">Tipo de documento</label>
+                            <div class="relative">
+                                <select id="documentType" class="w-full p-3 pr-10 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 appearance-none" required>
+                                    <option value="Identificación">Identificación</option>
+                                    <option value="Comprobante de domicilio">Comprobante de domicilio</option>
+                                    <option value="Estado de cuenta">Estado de cuenta</option>
+                                    <option value="Contrato">Contrato</option>
+                                    <option value="Otro">Otro</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <!-- Selector de archivo mejorado -->
+                        <div class="mb-5">
+                            <label class="block text-sm font-medium mb-2 text-gray-700">Archivo</label>
+                            <div class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-500 transition-colors duration-200 cursor-pointer" id="dropzone">
+                                <input type="file" id="fileInput" class="hidden" required>
+                                <div class="space-y-2" id="uploadPlaceholder">
+                                    <svg class="mx-auto h-12 w-12 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12"></path>
+                                    </svg>
+                                    <p class="text-sm text-gray-600">
+                                        <span class="font-medium text-blue-600 hover:underline">Clic para seleccionar</span> o arrastra y suelta
+                                    </p>
+                                    <p class="text-xs text-gray-500">PDF, Word, Excel, JPG, PNG (Max. 10MB)</p>
+                                </div>
+                                <div class="hidden space-y-2" id="filePreview">
+                                    <div class="flex items-center justify-center">
+                                        <svg class="h-10 w-10 text-gray-400" id="fileIcon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"></path>
+                                        </svg>
+                                    </div>
+                                    <p class="text-sm font-medium text-gray-800 truncate" id="fileName"></p>
+                                    <p class="text-xs text-gray-500" id="fileSize"></p>
+                                    <button type="button" id="removeFile" class="text-xs text-red-600 hover:text-red-800">
+                                        Eliminar archivo
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Barra de progreso -->
+                        <div class="mb-5 hidden" id="uploadProgress">
+                            <div class="w-full bg-gray-200 rounded-full h-2.5">
+                                <div class="bg-blue-600 h-2.5 rounded-full" id="progressBar" style="width: 0%"></div>
+                            </div>
+                            <p class="text-xs text-center mt-1 text-gray-600" id="progressText">Preparando...</p>
+                        </div>
+                        
+                        <!-- Botones de acción -->
+                        <div class="flex justify-end gap-3 pt-2">
+                            <button type="button" id="cancelUpload" class="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50 transition-colors duration-200">
+                                Cancelar
+                            </button>
+                            <button type="submit" id="submitUpload" class="px-4 py-2 bg-blue-600 text-white rounded-lg shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 transition-colors duration-200 flex items-center justify-center min-w-[80px]">
+                                <span>Subir</span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Referencias a elementos
+        const dropzone = modal.querySelector('#dropzone');
+        const fileInput = modal.querySelector('#fileInput');
+        const uploadPlaceholder = modal.querySelector('#uploadPlaceholder');
+        const filePreview = modal.querySelector('#filePreview');
+        const fileName = modal.querySelector('#fileName');
+        const fileSize = modal.querySelector('#fileSize');
+        const fileIcon = modal.querySelector('#fileIcon');
+        const removeFileBtn = modal.querySelector('#removeFile');
+        const progressContainer = modal.querySelector('#uploadProgress');
+        const progressBar = modal.querySelector('#progressBar');
+        const progressText = modal.querySelector('#progressText');
+        const submitBtn = modal.querySelector('#submitUpload');
+        
+        // Función para formatear el tamaño de archivo
+        const formatFileSize = (bytes) => {
+            if (bytes < 1024) return bytes + ' bytes';
+            if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + ' KB';
+            return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
+        };
+        
+        // Función para mostrar el archivo seleccionado
+        const showFilePreview = (file) => {
+            // Mostrar nombre y tamaño
+            fileName.textContent = file.name;
+            fileSize.textContent = formatFileSize(file.size);
+            
+            // Mostrar icono según tipo de archivo
+            const fileExtension = file.name.split('.').pop().toLowerCase();
+            
+            // Cambiar icono según extensión
+            let iconPath = '';
+            if (['jpg', 'jpeg', 'png', 'gif'].includes(fileExtension)) {
+                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />';
+                fileIcon.style.color = '#3b82f6'; // Blue for images
+            } else if (['pdf'].includes(fileExtension)) {
+                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21h10a2 2 0 002-2V9.414a1 1 0 00-.293-.707l-5.414-5.414A1 1 0 0012.586 3H7a2 2 0 00-2 2v14a2 2 0 002 2z" />';
+                fileIcon.style.color = '#ef4444'; // Red for PDFs
+            } else if (['doc', 'docx'].includes(fileExtension)) {
+                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+                fileIcon.style.color = '#2563eb'; // Blue for Word
+            } else if (['xls', 'xlsx'].includes(fileExtension)) {
+                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+                fileIcon.style.color = '#16a34a'; // Green for Excel
+            } else {
+                iconPath = '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />';
+            }
+            
+            fileIcon.innerHTML = iconPath;
+            
+            // Cambiar visibilidad
+            uploadPlaceholder.classList.add('hidden');
+            filePreview.classList.remove('hidden');
+        };
+        
+        // Función para limpiar la selección
+        const clearFileSelection = () => {
+            fileInput.value = '';
+            uploadPlaceholder.classList.remove('hidden');
+            filePreview.classList.add('hidden');
+        };
+        
+        // Event listeners para drag-and-drop
+        dropzone.addEventListener('click', () => fileInput.click());
+        
+        dropzone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropzone.classList.add('border-blue-500', 'bg-blue-50');
+        });
+        
+        dropzone.addEventListener('dragleave', () => {
+            dropzone.classList.remove('border-blue-500', 'bg-blue-50');
+        });
+        
+        dropzone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropzone.classList.remove('border-blue-500', 'bg-blue-50');
+            
+            if (e.dataTransfer.files.length) {
+                fileInput.files = e.dataTransfer.files;
+                showFilePreview(e.dataTransfer.files[0]);
+            }
+        });
+        
+        // Evento cuando se selecciona un archivo
+        fileInput.addEventListener('change', () => {
+            if (fileInput.files.length) {
+                showFilePreview(fileInput.files[0]);
+            }
+        });
+        
+        // Botón para eliminar archivo
+        removeFileBtn.addEventListener('click', clearFileSelection);
+        
+        // Cerrar modal
+        modal.querySelector('#cancelUpload').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        // Manejar envío del formulario
+        modal.querySelector('#uploadDocForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const fileInput = document.getElementById('fileInput');
+            const documentType = document.getElementById('documentType').value;
+            
+            if (!fileInput.files || fileInput.files.length === 0) {
+                this.leadManager.showNotification('Seleccione un archivo', 'error');
+                return;
+            }
+            
+            // Mostrar barra de progreso
+            progressContainer.classList.remove('hidden');
+            
+            // Cambiar botón de envío
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = `
+                <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                    <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                    <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                </svg>
+                <span>Subiendo...</span>
+            `;
+            
+            const formData = new FormData();
+            formData.append('file', fileInput.files[0]);
+            formData.append('folder_id', this.currentFolderId);
+            formData.append('lead_id', this.currentLead.id);
+            formData.append('document_type', documentType);
+            
+            try {
+                // Simular progreso de carga
+                let progress = 0;
+                const interval = setInterval(() => {
+                    progress += Math.random() * 15;
+                    if (progress > 90) {
+                        clearInterval(interval);
+                        progress = 90;
+                    }
+                    progressBar.style.width = `${progress}%`;
+                    progressText.textContent = `Subiendo... ${Math.round(progress)}%`;
+                }, 300);
+                
+                const response = await fetch('/api/crm/documents/upload_file.php', {
+                    method: 'POST',
+                    body: formData
+                });
+                
+                // Finalizar barra de progreso
+                clearInterval(interval);
+                progressBar.style.width = '100%';
+                progressText.textContent = 'Completado';
+                
+                const data = await response.json();
+                
+                if (data.success) {
+                    this.leadManager.showNotification('Documento subido correctamente', 'success');
+                    modal.remove();
+                    this.loadLeadDocuments(); // Recargar documentos
+                } else {
+                    throw new Error(data.error || 'Error al subir documento');
+                }
+            } catch (error) {
+                console.error('Error subiendo documento:', error);
+                
+                // Actualizar barra de progreso y botón para indicar error
+                progressBar.style.width = '100%';
+                progressBar.style.backgroundColor = '#ef4444'; // Rojo para error
+                progressText.textContent = 'Error al subir el archivo';
+                progressText.classList.add('text-red-600');
+                
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = `<span>Reintentar</span>`;
+                
+                this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+            }
+        });
     }
 
     // Actualización del método handleScheduleVisitSubmit en LeadDetailView

@@ -395,6 +395,7 @@ function showError(message) {
 }
 
 // Función para manejar la conexión con Google
+// Función para manejar la conexión con Google
 async function conectarGoogle() {
     console.log('Iniciando conexión con Google...');
     toggleLoader(true);
@@ -422,7 +423,8 @@ async function conectarGoogle() {
             client_id: '939527510238-dl9tuciuu2igh1ino8dfsttqog76a4vu.apps.googleusercontent.com',
             redirect_uri: window.location.origin + '/api/auth/oauth2callback.php',
             response_type: 'code',
-            scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar',
+            // Añadir el scope de Drive.file para gestionar solo archivos creados por la app
+            scope: 'https://www.googleapis.com/auth/calendar.events https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/drive.file',
             access_type: 'offline',
             prompt: 'consent',
             state: state,
