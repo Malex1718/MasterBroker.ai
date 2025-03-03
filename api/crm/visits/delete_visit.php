@@ -51,8 +51,8 @@ try {
     }
     
     // Verificar que la visita esté cancelada
-    if ($visit['status'] !== 'cancelada') {
-        throw new Exception('Solo las visitas canceladas pueden eliminarse');
+    if ($visit['status'] !== 'cancelada' && $visit['status'] !== 'realizada') {
+        throw new Exception('Solo las visitas canceladas o realizadas pueden eliminarse');
     }
     
     // Eliminar de Google Calendar si existe

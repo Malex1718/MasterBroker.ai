@@ -178,9 +178,36 @@ try {
                 $stmtLead->execute([':leadId' => $leadId]);
                 $leadInfo = $stmtLead->fetch(PDO::FETCH_ASSOC);
                 
+                // Determinar el colorId según el estado de la visita
+                $visitStatus = $data['status'] ?? 'programada';
+                $colorId = '9'; // Por defecto Blueberry (azul) para visitas programadas
+                
+                switch($visitStatus) {
+                    case 'programada':
+                        $colorId = '9'; // Blueberry (azul)
+                        break;
+                    case 'realizada':
+                        $colorId = '10'; // Basil (verde)
+                        break;
+                    case 'cancelada':
+                        $colorId = '11'; // Tomato (rojo)
+                        break;
+                    case 'reprogramada':
+                        $colorId = '5'; // Banana (amarillo)
+                        break;
+                    case 'no_asistio':
+                        $colorId = '8'; // Graphite (gris)
+                        break;
+                }
+                
+                // Determinar el título según si es virtual o no
+                $eventTitle = $isVirtual 
+                    ? 'Visita Virtual: ' . $leadInfo['name']
+                    : 'Visita: ' . $leadInfo['name'];
+                
                 // Configuración común del evento
                 $eventParams = [
-                    'summary' => $isVirtual ? 'Visita Virtual: ' . $leadInfo['name'] : 'Visita: ' . $leadInfo['name'],
+                    'summary' => $eventTitle,
                     'location' => $isVirtual ? 'Reunión virtual - Google Meet' : $leadInfo['property_title'] . ' - ' . $leadInfo['property_address'],
                     'description' => ($isVirtual ? "Visita virtual programada" : "Visita programada") . 
                                     " con cliente: {$leadInfo['name']}\n".
@@ -202,7 +229,7 @@ try {
                             ['method' => 'email', 'minutes' => 60]
                         ]
                     ],
-                    'colorId' => $isVirtual ? '6' : '4', // Turquesa para virtuales, Verde para presenciales
+                    'colorId' => $colorId // Usar el color según el estado
                 ];
                 
                 // Agregar conferencia para visitas virtuales con Meet
@@ -381,6 +408,9 @@ function createGoogleMeetLink($db, $userId, $leadId, $visitDate, $endTime, $data
     $stmtLead->execute([':leadId' => $leadId]);
     $leadInfo = $stmtLead->fetch(PDO::FETCH_ASSOC);
     
+    // Determinar el colorId para reuniones virtuales (por defecto programada)
+    $colorId = '9'; // Blueberry (azul) para visitas programadas
+    
     // Crear evento con videoconferencia habilitada
     $event = new Google_Service_Calendar_Event([
         'summary' => 'Visita Virtual: ' . $leadInfo['name'],
@@ -404,7 +434,7 @@ function createGoogleMeetLink($db, $userId, $leadId, $visitDate, $endTime, $data
                 ['method' => 'email', 'minutes' => 60]
             ]
         ],
-        'colorId' => '6', // Turquesa para reuniones virtuales
+        'colorId' => $colorId, // Blueberry (azul) para visitas programadas
         'conferenceData' => [
             'createRequest' => [
                 'requestId' => uniqid() . "_" . time(),

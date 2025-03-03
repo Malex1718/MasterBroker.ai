@@ -739,6 +739,114 @@ class VisitManager {
     }
 }
 
+function actualizarModalCalendario() {
+    const modalCalendario = document.getElementById('calendarModal');
+    if (!modalCalendario) return;
+    
+    modalCalendario.innerHTML = `
+      <div class="modal-content max-w-5xl">
+        <div class="flex justify-between items-center mb-2">
+          <h3 class="text-lg font-bold">Calendario de Citas</h3>
+          <button onclick="closeCalendarModal()" class="text-gray-500 hover:text-gray-700">
+            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+            </svg>
+          </button>
+        </div>
+        
+        <div class="calendar-container">
+          <div class="calendar-header flex justify-between items-center mb-2">
+            <!-- Navegación del mes y título -->
+            <div class="flex items-center space-x-1">
+              <button id="prevMonth" class="p-1 rounded-full hover:bg-gray-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                </svg>
+              </button>
+              <h4 id="currentMonthDisplay" class="text-lg font-medium">Febrero 2025</h4>
+              <button id="nextMonth" class="p-1 rounded-full hover:bg-gray-100">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                </svg>
+              </button>
+            </div>
+            
+            <!-- Selector de vista y acciones -->
+            <div class="flex items-center gap-2">
+              <div class="flex bg-gray-100 rounded-md p-0.5">
+                <button id="viewDay" class="px-2 py-1 rounded text-xs font-medium hover:bg-gray-50">Día</button>
+                <button id="viewWeek" class="px-2 py-1 rounded text-xs font-medium hover:bg-gray-50">Semana</button>
+                <button id="viewMonth" class="px-2 py-1 rounded text-xs font-medium bg-white shadow-sm">Mes</button>
+              </div>
+              
+              <button id="newVisitBtn" onclick="leadManager.scheduleVisit()" 
+                      class="flex items-center gap-1 px-2 py-1 text-xs font-medium text-white rounded bg-green-600 hover:bg-green-700">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                </svg>
+                Nueva Visita
+              </button>
+            </div>
+          </div>
+          
+          <div class="bg-white rounded-lg border border-gray-200 overflow-hidden">
+            <div class="calendar-grid">
+              <div id="calendarView" class="bg-white">
+                <!-- Encabezados de días compactos -->
+                <div class="day-header">Dom</div>
+                <div class="day-header">Lun</div>
+                <div class="day-header">Mar</div>
+                <div class="day-header">Mié</div>
+                <div class="day-header">Jue</div>
+                <div class="day-header">Vie</div>
+                <div class="day-header">Sáb</div>
+                <!-- Las celdas de los días se generarán con JavaScript -->
+              </div>
+            </div>
+          </div>
+          
+          <!-- Leyenda -->
+          <div class="flex items-center gap-4 text-xs mt-2 text-gray-600">
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-blue-500 rounded-full mr-1"></div>
+              <span>Programada</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-green-500 rounded-full mr-1"></div>
+              <span>Realizada</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-red-500 rounded-full mr-1"></div>
+              <span>Cancelada</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 bg-yellow-500 rounded-full mr-1"></div>
+              <span>Reprogramada</span>
+            </div>
+            <div class="flex items-center">
+              <div class="w-3 h-3 border-2 border-dashed border-blue-500 mr-1"></div>
+              <span>Virtual</span>
+            </div>
+          </div>
+          
+          <!-- Panel de detalles de cita -->
+          <div id="appointmentDetails" class="hidden mt-4">
+            <div id="appointmentContent"></div>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Volver a inicializar los event listeners
+    window.appointmentCalendar.initEventListeners();
+  }
+  
+  // Ejecutar cuando el DOM esté cargado
+  document.addEventListener('DOMContentLoaded', function() {
+    // Dejamos un pequeño retraso para asegurar que todo esté cargado
+    setTimeout(actualizarModalCalendario, 500);
+  });
+
 // Inicializar y exportar el gestor de visitas
 window.visitManager = new VisitManager();
 
@@ -979,9 +1087,13 @@ class AppointmentCalendar {
     }
     
     getAppointmentsForDay(date) {
-        return this.appointments.filter(appointment => 
-            this.isSameDay(appointment.date, date)
-        );
+        return this.appointments.filter(appointment => {
+            // Crear copia ajustada de la fecha de la cita
+            const appointmentDate = new Date(appointment.date);
+            appointmentDate.setHours(appointmentDate.getHours() - 6); // Ajuste para México
+            
+            return this.isSameDay(appointmentDate, date);
+        });
     }
     
     isSameDay(date1, date2) {
@@ -1078,7 +1190,7 @@ class AppointmentCalendar {
                         <!-- Botón para eliminar permanentemente si está cancelada -->
                         <button class="px-3 py-1 text-sm bg-red-600 text-white rounded hover:bg-red-700"
                                 onclick="appointmentCalendar.deleteAppointmentPermanently('${appointment.id}')">
-                            Eliminar permanentemente
+                            Eliminar
                         </button>
                     ` : ''}
                 </div>
@@ -1090,49 +1202,73 @@ class AppointmentCalendar {
         if (!confirm('¿Estás seguro de que deseas eliminar esta visita? Esta acción no se puede deshacer.')) return;
         
         try {
-            // Extraer el ID real de visita
-            const idParts = appointmentId.split('-');
-            if (idParts[0] === 'visit' && idParts[1]) {
-                const visitId = idParts[1];
-                
-                const result = await window.visitManager.deleteVisitPermanently(visitId);
-                if (result.success) {
-                    await this.loadAppointments();
-                    this.leadManager.showNotification('Visita eliminada', 'success');
-                    this.clearDetails(); // Cerrar el panel de detalles
-                }
-            } else {
-                this.leadManager.showNotification('ID de visita no válido', 'error');
+          // Extraer el ID real de visita
+          const idParts = appointmentId.split('-');
+          if (idParts[0] === 'visit' && idParts[1]) {
+            const visitId = idParts[1];
+            
+            const result = await window.visitManager.deleteVisitPermanently(visitId);
+            if (result.success) {
+              await this.loadAppointments();
+              this.leadManager.showNotification('Visita eliminada', 'success');
+              this.clearDetails(); // Cerrar el panel de detalles
+              
+              // Actualizar la interfaz
+              this.refreshCalendarDisplay();
             }
+          } else {
+            this.leadManager.showNotification('ID de visita no válido', 'error');
+          }
         } catch (error) {
-            console.error('Error al eliminar la visita:', error);
-            this.leadManager.showNotification('Error al eliminar la visita', 'error');
+          console.error('Error al eliminar la visita:', error);
+          this.leadManager.showNotification('Error al eliminar la visita', 'error');
         }
     }
-
+    
     // Método para marcar una cita como completada
     async markAppointmentComplete(appointmentId) {
         if (!confirm('¿Confirmar que la visita fue realizada?')) return;
         
         try {
-            // Extraer el ID real de visita
-            const idParts = appointmentId.split('-');
-            if (idParts[0] === 'visit' && idParts[1]) {
-                const visitId = idParts[1];
-                const notes = prompt('Notas sobre la visita (opcional):') || '';
-                
-                const result = await window.visitManager.completeVisit(visitId, notes);
-                if (result.success) {
-                    await this.loadAppointments();
-                    this.leadManager.showNotification('Visita marcada como realizada', 'success');
-                }
-            } else {
-                // Usar el método anterior para compatibilidad
-                await this.updateAppointmentStatus(appointmentId, 'realizada');
+          // Extraer el ID real de visita
+          const idParts = appointmentId.split('-');
+          if (idParts[0] === 'visit' && idParts[1]) {
+            const visitId = idParts[1];
+            const notes = prompt('Notas sobre la visita (opcional):') || '';
+            
+            const result = await window.visitManager.completeVisit(visitId, notes);
+            if (result.success) {
+              await this.loadAppointments();
+              this.leadManager.showNotification('Visita marcada como realizada', 'success');
+              
+              // Asegurar que la actualización en tiempo real funcione independientemente del tipo de calendario
+              if (typeof this.refreshCalendarDisplay === 'function') {
+                this.refreshCalendarDisplay();
+              } else if (this.isFullscreen) {
+                this.renderFullscreenCalendar();
+                this.renderMiniCalendar();
+                this.loadUpcomingEvents();
+              } else {
+                this.renderCalendar();
+              }
             }
+          } else {
+            await this.updateAppointmentStatus(appointmentId, 'realizada');
+            
+            // Asegurar que la actualización en tiempo real funcione independientemente del tipo de calendario
+            if (typeof this.refreshCalendarDisplay === 'function') {
+              this.refreshCalendarDisplay();
+            } else if (this.isFullscreen) {
+              this.renderFullscreenCalendar();
+              this.renderMiniCalendar();
+              this.loadUpcomingEvents();
+            } else {
+              this.renderCalendar();
+            }
+          }
         } catch (error) {
-            console.error('Error al marcar visita como realizada:', error);
-            this.leadManager.showNotification('Error al actualizar la visita', 'error');
+          console.error('Error al marcar visita como realizada:', error);
+          this.leadManager.showNotification('Error al actualizar la visita', 'error');
         }
     }
 
@@ -1142,136 +1278,279 @@ class AppointmentCalendar {
         if (reason === null) return; // Usuario canceló el prompt
         
         try {
-            // Extraer el ID real de visita
-            const idParts = appointmentId.split('-');
-            if (idParts[0] === 'visit' && idParts[1]) {
-                const visitId = idParts[1];
-                
-                const result = await window.visitManager.cancelVisit(visitId, reason);
-                if (result.success) {
-                    await this.loadAppointments();
-                    this.leadManager.showNotification('Visita cancelada correctamente', 'success');
-                }
-            } else {
-                // Usar el método anterior para compatibilidad
-                const appointment = this.appointments.find(a => a.id === appointmentId);
-                if (!appointment) throw new Error('Cita no encontrada');
-    
-                const updateData = {
-                    id: appointment.leadId,
-                    activity_type: 'visita',
-                    sub_state: 'cancelada',
-                    description: `Visita cancelada. Motivo: ${reason || 'No especificado'}`,
-                    activity_date: new Date().toISOString()
-                };
-    
-                const response = await fetch(this.leadManager.API_ENDPOINT, {
-                    method: 'PUT',
-                    headers: { 'Content-Type': 'application/json' },
-                    credentials: 'include',
-                    body: JSON.stringify(updateData)
-                });
-    
-                const result = await response.json();
-                
-                if (result.success) {
-                    await this.leadManager.loadLeads();
-                    await this.loadAppointments();
-                    this.leadManager.showNotification('Visita cancelada correctamente', 'success');
-                }
+          // Extraer el ID real de visita
+          const idParts = appointmentId.split('-');
+          if (idParts[0] === 'visit' && idParts[1]) {
+            const visitId = idParts[1];
+            
+            const result = await window.visitManager.cancelVisit(visitId, reason);
+            if (result.success) {
+              await this.loadAppointments();
+              this.leadManager.showNotification('Visita cancelada correctamente', 'success');
+              
+              // Asegurar que la actualización en tiempo real funcione independientemente del tipo de calendario
+              if (typeof this.refreshCalendarDisplay === 'function') {
+                this.refreshCalendarDisplay();
+              } else if (this.isFullscreen) {
+                this.renderFullscreenCalendar();
+                this.renderMiniCalendar();
+                this.loadUpcomingEvents();
+              } else {
+                this.renderCalendar();
+              }
             }
+          } else {
+            // Usar el método anterior para compatibilidad
+            const appointment = this.appointments.find(a => a.id === appointmentId);
+            if (!appointment) throw new Error('Cita no encontrada');
+      
+            const updateData = {
+              id: appointment.leadId,
+              activity_type: 'visita',
+              sub_state: 'cancelada',
+              description: `Visita cancelada. Motivo: ${reason || 'No especificado'}`,
+              activity_date: new Date().toISOString()
+            };
+      
+            const response = await fetch(this.leadManager.API_ENDPOINT, {
+              method: 'PUT',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify(updateData)
+            });
+      
+            const result = await response.json();
+            
+            if (result.success) {
+              await this.leadManager.loadLeads();
+              await this.loadAppointments();
+              this.leadManager.showNotification('Visita cancelada correctamente', 'success');
+              
+              // Asegurar que la actualización en tiempo real funcione independientemente del tipo de calendario
+              if (typeof this.refreshCalendarDisplay === 'function') {
+                this.refreshCalendarDisplay();
+              } else if (this.isFullscreen) {
+                this.renderFullscreenCalendar();
+                this.renderMiniCalendar();
+                this.loadUpcomingEvents();
+              } else {
+                this.renderCalendar();
+              }
+            }
+          }
         } catch (error) {
-            console.error('Error al cancelar visita:', error);
-            this.leadManager.showNotification('Error al cancelar la visita', 'error');
+          console.error('Error al cancelar visita:', error);
+          this.leadManager.showNotification('Error al cancelar la visita', 'error');
         }
     }
-
+      
     // Método para reprogramar una cita
     async rescheduleAppointment(appointmentId) {
         try {
-            // Extraer el ID real de visita
-            const idParts = appointmentId.split('-');
-            if (idParts[0] === 'visit' && idParts[1]) {
-                const visitId = idParts[1];
+        // Extraer el ID real de visita
+        const idParts = appointmentId.split('-');
+        if (idParts[0] === 'visit' && idParts[1]) {
+            const visitId = idParts[1];
+            
+            // Buscar la visita en el nuevo sistema
+            const visitData = window.visitManager.visits.find(v => v.id == visitId);
+            
+            if (!visitData) throw new Error('Visita no encontrada');
+            
+            // Configurar el modal de agendar visita con los datos actuales
+            const modal = document.getElementById('scheduleVisitModal');
+            if (!modal) return;
+            
+            document.getElementById('scheduleVisitLeadId').value = visitData.lead_id;
+            
+            // Configurar fecha y hora para la reprogramación
+            const visitDate = new Date(visitData.visit_date);
+            document.getElementById('visitDate').value = visitDate.toISOString().split('T')[0];
+            document.getElementById('visitTime').value = visitDate.toLocaleTimeString('es-MX', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+            });
+            
+            // Calcular duración
+            const duration = visitData.duration || 60;
+            const durationSelect = document.getElementById('visitDuration');
+            if (durationSelect) {
+            // Intentar seleccionar el valor correspondiente
+            const optionExists = Array.from(durationSelect.options).some(opt => opt.value == duration);
+            if (optionExists) {
+                durationSelect.value = duration;
+            } else {
+                // Si no existe, usar la opción por defecto
+                durationSelect.selectedIndex = 0;
+            }
+            }
+            
+            // Notas de reprogramación
+            const notesField = document.getElementById('visitNotes');
+            notesField.value = `Visita reprogramada. Original: ${visitData.visit_date}\n${visitData.description || ''}`;
+            
+            // Configurar ID de visita para reprogramación
+            document.getElementById('rescheduleVisitId').value = visitId;
+            
+            // Asegurar que este form se va a manejar con una función que actualice el calendario
+            const form = document.getElementById('scheduleVisitForm');
+            if (form) {
+            // Eliminar manejadores anteriores para evitar duplicados
+            form.onsubmit = async function(e) {
+                e.preventDefault();
                 
-                // Buscar la visita en el nuevo sistema
-                const visitData = window.visitManager.visits.find(v => v.id == visitId);
+                try {
+                const newDate = document.getElementById('visitDate').value;
+                const newTime = document.getElementById('visitTime').value;
+                const duration = document.getElementById('visitDuration').value;
+                const notes = document.getElementById('visitNotes').value;
                 
-                if (!visitData) throw new Error('Visita no encontrada');
+                const datetime = `${newDate}T${newTime}`;
                 
-                // Configurar el modal de agendar visita con los datos actuales
-                const modal = document.getElementById('scheduleVisitModal');
-                if (!modal) return;
+                const result = await window.visitManager.rescheduleVisit(
+                    visitId, 
+                    datetime, 
+                    notes, 
+                    duration
+                );
                 
-                document.getElementById('scheduleVisitLeadId').value = visitData.lead_id;
-                
-                // Configurar fecha y hora para la reprogramación
-                const visitDate = new Date(visitData.visit_date);
-                document.getElementById('visitDate').value = visitDate.toISOString().split('T')[0];
-                document.getElementById('visitTime').value = visitDate.toLocaleTimeString('es-MX', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
-                });
-                
-                // Calcular duración
-                const duration = visitData.duration || 60;
-                const durationSelect = document.getElementById('visitDuration');
-                if (durationSelect) {
-                    // Intentar seleccionar el valor correspondiente
-                    const optionExists = Array.from(durationSelect.options).some(opt => opt.value == duration);
-                    if (optionExists) {
-                        durationSelect.value = duration;
+                if (result.success) {
+                    leadManager.showNotification('Visita reprogramada correctamente', 'success');
+                    
+                    // Cerrar modal
+                    modal.style.display = 'none';
+                    
+                    // Actualizar calendario con los cambios
+                    await window.appointmentCalendar.loadAppointments();
+                    
+                    // Asegurar actualización en tiempo real del calendario
+                    const calendar = window.appointmentCalendar;
+                    if (typeof calendar.refreshCalendarDisplay === 'function') {
+                    calendar.refreshCalendarDisplay();
+                    } else if (calendar.isFullscreen) {
+                    calendar.renderFullscreenCalendar();
+                    calendar.renderMiniCalendar();
+                    calendar.loadUpcomingEvents();
                     } else {
-                        // Si no existe, usar la opción por defecto
-                        durationSelect.selectedIndex = 0;
+                    calendar.renderCalendar();
                     }
                 }
+                } catch (error) {
+                console.error('Error al reprogramar:', error);
+                leadManager.showNotification(
+                    `Error: ${error.message || 'No se pudo reprogramar la visita'}`,
+                    'error'
+                );
+                }
+            };
+            }
+            
+            // Mostrar el modal
+            modal.style.display = 'flex';
+            
+            // Cambiar título del modal
+            const modalTitle = modal.querySelector('h3');
+            if (modalTitle) modalTitle.textContent = 'Reprogramar Visita';
+        } else {
+            // Usar el método anterior para compatibilidad
+            const appointment = this.appointments.find(a => a.id === appointmentId);
+            if (!appointment) throw new Error('Cita no encontrada');
+
+            // Configurar el modal de agendar visita con los datos actuales
+            const modal = document.getElementById('scheduleVisitModal');
+            const currentDate = new Date(appointment.date);
+            
+            document.getElementById('scheduleVisitLeadId').value = appointment.leadId;
+            document.getElementById('visitDate').value = currentDate.toISOString().split('T')[0];
+            document.getElementById('visitTime').value = currentDate.toLocaleTimeString('es-MX', {
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+            });
+            
+            // Mostrar el modal
+            modal.style.display = 'flex';
+            
+            // Actualizar el mensaje de descripción para indicar que es una reprogramación
+            const notesField = document.getElementById('visitNotes');
+            const originalDateFormatted = this.leadManager.formatDateTime(appointment.date);
+            notesField.value = `Visita reprogramada. Cita original: ${originalDateFormatted}`;
+            
+            // Configurar manejador del formulario para actualizar el calendario
+            const form = document.getElementById('scheduleVisitForm');
+            if (form) {
+            form.onsubmit = async function(e) {
+                e.preventDefault();
                 
-                // Notas de reprogramación
-                const notesField = document.getElementById('visitNotes');
-                notesField.value = `Visita reprogramada. Original: ${visitData.visit_date}\n${visitData.description || ''}`;
+                try {
+                // Obtener los datos del formulario
+                const leadId = document.getElementById('scheduleVisitLeadId').value;
+                const visitDate = document.getElementById('visitDate').value;
+                const visitTime = document.getElementById('visitTime').value;
+                const visitDuration = document.getElementById('visitDuration').value;
+                const visitNotes = document.getElementById('visitNotes').value;
                 
-                // Configurar ID de visita para reprogramación
-                document.getElementById('rescheduleVisitId').value = visitId;
+                // Construir fecha completa
+                const datetime = `${visitDate}T${visitTime}`;
                 
-                // Mostrar el modal
-                modal.style.display = 'flex';
-                
-                // Cambiar título del modal
-                const modalTitle = modal.querySelector('h3');
-                if (modalTitle) modalTitle.textContent = 'Reprogramar Visita';
-            } else {
-                // Usar el método anterior para compatibilidad
-                const appointment = this.appointments.find(a => a.id === appointmentId);
-                if (!appointment) throw new Error('Cita no encontrada');
-    
-                // Configurar el modal de agendar visita con los datos actuales
-                const modal = document.getElementById('scheduleVisitModal');
-                const currentDate = new Date(appointment.date);
-                
-                document.getElementById('scheduleVisitLeadId').value = appointment.leadId;
-                document.getElementById('visitDate').value = currentDate.toISOString().split('T')[0];
-                document.getElementById('visitTime').value = currentDate.toLocaleTimeString('es-MX', {
-                    hour: '2-digit',
-                    minute: '2-digit',
-                    hour12: false
+                // Llamar al endpoint de actualización
+                const response = await fetch('/api/crm/appointments/update.php', {
+                    method: 'POST',
+                    headers: {
+                    'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                    appointment_id: appointmentId,
+                    lead_id: leadId,
+                    visit_date: datetime,
+                    duration: visitDuration,
+                    notes: visitNotes
+                    })
                 });
                 
-                // Mostrar el modal
-                modal.style.display = 'flex';
+                const result = await response.json();
                 
-                // Actualizar el mensaje de descripción para indicar que es una reprogramación
-                const notesField = document.getElementById('visitNotes');
-                const originalDateFormatted = this.leadManager.formatDateTime(appointment.date);
-                notesField.value = `Visita reprogramada. Cita original: ${originalDateFormatted}`;
+                if (result.success) {
+                    leadManager.showNotification('Cita reprogramada correctamente', 'success');
+                    
+                    // Cerrar modal
+                    modal.style.display = 'none';
+                    
+                    // Actualizar datos y vista
+                    await window.leadManager.loadLeads();
+                    await window.appointmentCalendar.loadAppointments();
+                    
+                    // Asegurar actualización en tiempo real del calendario
+                    const calendar = window.appointmentCalendar;
+                    if (typeof calendar.refreshCalendarDisplay === 'function') {
+                    calendar.refreshCalendarDisplay();
+                    } else if (calendar.isFullscreen) {
+                    calendar.renderFullscreenCalendar();
+                    calendar.renderMiniCalendar();
+                    calendar.loadUpcomingEvents();
+                    } else {
+                    calendar.renderCalendar();
+                    }
+                } else {
+                    throw new Error(result.message || 'Error al reprogramar la cita');
+                }
+                } catch (error) {
+                console.error('Error al reprogramar cita:', error);
+                leadManager.showNotification(
+                    `Error: ${error.message || 'No se pudo reprogramar la cita'}`,
+                    'error'
+                );
+                }
+            };
             }
+        }
         } catch (error) {
-            console.error('Error al reprogramar visita:', error);
-            this.leadManager.showNotification('Error al reprogramar la visita', 'error');
+        console.error('Error al reprogramar visita:', error);
+        this.leadManager.showNotification('Error al reprogramar la visita', 'error');
         }
     }
-    
 
     // Método para sincronizar la cancelación con Google Calendar
     async syncCancelWithGoogle(leadId, appointmentId) {
@@ -1421,30 +1700,106 @@ class AppointmentCalendar {
     }
 }
 
-// Funciones para manejar el modal de calendario
-function showCalendarModal() {
-    const modal = document.getElementById('calendarModal');
-    if (modal) {
-        modal.style.display = 'flex';
+// Método auxiliar para actualizar el calendario independientemente del tipo
+function updateCalendarDisplay() {
+    // Este método puede ser llamado desde cualquier contexto, por eso es una función y no un método
+    if (!window.appointmentCalendar) return;
+    
+    const calendar = window.appointmentCalendar;
+    
+    // Tratar de usar el método más específico disponible
+    if (typeof calendar.refreshCalendarDisplay === 'function') {
+      calendar.refreshCalendarDisplay();
+    } else if (calendar.isFullscreen) {
+      calendar.renderFullscreenCalendar();
+      if (typeof calendar.renderMiniCalendar === 'function') {
+        calendar.renderMiniCalendar();
+      }
+      if (typeof calendar.loadUpcomingEvents === 'function') {
+        calendar.loadUpcomingEvents();
+      }
+    } else {
+      calendar.renderCalendar();
+    }
+  }
+  
+  // Función global para actualizar el calendario desde cualquier contexto
+  window.updateCalendarDisplay = updateCalendarDisplay;
+
+function openFullscreenCalendar() {
+    // Asegurarse de que el modal existe en el DOM
+    const calendarModal = document.getElementById('calendarModal');
+    if (!calendarModal) {
+        console.error('El modal del calendario no existe en el DOM');
+        return;
+    }
+    
+    // Mantener el modal oculto pero existente en el DOM
+    calendarModal.style.display = 'none';
+    
+    // Verificar si el calendario fullscreen ya está inicializado
+    if (window.appointmentCalendar && typeof window.appointmentCalendar.showFullscreen === 'function') {
+        // Usar la función showFullscreen directamente
+        window.appointmentCalendar.showFullscreen();
+    } else {
+        // Mostrar mensaje de carga mientas se inicializa
+        const loadingMessage = document.createElement('div');
+        loadingMessage.id = 'calendar-loading-message';
+        loadingMessage.className = 'fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50';
+        loadingMessage.innerHTML = `
+            <div class="bg-white p-4 rounded-lg shadow-lg text-center">
+                <div class="animate-spin rounded-full h-10 w-10 border-b-2 border-blue-600 mx-auto mb-2"></div>
+                <p>Cargando calendario...</p>
+            </div>
+        `;
+        document.body.appendChild(loadingMessage);
         
-        // Cargar citas y renderizar calendario
-        if (window.appointmentCalendar) {
-            window.appointmentCalendar.loadAppointments();
-        }
+        // Inicializar el calendario
+        initializeFullscreenCalendar().then(() => {
+            // Eliminar mensaje de carga
+            const loadingEl = document.getElementById('calendar-loading-message');
+            if (loadingEl) loadingEl.remove();
+            
+            // Mostrar calendario
+            if (window.appointmentCalendar && typeof window.appointmentCalendar.showFullscreen === 'function') {
+                window.appointmentCalendar.showFullscreen();
+            } else {
+                alert('No se pudo inicializar el calendario. Por favor, recarga la página.');
+            }
+        }).catch(error => {
+            console.error('Error al inicializar el calendario:', error);
+            // Manejar el error
+        });
     }
 }
 
-function closeCalendarModal() {
-    const modal = document.getElementById('calendarModal');
-    if (modal) {
-        modal.style.display = 'none';
-        
-        // Limpiar detalles
-        if (window.appointmentCalendar) {
-            window.appointmentCalendar.clearDetails();
-        }
+// Guardar referencia a la función original por si se necesita
+window._originalShowCalendarModal = window.showCalendarModal;
+
+// Reemplazar con nuestra versión
+window.showCalendarModal = function() {
+    // Asegurarse de que el modal exista en el DOM pero no se muestre
+    const modalCalendario = document.getElementById('calendarModal');
+    if (modalCalendario) {
+        modalCalendario.style.display = 'none'; // En vez de 'flex'
     }
-}
+    
+    // Abrir directamente en pantalla completa
+    openFullscreenCalendar();
+};
+
+window.closeCalendarModal = function() {
+    // Cerrar el calendario en pantalla completa
+    if (window.appointmentCalendar && typeof window.appointmentCalendar.exitFullscreen === 'function') {
+        window.appointmentCalendar.exitFullscreen();
+    }
+    
+    // Asegurarse de que el modal también esté cerrado
+    const modalCalendario = document.getElementById('calendarModal');
+    if (modalCalendario) {
+        modalCalendario.style.display = 'none';
+    }
+};
 
 class ReminderSystem {
     constructor(leadManager) {
@@ -2632,7 +2987,7 @@ class LeadDetailView {
     // Actualización del método handleScheduleVisitSubmit en LeadDetailView
     async handleScheduleVisitSubmit(e) {
         if (e && e.preventDefault) {
-            e.preventDefault();
+          e.preventDefault();
         }
         
         // Obtener datos del formulario
@@ -2704,13 +3059,16 @@ class LeadDetailView {
                 this.leadManager.detailView.show(leadId);
                 this.closeScheduleVisitModal();
                 
-                // Configurar recordatorio
-                if (this.leadManager.reminderSystem) {
-                    this.leadManager.reminderSystem.createReminder(
-                        { id: leadId, name: lead?.name || 'Cliente' },
-                        'scheduled_visit',
-                        localDateTime
-                    );
+                // Actualizar calendario inmediatamente
+                if (window.appointmentCalendar) {
+                  await window.appointmentCalendar.loadAppointments();
+                  
+                  // Actualizar vista completa si está en modo fullscreen
+                  if (typeof window.appointmentCalendar.refreshCalendarDisplay === 'function') {
+                    window.appointmentCalendar.refreshCalendarDisplay();
+                  } else {
+                    window.appointmentCalendar.renderCalendar();
+                  }
                 }
                 
                 // Mostrar enlace al evento si está disponible
@@ -2774,8 +3132,8 @@ class LeadDetailView {
         } catch (error) {
             console.error('Error al programar visita:', error);
             this.leadManager.showNotification(
-                `Error: ${error.message || 'No se pudo programar la visita'}`,
-                'error'
+              `Error: ${error.message || 'No se pudo programar la visita'}`,
+              'error'
             );
         }
     }

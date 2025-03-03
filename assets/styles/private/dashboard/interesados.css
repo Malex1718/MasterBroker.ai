@@ -86,7 +86,11 @@
     background: rgba(0, 0, 0, 0.5);
     justify-content: center;
     align-items: center;
-    z-index: 1000;
+    z-index: 10000;
+}
+
+#phoneVerificationModal, #emailVerificationModal{
+  z-index: 10100;
 }
 
 .modal-content {
@@ -189,12 +193,12 @@
 }
 
 #leadDetailModal {
-    z-index: 1000;
+    z-index: 10000;
 }
 
 /* Modal de actualización */
 #leadUpdateModal {
-    z-index: 1100;
+    z-index: 10100;
 }
 
 /* Transiciones suaves */
@@ -249,7 +253,7 @@
     top: 1rem;
     left: 50%;
     transform: translateX(-50%);
-    z-index: 9999;
+    z-index: 11000;
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
@@ -708,7 +712,7 @@
   }
 
 #scheduleVisitModal{
-  z-index: 1001;
+  z-index: 10001;
 }
 
 /* Estilos para el menú contextual de contacto */
@@ -717,7 +721,7 @@
     background-color: white;
     border-radius: 0.5rem;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    z-index: 1200;
+    z-index: 10200;
     overflow: hidden;
     animation: fadeIn 0.2s ease-out;
     border: 1px solid #e5e7eb;
@@ -896,4 +900,212 @@
         white-space: nowrap;
         pointer-events: none;
     }
+}
+
+/* Agregar estos estilos a tu archivo CSS actual */
+
+/* Encabezados de días más compactos */
+.calendar-container .day-header {
+  padding: 0.5rem 0;
+  font-size: 0.85rem;
+  position: sticky;
+  top: 0;
+  background-color: #f9fafb;
+  z-index: 25;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* Mejorar espaciado de la cuadrícula del calendario */
+#calendarView {
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  grid-auto-rows: minmax(120px, 1fr);
+  gap: 0.25rem;
+}
+
+/* Estilos mejorados para citas */
+.appointment-item {
+  border-left-width: 4px;
+  padding: 0.35rem 0.5rem;
+  border-radius: 0.25rem;
+  margin-bottom: 0.35rem;
+  position: relative;
+  transition: all 0.15s ease;
+  background-color: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.05);
+}
+
+.appointment-item:hover {
+  transform: translateX(2px) scale(1.02);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  z-index: 10;
+}
+
+/* Indicador de estado visual */
+.appointment-item::before {
+  content: '';
+  position: absolute;
+  top: 0.35rem;
+  right: 0.35rem;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+}
+
+.appointment-item.status-programada::before { background-color: #3b82f6; }
+.appointment-item.status-realizada::before { background-color: #10b981; }
+.appointment-item.status-cancelada::before { background-color: #ef4444; }
+.appointment-item.status-reprogramada::before { background-color: #f59e0b; }
+.appointment-item.status-no_asistio::before { background-color: #6b7280; }
+
+/* Estructura del contenido */
+.appointment-item .content {
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+}
+
+.appointment-item .time {
+  font-weight: 600;
+  font-size: 0.7rem;
+  color: #4b5563;
+}
+
+.appointment-item .name {
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: 500;
+}
+
+.appointment-item .property {
+  font-size: 0.65rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: #6b7280;
+  max-width: 100%;
+}
+
+/* Menú de acciones */
+.appointment-item .actions {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.appointment-item:hover .actions {
+  opacity: 1;
+  visibility: visible;
+}
+
+.appointment-item .actions-menu {
+  position: absolute;
+  right: 0;
+  top: 100%;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 0.25rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  z-index: 30;
+  min-width: 150px;
+  display: none;
+}
+
+.appointment-item .actions-menu.show {
+  display: block;
+}
+
+.appointment-item .actions-menu button {
+  width: 100%;
+  text-align: left;
+  padding: 0.5rem 0.75rem;
+  font-size: 0.75rem;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.appointment-item .actions-menu button:hover {
+  background-color: #f3f4f6;
+}
+
+/* Panel de detalles mejorado */
+#appointmentDetails {
+  background-color: white;
+  border-radius: 0.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+  border: 1px solid #e5e7eb;
+  margin-top: 1rem;
+  padding: 1.25rem;
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Indicador de visita virtual */
+.appointment-item.virtual {
+  border-style: dashed;
+}
+
+.appointment-item.virtual::after {
+  content: '📹';
+  position: absolute;
+  bottom: 0.25rem;
+  right: 0.25rem;
+  font-size: 0.7rem;
+}
+
+/* Ajustes para dispositivos móviles */
+@media (max-width: 640px) {
+  #calendarView {
+    grid-auto-rows: minmax(100px, 1fr);
+  }
+  
+  .calendar-container .day-header {
+    padding: 0.35rem 0;
+    font-size: 0.75rem;
+  }
+  
+  .appointment-item {
+    padding: 0.25rem 0.35rem;
+  }
+  
+  .appointment-item .time,
+  .appointment-item .name {
+    font-size: 0.65rem;
+  }
+  
+  .appointment-item .property {
+    font-size: 0.6rem;
+  }
+}
+
+/* Hacer que los encabezados de los días sean más compactos */
+.calendar-container .day-header {
+  height: 40px !important;
+  max-height: 40px !important;
+  line-height: 40px !important;
+  padding: 0 !important;
+  font-size: 0.85rem;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  background-color: #f9fafb;
+  z-index: 25;
+  border-bottom: 2px solid #e5e7eb;
+}
+
+/* Asegurarse de que el grid respete esta altura */
+#calendarView {
+  grid-template-rows: 40px repeat(auto-fill, minmax(100px, auto)) !important;
 }
