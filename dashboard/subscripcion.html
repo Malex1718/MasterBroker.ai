@@ -1,0 +1,624 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2">
+  <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+  <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+  <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+  <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+  <title>Planes MasterBroker.ai - Premium</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-light: #dbeafe;
+      --primary-dark: #1e40af;
+      --secondary: #10b981;
+      --secondary-light: #d1fae5;
+      --tertiary: #8b5cf6;
+      --tertiary-light: #ede9fe;
+      --gray-100: #f3f4f6;
+      --gray-200: #e5e7eb;
+      --gray-300: #d1d5db;
+      --gray-400: #9ca3af;
+      --gray-700: #374151;
+      --gray-800: #1f2937;
+      --gray-900: #111827;
+      --accent: #f59e0b;
+      --accent-light: #fef3c7;
+      --red-light: #fee2e2;
+      --red: #ef4444;
+      --gold: #f59e0b;
+      --gold-light: #fef3c7;
+    }
+    
+    body {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+      line-height: 1.5;
+      color: var(--gray-700);
+      background-color: #f9fafb;
+      margin: 0;
+      font-size: 15px !important;
+    }
+    
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      margin-top: 120px;
+    }
+    
+    .header {
+      text-align: center;
+      margin-bottom: 30px;
+    }
+    
+    .header h1 {
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif !important;
+      font-size: 32px;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    
+    .header p {
+      color: var(--gray-700);
+      font-size: 18px;
+      max-width: 700px;
+      margin: 0 auto;
+    }
+    
+    .subheader {
+      text-align: center;
+      margin-bottom: 40px;
+    }
+    
+    .value-badge {
+      display: inline-block;
+      background-color: var(--tertiary-light);
+      color: var(--tertiary);
+      padding: 8px 16px;
+      border-radius: 20px;
+      font-weight: 600;
+      margin-bottom: 20px;
+    }
+    
+    .tabs {
+      display: flex;
+      justify-content: center;
+      margin-bottom: 30px;
+      position: relative;
+    }
+    
+    .tab {
+      padding: 12px 30px;
+      background-color: white;
+      border: 1px solid var(--gray-200);
+      cursor: pointer;
+      font-weight: 600;
+      position: relative;
+      z-index: 1;
+      transition: all 0.3s;
+      min-width: 120px;
+      text-align: center;
+    }
+    
+    .tab:first-child {
+      border-radius: 8px 0 0 8px;
+    }
+    
+    .tab:last-child {
+      border-radius: 0 8px 8px 0;
+    }
+    
+    .tab.active {
+      background-color: var(--primary);
+      color: white;
+      border-color: var(--primary);
+    }
+    
+    .tab:not(.active):hover {
+      background-color: var(--gray-100);
+    }
+    
+    .tab-content {
+      display: none;
+    }
+    
+    .tab-content.active {
+      display: block;
+      animation: fadeIn 0.5s;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    
+    .plans-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+      margin-bottom: 40px;
+    }
+    
+    .plan-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      width: 100%;
+      max-width: 400px;
+      padding: 30px;
+      display: flex;
+      flex-direction: column;
+      border: 1px solid var(--gray-200);
+      transition: transform 0.3s, box-shadow 0.3s;
+      position: relative;
+    }
+    
+    .plan-card:hover {
+      transform: translateY(-5px);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
+    }
+    
+    .plan-card.popular {
+      border-top: 4px solid var(--primary);
+    }
+    
+    .plan-card.premium {
+      border-top: 4px solid var(--gold);
+    }
+    
+    .popular-badge {
+      position: absolute;
+      top: -12px;
+      right: 30px;
+      background-color: var(--primary);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .premium-badge {
+      position: absolute;
+      top: -12px;
+      right: 30px;
+      background-color: var(--gold);
+      color: white;
+      padding: 4px 12px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+    }
+    
+    .plan-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--gray-900);
+      margin-bottom: 10px;
+    }
+    
+    .plan-price {
+      font-size: 36px;
+      font-weight: 800;
+      color: var(--gray-900);
+      margin-bottom: 5px;
+    }
+    
+    .price-period {
+      color: var(--gray-700);
+      font-size: 16px;
+      margin-bottom: 10px;
+    }
+    
+    .saving-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: var(--accent-light);
+      color: var(--accent);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 10px;
+    }
+    
+    .plan-description {
+      color: var(--gray-700);
+      margin-bottom: 20px;
+      font-size: 15px;
+    }
+    
+    .tokens-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: var(--primary-light);
+      color: var(--primary);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-top: 5px;
+    }
+    
+    .properties-badge {
+      display: inline-block;
+      padding: 4px 10px;
+      background-color: var(--gray-100);
+      color: var(--gray-700);
+      border-radius: 20px;
+      font-size: 14px;
+      font-weight: 600;
+      margin-left: 10px;
+    }
+    
+    .features-list {
+      list-style-type: none;
+      padding: 0;
+      margin: 0 0 30px;
+      flex-grow: 1;
+    }
+    
+    .feature-item {
+      display: flex;
+      align-items: flex-start;
+      margin-bottom: 12px;
+      font-size: 15px;
+    }
+    
+    .feature-icon {
+      color: var(--primary);
+      margin-right: 10px;
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+    
+    .feature-icon.no {
+      color: var(--red);
+    }
+    
+    .cta-button {
+      background-color: var(--primary);
+      color: white;
+      border: none;
+      border-radius: 8px;
+      padding: 14px 20px;
+      font-size: 16px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+    
+    .cta-button:hover {
+      background-color: var(--primary-dark);
+    }
+    
+    .cta-button.secondary {
+      background-color: white;
+      color: var(--primary);
+      border: 2px solid var(--primary);
+    }
+    
+    .cta-button.secondary:hover {
+      background-color: var(--primary-light);
+    }
+    
+    .cta-button.gold {
+      background-color: var(--gold);
+    }
+    
+    .cta-button.gold:hover {
+      background-color: #e69009;
+    }
+    
+    .monthly-price {
+      font-size: 14px;
+      color: var(--gray-700);
+      text-decoration: line-through;
+      margin-bottom: 5px;
+    }
+    
+    .spinner-border {
+      display: inline-block;
+      width: 1rem;
+      height: 1rem;
+      vertical-align: text-bottom;
+      border: 0.25em solid currentColor;
+      border-right-color: transparent;
+      border-radius: 50%;
+      animation: spinner-border 0.75s linear infinite;
+    }
+    
+    @keyframes spinner-border {
+      to { transform: rotate(360deg); }
+    }
+    
+    .test-mode-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: #ffcc00;
+      color: #333;
+      text-align: center;
+      padding: 5px;
+      z-index: 9999;
+      font-weight: bold;
+    }
+    
+    @media (max-width: 768px) {
+      .plans-container {
+        flex-direction: column;
+        align-items: center;
+      }
+      
+      .plan-card {
+        max-width: 100%;
+      }
+      
+      .tab {
+        padding: 10px 20px;
+        min-width: 100px;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .tab {
+        padding: 8px 15px;
+        min-width: 80px;
+        font-size: 14px;
+      }
+    }
+  </style>
+</head>
+<body>
+    <div id="loader">
+        <div class="spinner">
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+            <span></span>
+        </div>
+    </div>
+    
+    <!-- Banner de modo de prueba (se muestra dinámicamente vía JS) -->
+    <div id="test-mode-banner" style="display: none;" class="test-mode-banner">
+        <i class="fas fa-exclamation-triangle"></i> MODO DE PRUEBA - Las transacciones no generarán cargos reales
+    </div>
+    
+    <div class="nav_sup">
+        <div id="nav-container"></div>
+    </div>
+    
+    <div class="container">
+        <div class="header">
+            <h1>Planes Premium MasterBroker.ai</h1>
+            <p>La plataforma más avanzada para agentes inmobiliarios e inmobiliarias con tecnología de IA de vanguardia</p>
+        </div>
+        
+        <div class="subheader">
+            <div class="value-badge">Potenciado por IA avanzada</div>
+        </div>
+        
+        <div class="tabs">
+            <div class="tab active" onclick="showTab('monthly')">Mensual</div>
+            <div class="tab" onclick="showTab('annual')">Anual</div>
+        </div>
+        
+        <!-- Planes Mensuales -->
+        <div id="monthly-content" class="tab-content active">
+            <div class="plans-container">
+                <!-- Plan Básico Mensual -->
+                <div class="plan-card">
+                    <div class="plan-name">Básico</div>
+                    <div class="plan-price">$650 MXN</div>
+                    <div class="price-period">por mes</div>
+                    <div class="plan-description">Inicia tu presencia digital con herramientas esenciales potenciadas por IA.</div>
+                
+                    <div class="tokens-badge">10,000 tokens IA</div>
+                    <span class="properties-badge">5 propiedades</span>
+                
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Publicación de propiedades con SEO optimizado</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Perfil de agente profesional personalizable</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Notificaciones en tiempo real</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Estadísticas básicas y análisis de visitas</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Optimización automática de imágenes</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon no">✗</span>
+                            <span>Funciones avanzadas de IA</span>
+                        </li>
+                    </ul>
+                
+                    <!-- Botón personalizado para Stripe -->
+                    <button class="cta-button checkout-button" data-plan-id="1">
+                        Suscribirse
+                    </button>
+                </div>
+                
+                <!-- Plan Profesional Mensual -->
+                <div class="plan-card popular">
+                    <div class="popular-badge">Más Popular</div>
+                    <div class="plan-name">Profesional</div>
+                    <div class="plan-price">$1,650 MXN</div>
+                    <div class="price-period">por mes</div>
+                    <div class="plan-description">Potencia tu negocio con herramientas avanzadas de IA para destacar en el mercado.</div>
+                
+                    <div class="tokens-badge">20,000 tokens IA</div>
+                    <span class="properties-badge">15 propiedades</span>
+                
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span><strong>Todo lo del plan Básico</strong></span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Asistente IA para descripciones profesionales</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Posición destacada en búsquedas</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Analytics avanzado con seguimiento de leads</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Galerías multimedia optimizadas</span>
+                        </li>
+                    </ul>
+                
+                    <!-- Botón personalizado para Stripe -->
+                    <button class="cta-button checkout-button" data-plan-id="2">
+                        Suscribirse
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Planes Anuales -->
+        <div id="annual-content" class="tab-content">
+            <div class="plans-container">
+                <!-- Plan Básico Anual -->
+                <div class="plan-card">
+                    <div class="plan-name">Básico Anual</div>
+                    <div class="monthly-price">$7,800 MXN</div>
+                    <div class="plan-price">$6,240 MXN</div>
+                    <div class="price-period">pago único anual</div>
+                    <div class="saving-badge">¡Ahorras $1,560 MXN!</div>
+                
+                    <div class="plan-description">Inicia tu presencia digital con herramientas esenciales potenciadas por IA.</div>
+                
+                    <div class="tokens-badge">12,000 tokens IA/mes</div>
+                    <span class="properties-badge">5 propiedades</span>
+                
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Publicación de propiedades con SEO optimizado</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Mensajería interna con respuestas predefinidas</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Perfil de agente profesional personalizable</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Notificaciones en tiempo real</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Estadísticas básicas y análisis de visitas</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="exclusive-feature">1 listing destacado mensual</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="exclusive-feature">20% extra de tokens IA</span>
+                        </li>
+                    </ul>
+                
+                    <!-- Botón personalizado para Stripe -->
+                    <button class="cta-button checkout-button" data-plan-id="3">
+                        Suscribirse
+                    </button>
+                </div>
+                
+                <!-- Plan Profesional Anual -->
+                <div class="plan-card popular">
+                    <div class="popular-badge">Más Popular</div>
+                    <div class="plan-name">Profesional Anual</div>
+                    <div class="monthly-price">$19,800 MXN</div>
+                    <div class="plan-price">$15,960 MXN</div>
+                    <div class="price-period">pago único anual</div>
+                    <div class="saving-badge">¡Ahorras $3,840 MXN!</div>
+                
+                    <div class="plan-description">Potencia tu negocio con herramientas avanzadas de IA para destacar en el mercado.</div>
+                
+                    <div class="tokens-badge">36,000 tokens IA/mes</div>
+                    <span class="properties-badge">15 propiedades</span>
+                
+                    <ul class="features-list">
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span><strong>Todo lo del plan Básico</strong></span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Asistente IA para descripciones profesionales</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Posición destacada en búsquedas</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Analytics avanzado con seguimiento de leads</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span>Galerías multimedia optimizadas</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="exclusive-feature">3 listings destacados mensuales</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="exclusive-feature">20% extra de tokens IA</span>
+                        </li>
+                        <li class="feature-item">
+                            <span class="feature-icon">✓</span>
+                            <span class="exclusive-feature">Acceso prioritario a nuevas funciones</span>
+                        </li>
+                    </ul>
+                
+                    <!-- Botón personalizado para Stripe -->
+                    <button class="cta-button checkout-button" data-plan-id="4">
+                        Suscribirse
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="footer_container"></div>
+    
+    <!-- Scripts -->
+    <script src="/assets/js/subscripcion.js"></script>
+    <script src="/assets/js/components_private.js?v=1.0.2"></script>
+    <script src="/assets/js/navigation.js?v=1.0.2"></script>
+    <script src="/assets/js/loader.js?v=1.0.2"></script>
+    <script src="/assets/js/session_check.js"></script>
+    <script src="https://js.stripe.com/v3/"></script>
+</body>
+</html>
