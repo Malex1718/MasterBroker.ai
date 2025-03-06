@@ -27,8 +27,8 @@ return [
         ? ($_ENV['STRIPE_TEST_WEBHOOK_SECRET'])
         : ($_ENV['STRIPE_LIVE_WEBHOOK_SECRET']),
     
-    'success_url' => $_ENV['STRIPE_SUCCESS_URL'] ?? 'https://masterbroker.ai/dashboard/configuracion/subscripcion/success',
-    'cancel_url' => $_ENV['STRIPE_CANCEL_URL'] ?? 'https://masterbroker.ai/dashboard/configuracion/subscripcion/cancel',
+    'success_url' => $_ENV['STRIPE_SUCCESS_URL'],
+    'cancel_url' => $_ENV['STRIPE_CANCEL_URL'],
     
     'is_test_mode' => $isTestMode
 ];
