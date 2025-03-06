@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="shortcut icon" href="/assets/img/icon.png?v=1.0.2">
+  <link rel="stylesheet" href="/assets/styles/main.css?v=1.0.2">
+  <link rel="stylesheet" href="/assets/styles/components/header.css?v=1.0.1">
+  <link rel="stylesheet" href="/assets/styles/components/footer.css?v=1.0.1">
+  <link rel="stylesheet" href="/assets/styles/components/loader.css?v=1.0.1">
+  <title>Suscripción Cancelada - MasterBroker.ai</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+  <style>
+    .cancel-icon {
+      font-size: 72px;
+      color: #f59e0b;
+      margin-bottom: 20px;
+    }
+    
+    .cancel-card {
+      background-color: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+      padding: 40px;
+      text-align: center;
+      max-width: 600px;
+      margin: 60px auto;
+      border-top: 4px solid #f59e0b;
+    }
+    
+    .cancel-title {
+      font-size: 28px;
+      font-weight: 700;
+      margin-bottom: 15px;
+      color: #1f2937;
+    }
+    
+    .cancel-message {
+      font-size: 16px;
+      margin-bottom: 30px;
+      color: #4b5563;
+    }
+    
+    .btn-primary {
+      background-color: #2563eb;
+      color: white;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      margin-right: 12px;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-primary:hover {
+      background-color: #1d4ed8;
+    }
+    
+    .btn-secondary {
+      background-color: white;
+      color: #2563eb;
+      border: 2px solid #2563eb;
+      padding: 12px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      text-decoration: none;
+      display: inline-block;
+      transition: background-color 0.3s;
+    }
+    
+    .btn-secondary:hover {
+      background-color: #dbeafe;
+    }
+  </style>
+</head>
+<body>
+  <div id="loader">
+    <div class="spinner">
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+  
+  <div class="nav_sup">
+    <div id="nav-container"></div>
+  </div>
+  
+  <div class="container mx-auto px-4">
+    <div class="cancel-card">
+      <i class="fas fa-times-circle cancel-icon"></i>
+      <h1 class="cancel-title">Suscripción Cancelada</h1>
+      <p class="cancel-message">Has cancelado el proceso de suscripción. No te preocupes, no se ha realizado ningún cargo. Si tuviste algún problema durante el proceso o tienes alguna pregunta sobre nuestros planes, no dudes en contactarnos.</p>
+      
+      <div class="buttons-container">
+        <a href="/planes.html" class="btn-primary">Ver planes nuevamente</a>
+        <a href="/contacto.html" class="btn-secondary">Contactar soporte</a>
+      </div>
+    </div>
+  </div>
+  
+  <div id="footer_container"></div>
+  
+  <script src="/assets/js/components_private.js?v=1.0.2"></script>
+  <script src="/assets/js/navigation.js?v=1.0.2"></script>
+  <script src="/assets/js/loader.js?v=1.0.2"></script>
+  <script src="/assets/js/session_check.js"></script>
+  <script>
+    // Verificar si el usuario está logueado usando SessionManager
+    document.addEventListener('DOMContentLoaded', function() {
+      // Verificamos si el usuario está logueado
+      const sessionManager = new SessionManager();
+      if (!sessionManager.isAuthenticated()) {
+        // Si no está logueado, redirigir a la página de login
+        window.location.href = '/inicio_sesion.html?redirect=' + encodeURIComponent(window.location.pathname);
+      }
+    });
+  </script>
+</body>
+</html>
