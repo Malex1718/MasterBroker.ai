@@ -3,7 +3,6 @@
     display: flex;
     flex-direction: column;
     gap: 20px;
-    width: calc(100% - 40px);
     max-width: 1280px;
     min-height: calc(100vh - 156.6px); /* Restamos el margin-top */
     margin: 0 auto;
@@ -20,13 +19,32 @@
     border-top: 1px solid var(--border) !important;
 }
 
+@media (max-width: 767px) {
+    .footer_infer {
+        flex-direction: column-reverse;
+        padding-left: 20px;
+        padding-right: 20px;
+        width: auto;
+        height: auto;
+        justify-items: center;
+    }
+}
+
+@media (max-width: 1024px) {
+    .footer_infer {
+        width: auto;
+        padding-left: 20px;
+        padding-right: 20px;
+    }
+}
+
 .filtros_publicaciones{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    width: calc(100% - 32px);
     padding: 8px 8px 8px 24px;
-    background-color: var(--border);
+    background-color: var(--sub_contenedor);
+    border: 1px solid var(--border);
     border-radius: 10px;
 }
 
@@ -163,6 +181,7 @@
 
 .seleccionar_publicacion{
     padding: 0px 20px;
+    display: none;
 }
 
 .imagen_publicacion{
@@ -170,7 +189,7 @@
     width: 140px;
     background-color: var(--body);
     border-radius: 10px;
-
+    margin-left: 20px;
 }
 
 .imagen_publicacion img{
@@ -287,8 +306,8 @@
     padding: 10px;
     gap: 10px;
     border-radius: 8px;
-    border: 1px solid var(--border);
-    background-color: var(--body);
+    background-color: rgba(40, 141, 213, 0.2);
+    border: 1px solid var(--principal_2);
 }
 
 .estadistica{
@@ -298,11 +317,12 @@
 
 .estadistica h4{
     margin: 0;
+    color: var(--principal_2);
 }
 
 .estadistica span{
     margin: 0;
-    color: var(--colorp);
+    color: var(--principal_2);
 }
 
 .valores_acciones{
@@ -324,6 +344,7 @@
 .valores_unicos p{
     margin: 0;
     cursor: pointer;
+    font-size: 14px;
 }
 
 .acciones_boton{
@@ -409,8 +430,8 @@
     justify-content: center;
     height: 25px;
     width: 25px;
-    background-color: var(--principal);
-    border: 1px solid var(--principal);
+    background-color: var(--principal_2);
+    border: 1px solid var(--principal_2);
     border-radius: 5px;
     transition: all 0.2s;
     cursor: pointer;
@@ -441,7 +462,7 @@
 
 .pagination button {
     padding: 8px 16px;
-    border: 1px solid var(--principal);
+    border: 1px solid var(--principal_2);
     background-color: transparent;
     color: var(--principal);
     cursor: pointer;
@@ -463,8 +484,8 @@
 }
 
 .pagination button.active {
-    background-color: var(--principal);
-    color: var(--colortxt);
+    background-color: rgba(40, 141, 213, 0.2);
+    color: var(--principal_2);
 }
 
 .page-numbers {
@@ -481,8 +502,8 @@
 
 @media (max-width: 1024px) {
     .filtros_publicaciones{
-        width: calc(100% - 20px);
         padding: 8px 8px 8px 12px;
+        gap: 10px;
     }
     .buscar_publicacion{
         width: 200px;
@@ -530,7 +551,6 @@
     }
     
     .filtros_publicaciones {
-        width: calc(100% - 16px);
         padding: 8px;
     }
     .buscador_filtrado {
@@ -545,7 +565,6 @@
         gap: 10px;
         padding: 20px;
         padding-bottom: 0;
-        width: calc(100% - 40px);
     }
     .imagen_publicacion {
         position: relative;
@@ -608,4 +627,55 @@
         border-left: none;
         border-top: 1px solid var(--border);
     }
+}
+
+/* Aplicar truncado de texto con elipsis a todos los campos de texto relevantes */
+.info_propiedades h4, 
+.info_propiedades p {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+}
+
+/* Limitar el ancho de la información de propiedades */
+.info_propiedades {
+    max-width: calc(100% - 85px); /* Dejamos espacio para porcentaje_estado */
+    overflow: hidden;
+}
+
+/* Asegurar que los textos no rompan el diseño en pantallas pequeñas */
+@media (max-width: 1024px) {
+    .info_propiedades {
+        max-width: calc(100% - 85px);
+    }
+}
+
+@media (max-width: 767px) {
+    .info_propiedades {
+        max-width: calc(100% - 10px);
+    }
+    
+    /* Limitar la longitud del título en móvil */
+    .info_propiedades h4 {
+        font-size: 16px;
+        line-height: 1.3;
+    }
+    
+    /* Limitar la longitud de la dirección en móvil */
+    .info_propiedades p {
+        font-size: 14px;
+        line-height: 1.2;
+    }
+}
+
+/* Para los valores únicos (Código, ID, Fecha) */
+.valores_unicos p span {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 80px;
+    display: inline-block;
+    vertical-align: bottom;
+    font-size: 14px;
 }

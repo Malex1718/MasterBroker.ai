@@ -38,7 +38,7 @@ try {
     // Crear sesión del portal
     $session = \Stripe\BillingPortal\Session::create([
         'customer' => $subscription['stripe_customer_id'],
-        'return_url' => 'https://masterbroker.ai/dashboard/configuracion/subscripcion',
+        'return_url' => 'https://masterbroker.ai/dashboard/configuracion/suscripcion',
     ]);
     
     echo json_encode(['url' => $session->url]);

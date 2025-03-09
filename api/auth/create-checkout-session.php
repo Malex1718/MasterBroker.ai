@@ -61,22 +61,24 @@ try {
     if (empty($rawInput)) {
         terminateWithError("No se recibieron datos");
     }
-    
+
     $data = json_decode($rawInput, true);
     if (json_last_error() !== JSON_ERROR_NONE) {
         terminateWithError("Error al decodificar JSON: " . json_last_error_msg());
     }
-    
+
     // Verificar datos requeridos
     if (!isset($data['plan_id']) || !isset($data['price_id'])) {
         terminateWithError("Datos incompletos: " . json_encode($data));
     }
-    
+
     $planId = $data['plan_id'];
     $priceId = $data['price_id'];
-    
-    // Log debugging info
-    error_log("Received plan_id: $planId, price_id: $priceId");
+
+    // Añade estos logs aquí
+    error_log("Datos completos recibidos: " . json_encode($data));
+    error_log("plan_id recibido: " . $planId);
+    error_log("price_id recibido: " . $priceId);
     
     // Conexión a la base de datos
     try {
@@ -127,9 +129,26 @@ try {
             'user_id' => (string)$userId,
             'plan_type' => $planType,
             'billing_cycle' => $billingCycle
-        ]
+        ],
+        // Activar recolección de dirección de facturación
+        'billing_address_collection' => 'required',
+        // Agregar campo personalizado para RFC/ID fiscal
+        'tax_id_collection' => [
+            'enabled' => true
+        ],
+        // Añadir texto personalizado en el checkout
+        'custom_text' => [
+            'submit' => [
+                'message' => 'Estos datos serán utilizados para tu facturación',
+            ],
+        ],
+        // Habilitar cupones
+        'allow_promotion_codes' => true
     ];
-    
+
+    // Añade este log aquí para ver los parámetros finales
+    error_log("Parámetros de sesión: " . json_encode($params));
+
     // Si el usuario ya tiene una suscripción, usar su customer_id
     if ($existingSubscription && !empty($existingSubscription['stripe_customer_id'])) {
         $params['customer'] = $existingSubscription['stripe_customer_id'];
@@ -137,7 +156,10 @@ try {
         // Si no tiene, crear un nuevo cliente con los datos del usuario
         $params['customer_email'] = $user['email'];
     }
-    
+
+    // Añade este log para ver los parámetros con customer/email
+    error_log("Parámetros finales: " . json_encode($params));
+
     // Crear sesión de checkout
     try {
         $session = \Stripe\Checkout\Session::create($params);

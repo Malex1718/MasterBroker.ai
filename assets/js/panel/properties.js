@@ -582,8 +582,8 @@ class PropertyCardManager {
                     </div>
                     <div class="estadistica_resumida">
                         <div class="desempeño">
-                            <img src="/assets/img/tendencia.png" alt="">
-                            <span style="color: var(--colorp);">Desempeño</span>
+                            <img src="/assets/img/tendencia.png?v=1.0.2" alt="">
+                            <span style="color: var(--principal_2);">Desempeño</span>
                             <button style="display: none;">Mejorar Desempeño</button>
                         </div>
                         <div class="estadisticas">

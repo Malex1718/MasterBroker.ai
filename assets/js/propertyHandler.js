@@ -1732,6 +1732,22 @@ async handlePhoneRevealSubmit(e) {
         this.initializeFavoriteButton();
         this.initializeContactForm();
         this.initializeAmenitiesAccordion();
+        // Listener para cambios en precisión de ubicación
+        const precisionRadios = document.querySelectorAll('input[name="precision_ubicacion"]');
+        if (precisionRadios.length > 0) {
+            precisionRadios.forEach(radio => {
+                radio.addEventListener('change', (e) => {
+                    if (e.target.checked) {
+                        // Actualizar tipo de precisión en la propiedad
+                        if (this.currentProperty) {
+                            this.currentProperty.precision_ubicacion = e.target.value;
+                            // Actualizar visualización del mapa
+                            this.updateMapDisplay(e.target.value);
+                        }
+                    }
+                });
+            });
+        }
     }
 
     initializeAmenitiesAccordion() {
@@ -1890,16 +1906,17 @@ async handlePhoneRevealSubmit(e) {
     
             const data = await response.json();
             
+            // Busca esta sección en el método handleContactSubmit
             if (data.status === 'success') {
                 if (source === 'whatsapp') {
                     const phone = this.currentProperty.owner.mobile || this.currentProperty.owner.phone;
                     if (!phone) {
                         throw new Error('No hay número de teléfono disponible para WhatsApp');
                     }
-    
+
                     const messageField = document.getElementById('mensaje');
                     const message = messageField ? messageField.value : '';
-    
+
                     const cleanPhone = phone.replace(/\D/g, '');
                     const countryCode = formData.get('country_code').replace('+', '');
                     const encodedMessage = encodeURIComponent(message);
@@ -1907,14 +1924,23 @@ async handlePhoneRevealSubmit(e) {
                     window.open(`https://wa.me/${countryCode}${cleanPhone}?text=${encodedMessage}`, '_blank');
                 }
                 
+                // CAMBIA ESTA LÍNEA:
                 alert('Mensaje enviado correctamente');
+                
+                // POR ESTA CONDICIÓN:
+                if (source === 'email') {
+                    alert('Tu mensaje se ha enviado al asesor');
+                } else {
+                    alert('Mensaje enviado correctamente');
+                }
+                
                 form.reset();
-    
+
                 const messageField = document.getElementById('mensaje');
                 if (messageField) {
                     messageField.value = `¡Hola! Me interesa la propiedad "${this.currentProperty.title}" que vi en Master Broker.`;
                 }
-    
+
             } else {
                 throw new Error(data.message || 'Error al enviar el mensaje');
             }
@@ -1929,47 +1955,138 @@ async handlePhoneRevealSubmit(e) {
             console.log('Inicialización del mapa diferida - esperando datos o Google Maps');
             return;
         }
-
+    
         const mapContainer = document.getElementById('property-map');
         if (!mapContainer) {
             console.error('No se encontró el contenedor del mapa');
             return;
         }
-
+    
+        // Verificar la precisión de ubicación
+        const precisionType = this.currentProperty.precision_ubicacion || 'exact';
+        
         const propertyLocation = {
             lat: parseFloat(this.currentProperty.latitude),
             lng: parseFloat(this.currentProperty.longitude)
         };
-
+    
+        // Ajustar el zoom según la precisión
+        let zoomLevel = 15;
+        if (precisionType === 'approximate') {
+            zoomLevel = 14;
+        } else if (precisionType === 'hidden') {
+            zoomLevel = 13;
+        }
+    
         const mapOptions = {
             center: propertyLocation,
-            zoom: 15,
+            zoom: zoomLevel,
             mapTypeId: google.maps.MapTypeId.ROADMAP
         };
-
+    
         this.map = new google.maps.Map(mapContainer, mapOptions);
-
-        const customIcon = {
-            url: '/assets/img/pin.png',
-            scaledSize: new google.maps.Size(60, 60),
-            anchor: new google.maps.Point(30, 60),
-            origin: new google.maps.Point(0, 0)
-        };
-
-        this.marker = new google.maps.Marker({
-            position: propertyLocation,
-            map: this.map,
-            icon: customIcon,
-            title: this.currentProperty.title,
-            animation: google.maps.Animation.DROP
-        });
-
+        
+        // Crear marcador o círculo según el tipo de precisión
+        if (precisionType === 'exact') {
+            // Marcador exacto con ícono personalizado
+            const customIcon = {
+                url: '/assets/img/pin.png',
+                scaledSize: new google.maps.Size(60, 60),
+                anchor: new google.maps.Point(30, 60),
+                origin: new google.maps.Point(0, 0)
+            };
+    
+            this.marker = new google.maps.Marker({
+                position: propertyLocation,
+                map: this.map,
+                icon: customIcon,
+                title: this.currentProperty.title,
+                animation: google.maps.Animation.DROP
+            });
+        } else if (precisionType === 'approximate') {
+            // Círculo para ubicación aproximada
+            this.circle = new google.maps.Circle({
+                strokeColor: '#288cd5',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#288cd5',
+                fillOpacity: 0.35,
+                map: this.map,
+                center: propertyLocation,
+                radius: 500 // Radio en metros
+            });
+        }
+        // Para hidden no se muestra ningún marcador
+    
+        // Actualizar el mapa al cambiar de tamaño
         window.addEventListener('resize', () => {
             google.maps.event.trigger(this.map, 'resize');
             this.map.setCenter(propertyLocation);
         });
         
         this.mapInitialized = true;
+    }
+
+    updateMapDisplay(precisionType) {
+        if (!this.map || !this.currentProperty) return;
+        
+        const propertyLocation = {
+            lat: parseFloat(this.currentProperty.latitude),
+            lng: parseFloat(this.currentProperty.longitude)
+        };
+        
+        // Limpiar marcadores existentes
+        if (this.marker) {
+            this.marker.setMap(null);
+            this.marker = null;
+        }
+        
+        if (this.circle) {
+            this.circle.setMap(null);
+            this.circle = null;
+        }
+        
+        // Ajustar el zoom según la precisión
+        let zoomLevel = 15;
+        if (precisionType === 'approximate') {
+            zoomLevel = 14;
+        } else if (precisionType === 'hidden') {
+            zoomLevel = 13;
+        }
+        
+        this.map.setZoom(zoomLevel);
+        
+        // Crear marcador o círculo según el tipo de precisión
+        if (precisionType === 'exact') {
+            // Marcador exacto con ícono personalizado
+            const customIcon = {
+                url: '/assets/img/pin.png',
+                scaledSize: new google.maps.Size(60, 60),
+                anchor: new google.maps.Point(30, 60),
+                origin: new google.maps.Point(0, 0)
+            };
+    
+            this.marker = new google.maps.Marker({
+                position: propertyLocation,
+                map: this.map,
+                icon: customIcon,
+                title: this.currentProperty.title,
+                animation: google.maps.Animation.DROP
+            });
+        } else if (precisionType === 'approximate') {
+            // Círculo para ubicación aproximada
+            this.circle = new google.maps.Circle({
+                strokeColor: '#FF6B6B',
+                strokeOpacity: 0.8,
+                strokeWeight: 2,
+                fillColor: '#FF6B6B',
+                fillOpacity: 0.35,
+                map: this.map,
+                center: propertyLocation,
+                radius: 300 // Radio en metros
+            });
+        }
+        // Para hidden no se muestra ningún marcador
     }
 
     // Métodos del Modal

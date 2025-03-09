@@ -150,11 +150,12 @@ document.addEventListener('DOMContentLoaded', function() {
     </div>
     <div class="dashboard_container">
         <div class="filtros_publicaciones">
-            <label class="seleccionar_todas_publicaciones">
+            <label class="seleccionar_todas_publicaciones" style="display: none;">
                 <input type="checkbox">
                 <span></span>
                 <p>Se encontro<h5>0 publicaciones</h5></p>
             </label>
+            <!-- El indicador de propiedades se insertará aquí -->
             <div class="buscador_filtrado">
                 <div class="buscar_publicacion">
                     <input type="text" placeholder="Título / ID / Código / Dirección">
@@ -171,5 +172,7 @@ document.addEventListener('DOMContentLoaded', function() {
     <script src="/assets/js/components_private.js?v=1.0.1"></script>
     <script src="/assets/js/navigation.js?v=1.0.1"></script>
     <script src="/assets/js/session_check.js"></script>
+    <script src="/assets/js/subscription_modal.js"></script>
+    <script src="/assets/js/property_limit_indicator.js"></script>
 </body>
 </html>

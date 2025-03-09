@@ -1,5 +1,5 @@
 <?php
-// api/propiedades/get_property_stats.php
+// api/propiedades/get_publications.php
 
 require_once '../config/database.php';
 session_start();

@@ -2487,7 +2487,15 @@ class LeadDetailView {
     
                             <!-- Notas -->
                             <div class="bg-white rounded-lg shadow-sm p-4">
-                                <h3 class="font-semibold mb-4 text-gray-700">Notas</h3>
+                                <div class="flex justify-between items-center mb-4">
+                                    <h3 class="font-semibold text-gray-700">Notas</h3>
+                                    <button id="addNoteBtn" class="text-sm px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 flex items-center gap-1">
+                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/>
+                                        </svg>
+                                        Añadir Nota
+                                    </button>
+                                </div>
                                 <div id="leadDetailNotes" class="space-y-3">
                                     <!-- Se llenará dinámicamente -->
                                 </div>
@@ -2648,18 +2656,63 @@ class LeadDetailView {
     
         // Actualizar información de la propiedad
         const propertyContainer = document.getElementById('leadDetailProperty');
+        
+        // Determinar la información correcta de la propiedad
+        let propertyTitle = 'Sin propiedad asignada';
+        let propertyIdDisplay = '';
+        
+        if (lead.original_property_title) {
+            propertyTitle = lead.original_property_title;
+            if (lead.property_id) {
+                propertyIdDisplay = ` (ID: ${lead.property_id})`;
+            }
+        } else if (lead.property_title) {
+            propertyTitle = lead.property_title;
+        }
+        
         propertyContainer.innerHTML = `
             <div class="flex items-center gap-2 text-gray-600">
                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
                     <polyline points="9 22 9 12 15 12 15 22"/>
                 </svg>
-                <span>${lead.property_title || 'Sin propiedad asignada'}</span>
+                <span>${propertyTitle}${propertyIdDisplay}</span>
             </div>
             ${lead.property_description ? `
                 <p class="mt-2 text-gray-600">${lead.property_description}</p>
             ` : ''}
         `;
+    
+        // Sección de acciones - añadir botón discreto de eliminar lead
+        const actionsContainer = document.querySelector('#leadDetailModal .lg\\:w-96 .bg-white:first-child .space-y-2');
+
+        // Comprobar si ya existe el botón para no duplicarlo
+        if (actionsContainer && !actionsContainer.querySelector('[data-action="delete-lead"]')) {
+            // Crear un separador
+            const separator = document.createElement('div');
+            separator.className = 'border-t my-3 pt-3';
+            actionsContainer.appendChild(separator);
+            
+            // Crear el enlace de eliminar lead
+            const deleteLink = document.createElement('button');
+            deleteLink.setAttribute('data-action', 'delete-lead');
+            deleteLink.className = 'text-sm text-gray-500 hover:text-red-600 flex items-center justify-center gap-1 w-full mt-1';
+            deleteLink.innerHTML = `
+                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                        d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                </svg>
+                Eliminar lead
+            `;
+            
+            // Añadir el manejador de eventos
+            deleteLink.addEventListener('click', () => {
+                this.confirmDeleteLead(this.currentLead.id);
+            });
+            
+            // Añadir el enlace al contenedor
+            actionsContainer.appendChild(deleteLink);
+        }
     
         // Actualizar timeline de actividades
         this.updateTimeline(lead);
@@ -2669,6 +2722,17 @@ class LeadDetailView {
         
         // Añadir la sección de documentos
         this.addDocumentSection();
+        
+        // Cargar notas
+        this.loadLeadNotes();
+        
+        // Añadir event listener al botón de añadir nota
+        const addNoteBtn = document.getElementById('addNoteBtn');
+        if (addNoteBtn) {
+            addNoteBtn.addEventListener('click', () => {
+                this.showAddNoteForm();
+            });
+        }
     }
 
     scheduleVisit() {
@@ -2985,6 +3049,126 @@ class LeadDetailView {
                 </div>
             `);
         }
+    }
+
+    // Añadir este método a la clase LeadDetailView
+    confirmDeleteLead(leadId) {
+        if (!leadId) return;
+        
+        // Crear modal de confirmación
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content max-w-md">
+                <div class="p-6">
+                    <h3 class="text-xl font-semibold mb-4 text-center">Eliminar Lead</h3>
+                    <div class="bg-red-50 border-l-4 border-red-500 p-4 mb-4">
+                        <div class="flex items-center">
+                            <svg class="w-5 h-5 text-red-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"/>
+                            </svg>
+                            <p class="text-sm text-red-700 font-medium">
+                                ¿Estás seguro de que deseas eliminar este lead?
+                            </p>
+                        </div>
+                    </div>
+                    <p class="text-gray-600 mb-4">
+                        Esta acción ocultará el lead del tablero Kanban y las listas, pero los datos permanecerán en la base de datos por razones de auditoría. Puedes añadir un motivo para la eliminación:
+                    </p>
+                    <div class="mb-4">
+                        <label for="deleteReason" class="block text-sm font-medium mb-1">Motivo de eliminación (opcional)</label>
+                        <textarea id="deleteReason" rows="3" class="w-full p-2 border rounded" 
+                                placeholder="Escribe el motivo por el que eliminas este lead..."></textarea>
+                    </div>
+                    <div class="flex justify-end gap-3 pt-2">
+                        <button type="button" id="cancelDeleteLead" class="px-4 py-2 border rounded hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button type="button" id="confirmDeleteLead" class="px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                    d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                            Eliminar Lead
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Event listeners para los botones
+        document.getElementById('cancelDeleteLead').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        document.getElementById('confirmDeleteLead').addEventListener('click', async () => {
+            try {
+                // Obtener el motivo de eliminación
+                const reason = document.getElementById('deleteReason').value.trim();
+                
+                // Cambiar el botón a estado de carga
+                const confirmButton = document.getElementById('confirmDeleteLead');
+                confirmButton.disabled = true;
+                confirmButton.innerHTML = `
+                    <svg class="animate-spin -ml-1 mr-2 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                        <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
+                        <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                    </svg>
+                    Eliminando...
+                `;
+                
+                // Realizar la solicitud de eliminación
+                const response = await fetch('/api/crm/leads/delete_lead.php', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({
+                        lead_id: leadId,
+                        reason: reason
+                    })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    this.leadManager.showNotification('Lead eliminado correctamente', 'success');
+                    
+                    // Cerrar el modal de confirmación
+                    modal.remove();
+                    
+                    // Cerrar el modal de detalles
+                    this.close();
+                    
+                    // Recargar los leads para actualizar el tablero
+                    await this.leadManager.loadLeads();
+                    this.leadManager.initializeBoard();
+                } else {
+                    throw new Error(result.message || 'Error al eliminar el lead');
+                }
+            } catch (error) {
+                console.error('Error eliminando lead:', error);
+                this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+                
+                // Restaurar el botón
+                const confirmButton = document.getElementById('confirmDeleteLead');
+                if (confirmButton) {
+                    confirmButton.disabled = false;
+                    confirmButton.innerHTML = `
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" 
+                                d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                        </svg>
+                        Eliminar Lead
+                    `;
+                }
+            }
+        });
     }
 
     addDocumentSection() {
@@ -3897,6 +4081,324 @@ class LeadDetailView {
         }
     }
 
+    // Método para cargar notas desde el servidor
+    async loadLeadNotes() {
+        if (!this.currentLead) return;
+        
+        try {
+            const response = await fetch(`/api/crm/leads/lead_notes.php?lead_id=${this.currentLead.id}`);
+            const data = await response.json();
+            
+            const notesContainer = document.getElementById('leadDetailNotes');
+            
+            if (data.success && data.notes && data.notes.length > 0) {
+                notesContainer.innerHTML = data.notes.map(note => this.renderNoteItem(note)).join('');
+                
+                // Añadir eventos a los botones de acciones
+                document.querySelectorAll('.edit-note-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const noteId = e.currentTarget.dataset.noteId;
+                        this.editNote(noteId);
+                    });
+                });
+                
+                document.querySelectorAll('.delete-note-btn').forEach(btn => {
+                    btn.addEventListener('click', (e) => {
+                        const noteId = e.currentTarget.dataset.noteId;
+                        this.confirmDeleteNote(noteId);
+                    });
+                });
+            } else {
+                notesContainer.innerHTML = '<p class="text-gray-500 text-sm">No hay notas para este lead.</p>';
+            }
+        } catch (error) {
+            console.error('Error cargando notas:', error);
+            document.getElementById('leadDetailNotes').innerHTML = '<p class="text-red-500 text-sm">Error al cargar las notas.</p>';
+        }
+    }
+
+    // Renderizar una nota individual
+    renderNoteItem(note) {
+        return `
+            <div class="note-item bg-gray-50 p-3 rounded border-l-4 border-blue-500 relative">
+                <div class="flex justify-between items-start">
+                    <div class="flex items-start gap-2">
+                        <div>
+                            <h4 class="font-medium">${note.title || 'Nota'}</h4>
+                            <p class="text-sm mt-1">${note.content}</p>
+                        </div>
+                    </div>
+                    <div class="flex items-center gap-1">
+                        <button data-note-id="${note.id}" class="edit-note-btn text-gray-500 hover:text-blue-600" title="Editar">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                            </svg>
+                        </button>
+                        <button data-note-id="${note.id}" class="delete-note-btn text-gray-500 hover:text-red-600" title="Eliminar">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+                <div class="text-xs text-gray-500 mt-2 flex items-center justify-between">
+                    <span style="font-size:12px;">Por: ${note.user_name || 'Usuario'}</span>
+                    <span style="font-size:12px;">${this.leadManager.formatDateTime(note.created_at)}</span>
+                </div>
+            </div>
+        `;
+    }
+
+    // Método para mostrar el formulario de añadir nota
+    showAddNoteForm() {
+        // Crear el modal de nota
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content max-w-md">
+                <div>
+                    <h3 class="text-lg font-semibold mb-4">Añadir Nota</h3>
+                    <form id="addNoteForm" class="space-y-4">
+                        <input type="hidden" id="noteLeadId" value="${this.currentLead.id}">
+                        <input type="hidden" id="noteId" value="">
+                        
+                        <div>
+                            <label for="noteTitle" class="block text-sm font-medium mb-1">Título (opcional)</label>
+                            <input type="text" id="noteTitle" class="w-full p-2 border rounded" placeholder="Título de la nota">
+                        </div>
+                        
+                        <div>
+                            <label for="noteContent" class="block text-sm font-medium mb-1">Contenido</label>
+                            <textarea id="noteContent" rows="4" class="w-full p-2 border rounded" placeholder="Contenido de la nota" required></textarea>
+                        </div>
+                        
+                        <div class="flex justify-end gap-3 pt-2">
+                            <button type="button" id="cancelNoteBtn" class="px-4 py-2 border rounded hover:bg-gray-50">
+                                Cancelar
+                            </button>
+                            <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                Guardar Nota
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Configurar los event listeners
+        document.getElementById('cancelNoteBtn').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        document.getElementById('addNoteForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            
+            const noteId = document.getElementById('noteId').value;
+            const noteData = {
+                lead_id: document.getElementById('noteLeadId').value,
+                title: document.getElementById('noteTitle').value.trim(),
+                content: document.getElementById('noteContent').value.trim()
+            };
+            
+            try {
+                // Determinar si es añadir o editar
+                const isEdit = noteId !== '';
+                const url = '/api/crm/leads/lead_notes.php';
+                const method = isEdit ? 'PUT' : 'POST';
+                
+                if (isEdit) {
+                    noteData.id = noteId;
+                }
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify(noteData)
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    this.leadManager.showNotification(
+                        isEdit ? 'Nota actualizada correctamente' : 'Nota añadida correctamente',
+                        'success'
+                    );
+                    modal.remove();
+                    this.loadLeadNotes(); // Recargar notas
+                } else {
+                    throw new Error(result.message || 'Error al guardar la nota');
+                }
+            } catch (error) {
+                console.error('Error guardando nota:', error);
+                this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+            }
+        });
+    }
+
+    // Método para editar una nota existente
+    editNote(noteId) {
+        if (!this.currentLead) return;
+        
+        // Primero obtenemos los datos de la nota
+        fetch(`/api/crm/leads/lead_notes.php?note_id=${noteId}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.note) {
+                    // Mostrar formulario de edición con los datos cargados
+                    const note = data.note;
+                    
+                    // Crear el modal igual que en addNote pero con los datos cargados
+                    const modal = document.createElement('div');
+                    modal.className = 'modal';
+                    modal.style.display = 'flex';
+                    modal.innerHTML = `
+                        <div class="modal-content max-w-md">
+                            <div class="p-6">
+                                <h3 class="text-lg font-semibold mb-4">Editar Nota</h3>
+                                <form id="editNoteForm" class="space-y-4">
+                                    <input type="hidden" id="noteLeadId" value="${this.currentLead.id}">
+                                    <input type="hidden" id="noteId" value="${note.id}">
+                                    
+                                    <div>
+                                        <label for="noteTitle" class="block text-sm font-medium mb-1">Título (opcional)</label>
+                                        <input type="text" id="noteTitle" class="w-full p-2 border rounded" 
+                                            placeholder="Título de la nota" value="${note.title || ''}">
+                                    </div>
+                                    
+                                    <div>
+                                        <label for="noteContent" class="block text-sm font-medium mb-1">Contenido</label>
+                                        <textarea id="noteContent" rows="4" class="w-full p-2 border rounded" 
+                                                placeholder="Contenido de la nota" required>${note.content || ''}</textarea>
+                                    </div>
+                                    
+                                    <div class="flex justify-end gap-3 pt-2">
+                                        <button type="button" id="cancelNoteBtn" class="px-4 py-2 border rounded hover:bg-gray-50">
+                                            Cancelar
+                                        </button>
+                                        <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
+                                            Actualizar Nota
+                                        </button>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    `;
+                    
+                    document.body.appendChild(modal);
+                    
+                    // Configurar los event listeners igual que en addNote
+                    document.getElementById('cancelNoteBtn').addEventListener('click', () => {
+                        modal.remove();
+                    });
+                    
+                    document.getElementById('editNoteForm').addEventListener('submit', async (e) => {
+                        e.preventDefault();
+                        
+                        const noteData = {
+                            id: document.getElementById('noteId').value,
+                            lead_id: document.getElementById('noteLeadId').value,
+                            title: document.getElementById('noteTitle').value.trim(),
+                            content: document.getElementById('noteContent').value.trim()
+                        };
+                        
+                        try {
+                            const response = await fetch('/api/crm/leads/lead_notes.php', {
+                                method: 'PUT',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                credentials: 'include',
+                                body: JSON.stringify(noteData)
+                            });
+                            
+                            const result = await response.json();
+                            
+                            if (result.success) {
+                                this.leadManager.showNotification('Nota actualizada correctamente', 'success');
+                                modal.remove();
+                                this.loadLeadNotes(); // Recargar notas
+                            } else {
+                                throw new Error(result.message || 'Error al actualizar la nota');
+                            }
+                        } catch (error) {
+                            console.error('Error actualizando nota:', error);
+                            this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+                        }
+                    });
+                } else {
+                    this.leadManager.showNotification('No se pudo cargar la nota', 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error obteniendo nota:', error);
+                this.leadManager.showNotification('Error al obtener datos de la nota', 'error');
+            });
+    }
+
+    // Método para confirmar y eliminar una nota
+    confirmDeleteNote(noteId) {
+        // Crear modal de confirmación
+        const modal = document.createElement('div');
+        modal.className = 'modal';
+        modal.style.display = 'flex';
+        modal.innerHTML = `
+            <div class="modal-content max-w-md">
+                <div class="p-6">
+                    <h3 class="text-lg font-semibold mb-4">Confirmar eliminación</h3>
+                    <p class="text-gray-600 mb-4">¿Estás seguro de que deseas eliminar esta nota? Esta acción no se puede deshacer.</p>
+                    <div class="flex justify-end gap-3">
+                        <button id="cancelDeleteNote" class="px-4 py-2 border rounded hover:bg-gray-50">
+                            Cancelar
+                        </button>
+                        <button id="confirmDeleteNote" class="px-4 py-2 text-white rounded bg-red-600 hover:bg-red-700">
+                            Eliminar nota
+                        </button>
+                    </div>
+                </div>
+            </div>
+        `;
+        
+        document.body.appendChild(modal);
+        
+        // Event listeners para los botones
+        document.getElementById('cancelDeleteNote').addEventListener('click', () => {
+            modal.remove();
+        });
+        
+        document.getElementById('confirmDeleteNote').addEventListener('click', async () => {
+            try {
+                const response = await fetch('/api/crm/leads/lead_notes.php', {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    },
+                    credentials: 'include',
+                    body: JSON.stringify({ id: noteId })
+                });
+                
+                const result = await response.json();
+                
+                if (result.success) {
+                    this.leadManager.showNotification('Nota eliminada correctamente', 'success');
+                    modal.remove();
+                    this.loadLeadNotes(); // Recargar notas
+                } else {
+                    throw new Error(result.message || 'Error al eliminar la nota');
+                }
+            } catch (error) {
+                console.error('Error eliminando nota:', error);
+                this.leadManager.showNotification(`Error: ${error.message}`, 'error');
+                modal.remove();
+            }
+        });
+    }
+
     updateTimeline(lead) {
         const timelineContainer = document.getElementById('leadDetailTimeline');
         const activities = lead.activities ? JSON.parse(lead.activities) : [];
@@ -4678,7 +5180,6 @@ class LeadManager {
                 <option value="llamada">Llamada</option>
                 <option value="email">Email</option>
                 <option value="mensaje">Mensaje</option>
-                <option value="nota">Nota</option>
             `;
         }
     

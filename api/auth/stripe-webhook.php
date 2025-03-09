@@ -79,6 +79,10 @@ try {
     exit();
 }
 
+function webhook_log($message) {
+    error_log($message);
+}
+
 // Función para crear las tablas si no existen
 function createTablesIfNotExist($pdo) {
     // Tabla de eventos de Stripe
@@ -330,83 +334,7 @@ function handleNewSubscription($subscription, $pdo) {
     }
 }
 
-// Función para manejar actualizaciones de suscripción
-function handleSubscriptionUpdate($subscription, $pdo) {
-    try {
-        // Buscar la suscripción en nuestra base de datos por ID de suscripción de Stripe
-        $stmt = $pdo->prepare("
-            SELECT * FROM subscriptions 
-            WHERE stripe_subscription_id = ?
-        ");
-        $stmt->execute([$subscription->id]);
-        $localSub = $stmt->fetch(PDO::FETCH_ASSOC);
-        
-        if (!$localSub) {
-            // Si no existe, buscar por customer_id (por si acaso)
-            $stmt = $pdo->prepare("
-                SELECT * FROM subscriptions 
-                WHERE stripe_customer_id = ?
-            ");
-            $stmt->execute([$subscription->customer]);
-            $localSub = $stmt->fetch(PDO::FETCH_ASSOC);
-            
-            if (!$localSub) {
-                error_log("No se encontró la suscripción local para actualizar: " . $subscription->id);
-                return;
-            }
-        }
-        
-        // Determinar tipo de plan y ciclo
-        $oldPlanType = $localSub['plan_type'];
-        $oldBillingCycle = $localSub['billing_cycle'];
-        
-        // Obtener el nuevo tipo de plan y ciclo
-        $priceId = $subscription->items->data[0]->price->id;
-        $newPlanType = determinePlanType($priceId);
-        $newBillingCycle = determineBillingCycle($priceId);
-        
-        // Registrar el cambio si hubo modificación
-        if ($newPlanType !== $oldPlanType || $newBillingCycle !== $oldBillingCycle) {
-            logSubscriptionChange(
-                $localSub['user_id'], 
-                $oldPlanType, 
-                $newPlanType,
-                $oldBillingCycle,
-                $newBillingCycle,
-                $pdo
-            );
-        }
-        
-        // Actualizar en la base de datos
-        $stmt = $pdo->prepare("
-            UPDATE subscriptions 
-            SET status = ?,
-                plan_type = ?,
-                billing_cycle = ?,
-                current_period_start = FROM_UNIXTIME(?),
-                current_period_end = FROM_UNIXTIME(?),
-                updated_at = NOW()
-            WHERE id = ?
-        ");
-        
-        $stmt->execute([
-            $subscription->status,
-            $newPlanType,
-            $newBillingCycle,
-            $subscription->current_period_start,
-            $subscription->current_period_end,
-            $localSub['id']
-        ]);
-        
-        // Actualizar límites del usuario
-        updateUserLimits($localSub['user_id'], $newPlanType, $pdo);
-        
-    } catch (Exception $e) {
-        error_log('Error al procesar actualización de suscripción: ' . $e->getMessage());
-    }
-}
-
-// Función para manejar cancelaciones de suscripción
+// Función para manejar la cancelación de suscripciones
 function handleSubscriptionCancellation($subscription, $pdo) {
     try {
         // Buscar la suscripción en nuestra base de datos
@@ -422,26 +350,88 @@ function handleSubscriptionCancellation($subscription, $pdo) {
             return;
         }
         
-        // Actualizar la suscripción como cancelada
+        // Actualizar el estado de la suscripción y registrar la fecha de cancelación
         $stmt = $pdo->prepare("
             UPDATE subscriptions 
             SET status = ?,
-                cancelled_at = FROM_UNIXTIME(?),
+                cancelled_at = NOW(),
                 updated_at = NOW()
             WHERE id = ?
         ");
         
-        $canceledAt = $subscription->canceled_at ?? time();
-        
         $stmt->execute([
-            $subscription->status,
-            $canceledAt,
+            $subscription->status, // Normalmente 'canceled'
             $localSub['id']
         ]);
-
+        
+        // Opcionalmente, si quieres volver al plan gratuito o actualizar algún otro límite
+        // cuando la suscripción es cancelada, puedes hacerlo aquí
+        updateUserLimits($localSub['user_id'], 'free', $pdo);
         
     } catch (Exception $e) {
         error_log('Error al procesar cancelación de suscripción: ' . $e->getMessage());
+    }
+}
+
+// Función para manejar actualizaciones de suscripción
+function handleSubscriptionUpdate($subscription, $pdo) {
+    try {
+        // Obtener el ID de precio directamente
+        $priceId = $subscription->items->data[0]->price->id;
+        
+        // Encontrar la suscripción en la base de datos
+        $stmt = $pdo->prepare("SELECT * FROM subscriptions WHERE stripe_subscription_id = ?");
+        $stmt->execute([$subscription->id]);
+        $localSub = $stmt->fetch(PDO::FETCH_ASSOC);
+        
+        if (!$localSub) {
+            return;
+        }
+        
+        // Mapeo directo de planes
+        $planMap = [
+            'price_1QzVfYCorMZEmsUnOLzbG1IF' => 'basic',        // básico mensual
+            'price_1QzWEtCorMZEmsUncToobQdL' => 'professional', // profesional mensual
+            'price_1QzWbuCorMZEmsUnDY7sg1zN' => 'basic',        // básico anual
+            'price_1QzWedCorMZEmsUn4TmudeJi' => 'professional'  // profesional anual
+        ];
+        
+        // Determinar tipo de plan directamente
+        if (isset($planMap[$priceId])) {
+            $newPlanType = $planMap[$priceId];
+        } else {
+            $newPlanType = 'basic'; // default
+        }
+        
+        // Determinar ciclo de facturación
+        $billingCycle = $subscription->items->data[0]->plan->interval == 'year' ? 'annual' : 'monthly';
+        
+        // Actualizar la base de datos directamente con los valores determinados
+        $stmt = $pdo->prepare("
+            UPDATE subscriptions 
+            SET status = ?,
+                plan_type = ?,
+                billing_cycle = ?,
+                current_period_start = FROM_UNIXTIME(?),
+                current_period_end = FROM_UNIXTIME(?),
+                updated_at = NOW()
+            WHERE id = ?
+        ");
+        
+        $stmt->execute([
+            $subscription->status,
+            $newPlanType,
+            $billingCycle,
+            $subscription->current_period_start,
+            $subscription->current_period_end,
+            $localSub['id']
+        ]);
+        
+        // Actualizar límites del usuario
+        updateUserLimits($localSub['user_id'], $newPlanType, $pdo);
+        
+    } catch (Exception $e) {
+        error_log('Error al procesar actualización de suscripción: ' . $e->getMessage());
     }
 }
 
@@ -494,8 +484,6 @@ function handleInvoicePayment($invoice, $pdo) {
             $invoice->hosted_invoice_url ?? null
         ]);
         
-
-        
     } catch (Exception $e) {
         error_log('Error al procesar pago de factura: ' . $e->getMessage());
     }
@@ -519,8 +507,6 @@ function handleInvoiceFailure($invoice, $pdo) {
         $stmt->execute([$invoice->subscription]);
         $localSub = $stmt->fetch(PDO::FETCH_ASSOC);
         
-
-        
     } catch (Exception $e) {
         error_log('Error al procesar fallo de factura: ' . $e->getMessage());
     }
@@ -528,34 +514,55 @@ function handleInvoiceFailure($invoice, $pdo) {
 
 // Función para determinar tipo de plan basado en ID de precio
 function determinePlanType($priceId) {
-    // Mapeo de IDs de precio a tipos de plan
-    $planTypes = [
-        // Plan Básico (mensual y anual)
-        'price_1QygzwCorMZEmsUnLV6Vryxx' => 'basic',
-        'price_1Qz0LqCorMZEmsUn2cNGiIun' => 'basic',
-        
-        // Plan Profesional (mensual y anual)
-        'price_1Qz0EECorMZEmsUnnJ8WyTyB' => 'professional',
-        'price_1Qz0Q7CorMZEmsUncUX9Wj67' => 'professional'
+    // Mapeo directo y explícito
+    $planMap = [
+        'price_1QygdpCorMZEmsUn1Dm4jm6z' => 'basic',        // básico mensual
+        'price_1Qygi3CorMZEmsUnqDmcZh8b' => 'professional', // profesional mensual
+        'price_1QyzAwCorMZEmsUneNSQSpSL' => 'basic',        // básico anual
+        'price_1QyzCKCorMZEmsUnm9KFOuBa' => 'professional'  // profesional anual
     ];
     
-    return $planTypes[$priceId] ?? 'basic'; // Default a básico si no se encuentra
+    // Verificación directa del precio
+    if (isset($planMap[$priceId])) {
+        return $planMap[$priceId];
+    }
+    
+    return 'basic'; // Default a básico si no se encuentra
 }
 
 // Función para determinar ciclo de facturación basado en ID de precio
 function determineBillingCycle($priceId) {
-    // Mapeo de IDs de precio a ciclos de facturación
-    $billingCycles = [
-        // Planes mensuales
-        'price_1QygzwCorMZEmsUnLV6Vryxx' => 'monthly',
-        'price_1Qz0EECorMZEmsUnnJ8WyTyB' => 'monthly',
-        
-        // Planes anuales
-        'price_1Qz0LqCorMZEmsUn2cNGiIun' => 'annual',
-        'price_1Qz0Q7CorMZEmsUncUX9Wj67' => 'annual'
+    // Mapeo para entorno de prueba
+    $testBillingCycles = [
+        'price_1QzVfYCorMZEmsUnOLzbG1IF' => 'monthly', // 1: básico mensual
+        'price_1QzWEtCorMZEmsUncToobQdL' => 'monthly', // 2: profesional mensual
+        'price_1QzWbuCorMZEmsUnDY7sg1zN' => 'annual',  // 3: básico anual
+        'price_1QzWedCorMZEmsUn4TmudeJi' => 'annual'   // 4: profesional anual
     ];
     
-    return $billingCycles[$priceId] ?? 'monthly'; // Default a mensual si no se encuentra
+    // Mapeo para entorno de producción
+    $prodBillingCycles = [
+        'price_1QygdpCorMZEmsUn1Dm4jm6z' => 'basic',        // básico mensual
+        'price_1Qygi3CorMZEmsUnqDmcZh8b' => 'professional', // profesional mensual
+        'price_1QyzAwCorMZEmsUneNSQSpSL' => 'basic',        // básico anual
+        'price_1QyzCKCorMZEmsUnm9KFOuBa' => 'professional'  // profesional anual
+    ];
+    
+    // Determinar qué conjunto de mapeos usar
+    $isTestMode = (isset($GLOBALS['stripeConfig']['livemode']) && $GLOBALS['stripeConfig']['livemode'] === false);
+    $billingCycles = $isTestMode ? $testBillingCycles : $prodBillingCycles;
+    
+    // Verificar si el ID existe en el mapeo
+    if (isset($billingCycles[$priceId])) {
+        return $billingCycles[$priceId];
+    } else {
+        // Intentar inferir del intervalo del plan si está disponible
+        if (isset($GLOBALS['current_plan_interval']) && $GLOBALS['current_plan_interval'] === 'year') {
+            return 'annual';
+        }
+        
+        return 'monthly'; // Default a mensual si no se encuentra
+    }
 }
 
 // Función para actualizar límites del usuario según el plan
@@ -572,8 +579,12 @@ function updateUserLimits($userId, $planType, $pdo) {
                 'tokens_limit' => 20000
             ],
             'premium' => [
-                'properties_limit' => 30,
-                'tokens_limit' => 50000
+                'properties_limit' => 25,
+                'tokens_limit' => 40000
+            ],
+            'unlimited' => [
+                'properties_limit' => 'Ilimitado',
+                'tokens_limit' => 'Ilimitado'
             ]
         ];
         
