@@ -7,12 +7,48 @@ class MultimediaHandler {
         this.uploadedImages = [];
         this.videos = [];
         this.isUploading = false;
+        this.imageLimit = 40; // Valor predeterminado antes de verificar
+        this.planInfo = null;
 
         // Inicializar
-        this.initializeEventListeners();
-        this.loadExistingMedia();
+        this.checkImageLimit().then(() => {
+            this.initializeEventListeners();
+            this.loadExistingMedia();
+            this.updateLimitText();
+        });
     }
 
+    async checkImageLimit() {
+        try {
+            const response = await fetch(`/api/propiedades/verificar_limite_imagenes.php?id=${this.propertyId}`);
+            const data = await response.json();
+            
+            if (data.success) {
+                this.imageLimit = data.limite;
+                this.planInfo = {
+                    plan: data.plan,
+                    ciclo: data.ciclo,
+                    esAdmin: data.es_admin
+                };
+                console.log(`Límite de imágenes: ${this.imageLimit}`);
+            } else {
+                console.warn(`No se pudo obtener el límite de imágenes: ${data.error}`);
+                // Usar límite predeterminado
+            }
+        } catch (error) {
+            console.error('Error al verificar límite de imágenes:', error);
+        }
+    }
+
+    updateLimitText() {
+        // Actualizar el texto informativo según el límite
+        const infoText = document.querySelector('.container_publicador p');
+        if (infoText) {
+            infoText.textContent = `Sube de 6 a ${this.imageLimit} fotos en formato JPG, JPEG o PNG (tamaño desde 500 x 500px hasta 6000 x 6000px). Una vez cargadas, podrás ordenarlas arrastrándolas.`;
+        }
+    }
+
+    // Sobreescribir loadExistingMedia para agregar verificación de límites
     async loadExistingMedia() {
         try {
             showLoader();
@@ -22,6 +58,11 @@ class MultimediaHandler {
             if (data.success) {
                 // Cargar imágenes existentes
                 if (data.images && data.images.length > 0) {
+                    if (data.images.length > this.imageLimit) {
+                        // Si tiene más imágenes que el límite permitido, mostrar advertencia
+                        showToast(`Tienes ${data.images.length} imágenes pero tu plan actual permite ${this.imageLimit}. No podrás agregar más imágenes hasta que elimines algunas.`, 'warning');
+                    }
+                    
                     data.images.forEach(image => {
                         this.createImageElement(image.file_path, true, image);
                     });
@@ -35,6 +76,7 @@ class MultimediaHandler {
                 }
                 
                 this.updateProgressBar();
+                this.updateImageCounter();
             }
         } catch (error) {
             console.error('Error al cargar multimedia:', error);
@@ -140,10 +182,14 @@ class MultimediaHandler {
     async handleFileSelect(event) {
         const files = event.target.files;
         
-        // Verificar límite de imágenes
+        // Verificar límite de imágenes según plan
         const totalImages = this.container.getElementsByClassName('imagen_cargada').length;
-        if (totalImages + files.length > 40) {
-            showToast('No puedes subir más de 40 imágenes', 'error');
+        if (totalImages + files.length > this.imageLimit) {
+            showToast(`Tu plan actual permite subir hasta ${this.imageLimit} imágenes por propiedad`, 'error');
+            // Opcional: Mostrar mensaje para actualizar plan
+            if (!this.planInfo?.esAdmin) {
+                this.showUpgradePlanMessage();
+            }
             return;
         }
 
@@ -163,6 +209,118 @@ class MultimediaHandler {
         hideLoader();
 
         this.updateProgressBar();
+        this.updateImageCounter();
+    }
+
+    // Método para mostrar el contador actual de imágenes
+    updateImageCounter() {
+        const totalImages = this.container.getElementsByClassName('imagen_cargada').length;
+        const counterElement = document.querySelector('.image-counter');
+        
+        if (!counterElement) {
+            // Crear el contador si no existe
+            const counter = document.createElement('div');
+            counter.className = 'image-counter';
+            
+            // Determinar color según cercanía al límite
+            let statusClass = 'counter-normal';
+            const percentage = (totalImages / this.imageLimit) * 100;
+            
+            if (percentage >= 90) {
+                statusClass = 'counter-danger';
+            } else if (percentage >= 70) {
+                statusClass = 'counter-warning';
+            }
+            
+            counter.className = `image-counter ${statusClass}`;
+            counter.innerHTML = `<span>${totalImages}/${this.imageLimit} imágenes</span>`;
+            
+            // Insertar después del título de Fotos
+            const headerElement = document.querySelector('.container_publicador h3');
+            if (headerElement) {
+                headerElement.parentNode.insertBefore(counter, headerElement.nextSibling);
+            }
+        } else {
+            // Actualizar el contador existente
+            counterElement.innerHTML = `<span>${totalImages}/${this.imageLimit} imágenes</span>`;
+            
+            // Actualizar clase según cercanía al límite
+            const percentage = (totalImages / this.imageLimit) * 100;
+            counterElement.className = 'image-counter';
+            
+            if (percentage >= 90) {
+                counterElement.classList.add('counter-danger');
+            } else if (percentage >= 70) {
+                counterElement.classList.add('counter-warning');
+            } else {
+                counterElement.classList.add('counter-normal');
+            }
+        }
+    }
+
+    showUpgradePlanMessage() {
+        // Verificar si ya existe el mensaje
+        if (document.querySelector('.upgrade-plan-message')) return;
+        
+        const messageContainer = document.createElement('div');
+        messageContainer.className = 'upgrade-plan-message';
+        messageContainer.innerHTML = `
+            <p>¿Necesitas subir más imágenes? <a href="/planes.html" class="upgrade-link">Mejora tu plan</a> para subir hasta 35 imágenes por propiedad.</p>
+        `;
+        
+        // Insertar después del container de imágenes
+        this.container.parentNode.insertBefore(messageContainer, this.container.nextSibling);
+        
+        // Agregar estilos si no existen
+        if (!document.getElementById('upgrade-plan-styles')) {
+            const style = document.createElement('style');
+            style.id = 'upgrade-plan-styles';
+            style.textContent = `
+                .upgrade-plan-message {
+                    margin: 15px 0;
+                    padding: 12px 15px;
+                    background-color: #f0f4f9;
+                    border: 1px solid #d0d9e4;
+                    border-radius: 8px;
+                    font-size: 14px;
+                }
+                
+                .upgrade-link {
+                    color: var(--principal);
+                    font-weight: bold;
+                    text-decoration: none;
+                }
+                
+                .upgrade-link:hover {
+                    text-decoration: underline;
+                }
+                
+                .image-counter {
+                    display: inline-flex;
+                    align-items: center;
+                    margin-left: 15px;
+                    padding: 4px 10px;
+                    border-radius: 20px;
+                    font-size: 14px;
+                }
+                
+                .counter-normal {
+                    background-color: #e8f5e9;
+                    color: #2e7d32;
+                }
+                
+                .counter-warning {
+                    background-color: #fff3e0;
+                    color: #ef6c00;
+                }
+                
+                .counter-danger {
+                    background-color: #ffebee;
+                    color: #c62828;
+                }
+            `;
+            document.head.appendChild(style);
+        }
     }
 
     createImageElement(src, isExisting, data = {}) {

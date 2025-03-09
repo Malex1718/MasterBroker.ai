@@ -1,6 +1,6 @@
 // Configuración del entorno
 const ENV = {
-    isTestMode: true, // Cambiar a false en producción
+    isTestMode: false, // Cambiar a false en producción
     stripePublishableKey: 'pk_test_51QwoDVCorMZEmsUnDz1rVqPRdpgHEM7bVLufMNzm8vg1ErwvzqN9VI0QtxB56ICHRuHpjNDGxCqqu0cwUtf4N2PH00Hj24DDNR', // Reemplazar con la clave adecuada según el entorno
     planPrices: {
         // Mapeo de IDs locales a IDs de precio de Stripe
@@ -13,10 +13,10 @@ const ENV = {
         },
         // Production mode
         production: {
-            '1': 'price_1QygzwCorMZEmsUnLV6Vryxx',
-            '2': 'price_1Qz0EECorMZEmsUnnJ8WyTyB',
-            '3': 'price_1Qz0LqCorMZEmsUn2cNGiIun',
-            '4': 'price_1Qz0Q7CorMZEmsUncUX9Wj67'
+            '1': 'price_1QygdpCorMZEmsUn1Dm4jm6z',   // básico mensual
+            '2': 'price_1Qygi3CorMZEmsUnqDmcZh8b',   // profesional mensual
+            '3': 'price_1QyzAwCorMZEmsUneNSQSpSL',   // básico anual
+            '4': 'price_1QyzCKCorMZEmsUnm9KFOuBa'    // profesional anual
         }
     }
 };
@@ -93,13 +93,21 @@ document.addEventListener('DOMContentLoaded', function() {
             // Obtener el ID de precio correspondiente según el modo
             const priceMode = ENV.isTestMode ? 'test' : 'production';
             const priceId = ENV.planPrices[priceMode][planId];
-            
+
             if (!priceId) {
                 console.error('ID de precio no encontrado para el plan:', planId);
                 alert('Error en la configuración del plan. Por favor, intenta más tarde.');
                 return;
             }
-            
+
+            // Añade estos logs aquí
+            console.log('Configuración:', {
+                isTestMode: ENV.isTestMode,
+                priceMode: priceMode,
+                planId: planId,
+                priceId: priceId
+            });
+
             // Deshabilitar botón y mostrar carga
             this.disabled = true;
             const originalText = this.innerHTML;
@@ -114,6 +122,13 @@ document.addEventListener('DOMContentLoaded', function() {
                 }
                 const userId = session.id;
                 
+                // Añade este log
+                console.log('Enviando datos al servidor:', {
+                    plan_id: planId,
+                    price_id: priceId,
+                    user_id: userId
+                });
+
                 // Obtener sesión de checkout desde el servidor
                 const response = await fetch('/api/auth/create-checkout-session.php', {
                     method: 'POST',

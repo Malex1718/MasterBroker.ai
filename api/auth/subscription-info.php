@@ -118,8 +118,13 @@ try {
         $stmt->execute([$userId]);
         $invoices = $stmt->fetchAll(PDO::FETCH_ASSOC);
         
-        // Opcionalmente, obtener detalles actualizados de Stripe
-        if ($subscription['stripe_subscription_id']) {
+        // Actualizar información de Stripe solo si no es una suscripción interna
+        $isInternalSubscription = (
+            strpos($subscription['stripe_subscription_id'], 'sub_internal_unlimited_') === 0 &&
+            strpos($subscription['stripe_customer_id'], 'cus_internal_') === 0
+        );
+        
+        if ($subscription['stripe_subscription_id'] && !$isInternalSubscription) {
             try {
                 $stripeSubscription = \Stripe\Subscription::retrieve($subscription['stripe_subscription_id']);
                 

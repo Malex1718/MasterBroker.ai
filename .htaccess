@@ -15,6 +15,10 @@ RewriteRule ^(.*)$ $1.html [L]
     RewriteRule . /index.php [L]
 </IfModule>
 
+# O si prefieres estandarizar a non-www, usa esto en su lugar:
+RewriteCond %{HTTP_HOST} ^www\.masterbroker\.ai [NC]
+RewriteRule ^(.*)$ https://masterbroker.ai/$1 [L,R=301]
+
 # Control de caché
 <IfModule mod_headers.c>
     # Prevenir caché para archivos HTML

@@ -29,7 +29,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.baseUrl = window.location.origin;
             this.sessionKey = 'vibien_session';
             this.sessionDuration = 7 * 60 * 60 * 1000; // 7 horas en milisegundos
-            this.apiCheckUrl = 'https://masterbroker.ai/api/check_session.php';
+            this.apiCheckUrl = '/api/check_session.php';
         }
 
         setSession(userData) {
@@ -112,7 +112,7 @@ document.addEventListener('DOMContentLoaded', function() {
         async register(userData) {
             try {
                 console.log('Datos a enviar:', userData);
-                const response = await fetch('https://masterbroker.ai/api/register.php', {
+                const response = await fetch('/api/register.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -145,7 +145,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
         async login(credentials) {
             try {
-                const response = await fetch('https://masterbroker.ai/api/login.php', {
+                const response = await fetch('/api/login.php', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
@@ -191,7 +191,7 @@ document.addEventListener('DOMContentLoaded', function() {
             this.clearSession();
             
             // También hacer logout en el servidor
-            fetch('https://masterbroker.ai/api/logout.php', {
+            fetch('/api/logout.php', {
                 method: 'POST',
                 credentials: 'include'
             }).then(() => {
@@ -329,8 +329,8 @@ document.addEventListener('DOMContentLoaded', function() {
     // Event Listeners
     registerLink?.addEventListener('click', (e) => {
         e.preventDefault();
-        // Redirigir a la página de waitlist
-        window.location.href = '/waitlist.html';
+        // Mostrar el formulario de registro en lugar de redirigir
+        switchForms(loginForm, registroForm);
     });
 
     backButtons.forEach(button => {

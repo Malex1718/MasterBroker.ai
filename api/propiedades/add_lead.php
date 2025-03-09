@@ -37,34 +37,37 @@ try {
     try {
         // Insertar nuevo lead
         $query = "
-            INSERT INTO property_leads (
-                property_id,
-                name,
-                email,
-                phone,
-                country_code,
-                source,
-                contact_preference,
-                status,
-                message,
-                created_at
-            ) VALUES (
-                :property_id,
-                :name,
-                :email,
-                :phone,
-                :country_code,
-                :source,
-                :contact_preference,
-                'new',
-                :message,
-                NOW()
-            )
-        ";
-        
+        INSERT INTO property_leads (
+            property_id,
+            user_id,        /* Agregar este campo */
+            name,
+            email,
+            phone,
+            country_code,
+            source,
+            contact_preference,
+            status,
+            message,
+            created_at
+        ) VALUES (
+            :property_id,
+            :user_id,       /* Agregar este valor */
+            :name,
+            :email,
+            :phone,
+            :country_code,
+            :source,
+            :contact_preference,
+            'nuevo',
+            :message,
+            NOW()
+        )
+    ";
+    
         $stmt = $conn->prepare($query);
         $result = $stmt->execute([
             ':property_id' => $_POST['property_id'],
+            ':user_id' => $propertyData['user_id'],  /* Agregar este parámetro */
             ':name' => $_POST['name'],
             ':email' => $_POST['email'] ?? null,
             ':phone' => $_POST['phone'],

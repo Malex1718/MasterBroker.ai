@@ -242,9 +242,11 @@
 }
 
 .main-menu a.active {
-    color: var(--colortxt);
-    background-color: var(--body);
+    color: var(--principal_2);
+    background-color: rgba(40, 141, 213, 0.2);
+    border: 1px solid var(--principal_2);
     border-radius: 10px;
+    padding: 10px;
 }
 
 /* Botón de iniciar */
@@ -318,9 +320,12 @@
     flex-direction: column;
     width: 100%;
     gap: 10px;
-    padding: 0;
     padding-bottom: 15px;
-    border-bottom: 2px solid var(--border);
+    border-bottom: 1px solid var(--border);
+}
+
+.main-menu {
+    padding-left: 0;
 }
 
 .nav_lateral .principal_botones button{
@@ -424,23 +429,24 @@
     display: flex;
     flex-direction: column;
     gap: 10px;
-    background-color: var(--border);
+    background-color: rgba(40, 141, 213, 0.2);
+    border: 1px solid var(--principal_2);
     padding: 10px;
     border-radius: 10px;
 }
 
 .datos_user h4{
     margin: 0;
-    color: var(--colortxt);
+    color: var(--principal);
 }
 
 .datos_user p{
     margin: 0;
-    color: var(--colortxt);
+    color: var(--principal);
 }
 
 .datos_user span{
-    color: var(--colortxt);
+    color: var(--principal);
 }
 
 .nav_user .main-menu{
@@ -545,7 +551,7 @@
     flex-direction: column;
     border-bottom: 1px solid var(--border);
     padding-bottom: 15px;
-    margin-bottom: 14px;
+    margin-bottom: 5px;
 }
 
 .menu_user .datos_user{

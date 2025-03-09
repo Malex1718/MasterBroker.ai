@@ -131,8 +131,8 @@ switch ($method) {
                 FROM property_leads pl
                 LEFT JOIN properties p ON pl.property_id = p.id
                 LEFT JOIN users u ON pl.assigned_to = u.id
-                WHERE 1=1 ";
-
+                WHERE pl.deleted_by IS NULL ";  // Esta línea filtra los leads borrados
+    
                 $params = [];
                 
                 if (isset($_SESSION['user_role'])) {
@@ -155,7 +155,7 @@ switch ($method) {
                 }
 
                 $sql .= " GROUP BY pl.id, p.title, u.first_name, u.last_name
-                         ORDER BY pl.created_at DESC";
+                        ORDER BY pl.created_at DESC";
 
                 $stmt = $pdo->prepare($sql);
                 $stmt->execute($params);
@@ -172,7 +172,7 @@ switch ($method) {
                 ], 500);
             }
         }
-        break;
+    break;
 
     case 'POST':
         $postData = json_decode(file_get_contents("php://input"), true);
